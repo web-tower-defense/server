@@ -40,17 +40,12 @@ var roomSystem = {
 		this.hideMessageDiv();
 		if(roomName === ''){
 			this.showMessageDiv('please Enter the name!')
-		}else if(this.nameAlreadyExist(roomName)){
-			this.showMessageDiv('the name already exist')
-		}else{
-			this.createNewRoom(roomName);
-			this.createNewRoomInput.value = '';
+		}else {
+			socket.emit('clientCreateNewRoomEvent', roomName);
 		}
 	},
 	createNewRoom:function(roomName){
 		this.showWaitingDivAndHideMainDiv();
-		socket.emit('clientCreateNewRoomEvent', roomName);
-
 	},
 	cancelCreateNewRoom:function(){
 		//cancel create new room
@@ -82,4 +77,14 @@ var roomSystem = {
 		return false;
 	}
 }
+
+socket.on('respondClientCreateNewRoomEvent', function(data) {
+	if(data.success){
+		roomSystem.createNewRoom(data.roomName);
+	}else{
+		roomSystem.showMessageDiv('this room name is already used');
+	}
+})
+
+
 roomSystem.init();
