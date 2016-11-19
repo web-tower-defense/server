@@ -22,8 +22,9 @@ var roomSystem = {
 		for(var i=0; i<this.roomsDiv.childElementCount; i++){
 			this.evalRoom.bind(this, this.roomsDiv.children[i])();
 		}
-		this.waitingDiv.getElementsByTagName('button')[0].onclick = this.cancelCreateNewRoom.bind(this);
+		this.waitingDiv.getElementsByTagName('button')[0].onclick = this.cancelCreateNewRoomEvent.bind(this);
 	},
+	//below are onclick events
 	evalRoom: function(room){
 		var roomBtn = room.getElementsByTagName('button')[0];
 		var roomBtnClassName = roomBtn.getAttribute('class');
@@ -44,12 +45,24 @@ var roomSystem = {
 			socket.emit('clientCreateNewRoomEvent', roomName);
 		}
 	},
-	createNewRoom:function(roomName){
-		this.showWaitingDivAndHideMainDiv();
-	},
-	cancelCreateNewRoom:function(){
+	cancelCreateNewRoomEvent:function(){
 		//cancel create new room
 		this.hideWaitingDivAndShowMainDiv();
+	},
+	//below are useful function
+	appendNewRoom:function(roomName){
+		var roomDiv = document.createElement('div');
+		roomDiv.setAttribute('class', 'room-div');
+		var span = document.createElement('span');
+		span.textContent = roomName;
+		var button = document.createElement('button');
+		button.setAttribute('class', 'join-room-btn');
+		var icon = document.createElement('i');
+		icon.setAttribute('class', 'fa fa-sign-in');
+		button.appendChild(icon);
+		roomDiv.appendChild(span);
+		roomDiv.appendChild(button);
+		this.roomsDiv.appendChild(roomDiv);
 	},
 	showMessageDiv:function(message){
 		this.messageDiv.style.display = 'flex';
@@ -58,10 +71,10 @@ var roomSystem = {
 	hideMessageDiv:function(){
 		this.messageDiv.style.display = 'none';
 	},
-	showWaitingDivAndHideMainDiv:function(joinOther){
+	showWaitingDivAndHideMainDiv:function(isJoinOther){
 		this.waitingDiv.style.display = 'flex';
 		this.mainDiv.style.display = 'none';
-		if(joinOther){
+		if(isJoinOther){
 			this.waitingDiv.getElementsByTagName('p')[0].textContent='joining room, please wait...'
 			this.waitingDiv.getElementsByTagName('button')[0].style.display='none';
 		}
@@ -70,21 +83,21 @@ var roomSystem = {
 		this.waitingDiv.style.display = 'none';
 		this.mainDiv.style.display = 'flex';
 	},
-	nameAlreadyExist:function(roomName){
-
-
-		// return true if name already exist
-		return false;
-	}
 }
 
 socket.on('respondClientCreateNewRoomEvent', function(data) {
-	if(data.success){
-		roomSystem.createNewRoom(data.roomName);
+	if(data.isHost){
+		if(data.success){
+			roomSystem.showWaitingDivAndHideMainDiv();
+		}else{
+			roomSystem.showMessageDiv('this name is already used');
+		}
 	}else{
-		roomSystem.showMessageDiv('this room name is already used');
+		roomSystem.appendNewRoom(data.roomName);
 	}
-})
+
+});
+
 
 
 roomSystem.init();

@@ -5,10 +5,10 @@ var io = require('socket.io')(http);
 
 var fullRooms = [];
 io.on('connection', function(socket){
-	console.log('a user connected');
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
-		data.roomName=roomName;
+		data.roomName = roomName;
+		data.isHost = true;
 		if(io.sockets.adapter.rooms.hasOwnProperty(roomName)){
 			data.success=false;
 			console.log('### this name exist');
@@ -18,7 +18,10 @@ io.on('connection', function(socket){
 			console.log('### create room success');
 		}
 		socket.emit('respondClientCreateNewRoomEvent', data);
+		data.isHost = false;
+		socket.broadcast.emit('respondClientCreateNewRoomEvent', data);
 		});
+
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 	})
