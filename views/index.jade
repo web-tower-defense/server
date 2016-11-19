@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  #header-div
+    h1 TowerFight2D
+  #main-div
+    #message-div Please enter a name!
+    #create-new-room-div
+      input#create-new-room-input(type="text", placeholder="Create new room here")
+      button#create-new-room-btn
+        i(class="fa fa-plus")
+    #rooms-div
+      .room-div
+        span muan's room
+        button.join-room-btn
+          i(class="fa fa-sign-in")
+      .room-div
+        span ryan's room
+        button.full-room-btn
+          i(class="fa fa-ban")
+  #waiting-div
+    p Your room has been created, now waiting for opponent...
+    button cancel

@@ -1,0 +1,83 @@
+body {
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  margin-top: 40px; }
+  body > div {
+    max-width: 400px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; }
+
+#main-div * {
+  font-size: 18px; }
+
+#waiting-div {
+  display: none; }
+
+#header-div {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center; }
+  #header-div h1 {
+    font-size: 28px !important; }
+
+#create-new-room-div {
+  display: flex;
+  padding: 0;
+  height: 44px; }
+  #create-new-room-div input {
+    padding-left: 14px;
+    border: 0;
+    color: white;
+    background-color: #313e50;
+    flex-grow: 1; }
+  #create-new-room-div button {
+    border: 0;
+    padding: 0;
+    background-color: #b0bec5;
+    color: #607d8b; }
+    #create-new-room-div button i {
+      width: 44px; }
+    #create-new-room-div button:hover {
+      background-color: #c2d1d9; }
+
+#message-div {
+  height: 44px;
+  display: none;
+  background-color: #607d8b;
+  color: white;
+  align-items: center;
+  justify-content: center; }
+
+#rooms-div {
+  display: flex;
+  flex-direction: column; }
+  #rooms-div > .room-div {
+    height: 44px !important;
+    display: flex;
+    align-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    background-color: #eee; }
+    #rooms-div > .room-div > .join-room-btn, #rooms-div > .room-div > .full-room-btn {
+      border: 0;
+      margin: 0;
+      padding: 0; }
+      #rooms-div > .room-div > .join-room-btn i, #rooms-div > .room-div > .full-room-btn i {
+        color: white;
+        width: 44px; }
+    #rooms-div > .room-div > .join-room-btn {
+      background-color: #607d8b; }
+      #rooms-div > .room-div > .join-room-btn:hover {
+        background-color: #6a8a99; }
+    #rooms-div > .room-div > .full-room-btn {
+      background-color: #37474f; }
+    #rooms-div > .room-div > span {
+      display: flex;
+      align-items: center;
+      padding-left: 14px;
+      flex-grow: 1;
+      border-bottom: 1px solid #bebebe; }

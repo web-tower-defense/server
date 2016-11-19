@@ -1,0 +1,113 @@
+$create-new-room-div-input-color:  #313e50;
+$message-div-color: #607d8b;
+$create-new-room-div-btn-color: #b0bec5;
+$join-room-btn-color: #607d8b;
+$ban-color: #37474f;
+$row-height: 44px;
+$room-color: #eee;
+body{
+	background-color: #fafafa;
+	display: flex;
+	flex-direction: column;
+	align-content: space-around;
+	margin-top: 40px;
+	&>div{
+		max-width: 400px;
+		margin:10px auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+	}
+}
+#main-div{
+	*{
+		font-size: 18px;
+	}
+}
+#waiting-div{
+	display: none;
+}
+#header-div{
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	h1{
+		font-size: 28px !important;
+	}
+}
+#create-new-room-div{
+	display: flex;
+	padding: 0;
+	height: $row-height;
+
+	input{
+		padding-left: 14px;
+		border: 0;
+		color:white;
+		background-color: $create-new-room-div-input-color;
+		flex-grow: 1;
+	}
+	button{
+		border: 0;
+		padding: 0;
+		background-color: $create-new-room-div-btn-color;
+		color:#607d8b;
+		i{
+			width: $row-height;
+		}
+		&:hover{
+			background-color: $create-new-room-div-btn-color*1.1;
+		}
+	}
+}
+#message-div{
+	height: $row-height;
+	display: none;
+
+	background-color: $message-div-color;
+	color:white;
+	align-items: center;
+	justify-content: center;
+}
+#rooms-div{
+	// display:none !important;
+	display:flex;
+	flex-direction: column;
+	&>.room-div{
+		height: $row-height !important;
+		display: flex;
+		align-content: space-between;
+		align-items: stretch;
+		width:100%;
+		background-color: $room-color;
+
+		%button{
+			border:0;
+			margin: 0;
+			padding: 0;
+			i{
+				color: white;
+				width: $row-height;
+			}
+		}
+		&>.join-room-btn{
+			@extend %button;
+			background-color: $join-room-btn-color;
+			&:hover{
+				background-color: $join-room-btn-color*1.1;
+			}
+		}
+		&>.full-room-btn{
+			@extend %button;
+			background-color: $ban-color;
+		}
+		&>span{
+			display: flex;
+			align-items: center;
+			padding-left: 14px;
+			flex-grow: 1;
+			border-bottom: 1px solid $room-color*0.8;
+		}
+	}
+}
