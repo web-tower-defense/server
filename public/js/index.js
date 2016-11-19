@@ -64,6 +64,18 @@ var roomSystem = {
 		roomDiv.appendChild(button);
 		this.roomsDiv.appendChild(roomDiv);
 	},
+	changeRoomStateFromWaitingToFull:function(roomName) {
+		var iRoomName = '';
+		for(var i=0; i<this.roomsDiv.childElementCount; i++){
+			iRoomName = this.roomsDiv.children[i].getElementsByTagName('span')[0].textContent;
+			if(iRoomName===roomName){
+				this.roomsDiv.children[i].getElementsByTagName('button')[0].setAttribute('class', 'full-room-btn');
+				this.roomsDiv.children[i].getElementsByTagName('i')[0].setAttribute('class', 'fa fa-ban');
+			}
+			return;
+		}
+
+	},
 	showMessageDiv:function(message){
 		this.messageDiv.style.display = 'flex';
 		this.messageDiv.textContent = message;
