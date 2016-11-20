@@ -5,23 +5,43 @@ var io = require('socket.io')(http);
 
 var fullRooms = [];
 io.on('connection', function(socket){
+	function getRoomsData () {
+		var roomsData = {};
+		for(room in io.sockets.adapter.rooms){
+			if(room.length<20){
+				roomsData[room] = io.sockets.adapter.rooms[room].length===2;
+			}
+		}
+		return roomsData;
+	}
+	socket.emit('resetRooms',getRoomsData());
+	socket.on('joinRoomEvent',function(roomName){
+		socket.join(roomName);
+		if(io.sockets.adapter.rooms[roomName].length!==2){
+			// To Do, the host lost connection
+		}
+		io.sockets.emit('resetRooms',getRoomsData())
+	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
 		data.roomName = roomName;
 		data.isHost = true;
 		if(io.sockets.adapter.rooms.hasOwnProperty(roomName)){
-			data.success=false;
-			console.log('### this name exist');
+			data.nameRepeat=true;
 		}else{
-			data.success=true;
+			data.nameRepeat=false;
 			socket.join(roomName);
-			console.log('### create room success');
 		}
 		socket.emit('respondClientCreateNewRoomEvent', data);
 		data.isHost = false;
+		data.rooms = getRoomsData();
+		console.log(data.rooms);
 		socket.broadcast.emit('respondClientCreateNewRoomEvent', data);
 		});
-
+	socket.on('cancelCreateNewRoomEvent',function(roomName){
+		socket.leave(roomName);
+		io.sockets.emit('resetRooms',getRoomsData());
+	});
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 	})

@@ -1,116 +1,127 @@
 var socket = io();
 var roomSystem = {
-	init: function(){
-		this.cacheDom();
-		this.bindEvents();
-	},
-	cacheDom: function(){
-		this.mainDiv = document.getElementById('main-div');
-		this.waitingDiv = document.getElementById('waiting-div');
-		this.messageDiv = document.getElementById('message-div');
-		this.createNewRoomInput = document.getElementById('create-new-room-input');
-		this.createNewRoomBtn = document.getElementById('create-new-room-btn');
-		this.roomsDiv = document.getElementById('rooms-div');
-	},
-	bindEvents: function(){
-		this.createNewRoomBtn.onclick=this.createNewRoomEvent.bind(this);
-		this.createNewRoomInput.onkeypress = function(event){
-			if(event.keyCode===13||event.which===13){
-				roomSystem.createNewRoomEvent();
+  init: function() {
+    this.cacheDom();
+    this.bindEvents();
+  },
+  cacheDom: function() {
+    this.mainDiv = document.getElementById('main-div');
+    this.waitingDiv = document.getElementById('waiting-div');
+    this.messageDiv = document.getElementById('message-div');
+    this.createNewRoomInput = document.getElementById('create-new-room-input');
+    this.createNewRoomBtn = document.getElementById('create-new-room-btn');
+    this.roomsDiv = document.getElementById('rooms-div');
+  },
+  bindEvents: function() {
+    this.createNewRoomBtn.onclick = this.createNewRoomEvent.bind(this);
+    this.createNewRoomInput.onkeypress = function(event) {
+      if (event.keyCode === 13 || event.which === 13) {
+        roomSystem.createNewRoomEvent();
+      }
+    }
+    for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
+			var room = this.roomsDiv.children[i];
+			if(room.lastChild.className==='join-room-btn'){
+				room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
 			}
-		}
-		for(var i=0; i<this.roomsDiv.childElementCount; i++){
-			this.evalRoom.bind(this, this.roomsDiv.children[i])();
-		}
-		this.waitingDiv.getElementsByTagName('button')[0].onclick = this.cancelCreateNewRoomEvent.bind(this);
-	},
-	//below are onclick events
-	evalRoom: function(room){
-		var roomBtn = room.getElementsByTagName('button')[0];
-		var roomBtnClassName = roomBtn.getAttribute('class');
-		var roomName = room.getElementsByTagName('span')[0].textContent;
-		if(roomBtnClassName=='join-room-btn'){
-			roomBtn.onclick = (function(){
-				this.showWaitingDivAndHideMainDiv(roomName);
-				// join this room
-			}).bind(this);
-		}
-	},
-	createNewRoomEvent: function(){
-		var roomName = this.createNewRoomInput.value;
-		this.hideMessageDiv();
-		if(roomName === ''){
-			this.showMessageDiv('please Enter the name!')
-		}else {
-			socket.emit('clientCreateNewRoomEvent', roomName);
-		}
-	},
-	cancelCreateNewRoomEvent:function(){
-		//cancel create new room
-		this.hideWaitingDivAndShowMainDiv();
-	},
-	//below are useful function
-	appendNewRoom:function(roomName){
-		var roomDiv = document.createElement('div');
-		roomDiv.setAttribute('class', 'room-div');
-		var span = document.createElement('span');
-		span.textContent = roomName;
-		var button = document.createElement('button');
-		button.setAttribute('class', 'join-room-btn');
-		var icon = document.createElement('i');
-		icon.setAttribute('class', 'fa fa-sign-in');
-		button.appendChild(icon);
-		roomDiv.appendChild(span);
-		roomDiv.appendChild(button);
-		this.roomsDiv.appendChild(roomDiv);
-	},
-	getRoomDivByName:function(roomName) {
-		for(var i=0; i<this.roomsDiv.childElementCount; i++){
-			if(this.roomsDiv.children[i].getElementsByTagName('span')[0].textContent===roomName){
-				return this.roomsDiv.children[i];
-			};
-		}
-	},
-	changeRoomStateFromWaitingToFull:function(roomName) {
-		var roomDiv = this.getRoomDivByName(roomName);
-		roomDiv.getElementsByTagName('button')[0].setAttribute('class', 'full-room-btn');
-		roomDiv.getElementsByTagName('i')[0].setAttribute('class', 'fa fa-ban');
-	},
-	showMessageDiv:function(message){
-		this.messageDiv.style.display = 'flex';
-		this.messageDiv.textContent = message;
-	},
-	hideMessageDiv:function(){
-		this.messageDiv.style.display = 'none';
-	},
-	showWaitingDivAndHideMainDiv:function(isJoinOther){
-		this.waitingDiv.style.display = 'flex';
-		this.mainDiv.style.display = 'none';
-		if(isJoinOther){
-			this.waitingDiv.getElementsByTagName('p')[0].textContent='joining room, please wait...'
-			this.waitingDiv.getElementsByTagName('button')[0].style.display='none';
-		}
-	},
-	hideWaitingDivAndShowMainDiv:function(){
-		this.waitingDiv.style.display = 'none';
-		this.mainDiv.style.display = 'flex';
-	},
+    }
+  },
+  //below are onclick events
+  joinRoomEvent: function(roomName) {
+    socket.emit('joinRoomEvent',roomName);
+		this.showWaitingDivAndHideMainDiv(true);
+		this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
+  },
+  createNewRoomEvent: function() {
+    var roomName = this.createNewRoomInput.value;
+    this.hideMessageDiv();
+    if (roomName === '') {
+      this.showMessageDiv('please Enter the name!')
+    } else if (roomName.length > 18) {
+      this.showMessageDiv('Name must shorter than 18!')
+    } else {
+      socket.emit('clientCreateNewRoomEvent', roomName);
+			this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
+    }
+  },
+  cancelCreateNewRoomEvent: function(roomName) {
+    //cancel create new room
+    this.hideWaitingDivAndShowMainDiv();
+		socket.emit('cancelCreateNewRoomEvent',roomName);
+  },
+  //below are useful function
+  appendNewRoom: function(roomName, isFull) {
+    var roomDiv = document.createElement('div');
+    roomDiv.setAttribute('class', 'room-div');
+    var span = document.createElement('span');
+    span.textContent = roomName;
+    var button = document.createElement('button');
+    var icon = document.createElement('i');
+    if (isFull) {
+      button.setAttribute('class', 'full-room-btn');
+      icon.setAttribute('class', 'fa fa-users');
+    } else {
+      button.setAttribute('class', 'join-room-btn');
+      icon.setAttribute('class', 'fa fa-sign-in');
+    }
+    button.appendChild(icon);
+    roomDiv.appendChild(span);
+    roomDiv.appendChild(button);
+    this.roomsDiv.appendChild(roomDiv);
+  },
+  getRoomDivByName: function(roomName) {
+    for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
+      if (this.roomsDiv.children[i].getElementsByTagName('span')[0].textContent === roomName) {
+        return this.roomsDiv.children[i];
+      };
+    }
+  },
+  removeRoomByName: function(roomName) {
+    this.getRoomDivByName(roomName).remove();
+  },
+  showMessageDiv: function(message) {
+    this.messageDiv.style.display = 'flex';
+    this.messageDiv.textContent = message;
+  },
+  hideMessageDiv: function() {
+    this.messageDiv.style.display = 'none';
+  },
+  showWaitingDivAndHideMainDiv: function(isJoinOther) {
+    this.waitingDiv.style.display = 'flex';
+    this.mainDiv.style.display = 'none';
+    if (isJoinOther) {
+      this.waitingDiv.getElementsByTagName('p')[0].textContent = 'joining room, please wait...'
+    }
+  },
+  hideWaitingDivAndShowMainDiv: function() {
+    this.waitingDiv.style.display = 'none';
+    this.mainDiv.style.display = 'flex';
+  },
+
 }
 
-socket.on('respondClientCreateNewRoomEvent', function(data) {
-	if(data.isHost){
-		if(data.success){
-			roomSystem.showWaitingDivAndHideMainDiv();
-		}else{
-			roomSystem.showMessageDiv('this name is already used');
-		}
-	}else{
-		roomSystem.appendNewRoom(data.roomName);
-		
+function resetRooms(rooms) {
+	while(roomSystem.roomsDiv.firstChild){
+		roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
 	}
-
+  for (room in rooms) {
+    roomSystem.appendNewRoom(room, rooms[room]);
+  }
+	roomSystem.bindEvents();
+}
+socket.on('respondClientCreateNewRoomEvent', function(data) {
+  if (data.isHost) {
+    if (data.nameRepeat) {
+			roomSystem.showMessageDiv('this name is already used');
+    } else {
+			roomSystem.showWaitingDivAndHideMainDiv();
+    }
+  }
+	else{
+		resetRooms(data.rooms);
+	}
 });
-
+socket.on('resetRooms',resetRooms);
 
 
 roomSystem.init();

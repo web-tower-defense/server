@@ -3,11 +3,11 @@
   "libs": [
     "browser"
   ],
-  "plugins": {
-    "node": {
-      "dontLoad": "",
-      "load": "",
-      "modules": ""
-    }
+	"loadEagerly": [
+    "server/**/*.js",
+		"public/**/*.js"
+  ],
+	"plugins": {
+    "node": {}
   }
 }

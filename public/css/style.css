@@ -42,7 +42,7 @@ body {
     #create-new-room-div button i {
       width: 44px; }
     #create-new-room-div button:hover {
-      background-color: #c2d1d9; }
+      background-color: #e5f7ff; }
 
 #message-div {
   height: 44px;
@@ -61,23 +61,23 @@ body {
     align-content: space-between;
     align-items: stretch;
     width: 100%;
-    background-color: #eee; }
-    #rooms-div > .room-div > .join-room-btn, #rooms-div > .room-div > .full-room-btn {
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+    #rooms-div > .room-div .join-room-btn, #rooms-div > .room-div .full-room-btn {
       border: 0;
       margin: 0;
       padding: 0; }
-      #rooms-div > .room-div > .join-room-btn i, #rooms-div > .room-div > .full-room-btn i {
+      #rooms-div > .room-div .join-room-btn i, #rooms-div > .room-div .full-room-btn i {
         color: white;
         width: 44px; }
-    #rooms-div > .room-div > .join-room-btn {
+    #rooms-div > .room-div .join-room-btn {
       background-color: #607d8b; }
-      #rooms-div > .room-div > .join-room-btn:hover {
-        background-color: #6a8a99; }
-    #rooms-div > .room-div > .full-room-btn {
+      #rooms-div > .room-div .join-room-btn:hover {
+        background-color: #86afc3; }
+    #rooms-div > .room-div .full-room-btn {
       background-color: #37474f; }
     #rooms-div > .room-div > span {
       display: flex;
       align-items: center;
       padding-left: 14px;
-      flex-grow: 1;
-      border-bottom: 1px solid #bebebe; }
+      flex-grow: 1; }

@@ -57,7 +57,7 @@ body{
 			width: $row-height;
 		}
 		&:hover{
-			background-color: $create-new-room-div-btn-color*1.1;
+			background-color: $create-new-room-div-btn-color*1.3;
 		}
 	}
 }
@@ -81,6 +81,7 @@ body{
 		align-items: stretch;
 		width:100%;
 		background-color: $room-color;
+		border-bottom: 1px solid $room-color*0.6;
 
 		%button{
 			border:0;
@@ -91,14 +92,14 @@ body{
 				width: $row-height;
 			}
 		}
-		&>.join-room-btn{
+		.join-room-btn{
 			@extend %button;
 			background-color: $join-room-btn-color;
 			&:hover{
-				background-color: $join-room-btn-color*1.1;
+				background-color: $join-room-btn-color*1.4;
 			}
 		}
-		&>.full-room-btn{
+		.full-room-btn{
 			@extend %button;
 			background-color: $ban-color;
 		}
@@ -107,7 +108,6 @@ body{
 			align-items: center;
 			padding-left: 14px;
 			flex-grow: 1;
-			border-bottom: 1px solid $room-color*0.8;
 		}
 	}
 }
