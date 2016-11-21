@@ -17,10 +17,7 @@ io.on('connection', function(socket){
 	socket.emit('resetRooms',getRoomsData());
 	socket.on('joinRoomEvent',function(roomName){
 		socket.join(roomName);
-		if(io.sockets.adapter.rooms[roomName].length!==2){
-			// To Do, the host lost connection
-		}
-		io.sockets.emit('resetRooms',getRoomsData())
+		io.sockets.emit('resetRooms',getRoomsData());
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
@@ -35,7 +32,6 @@ io.on('connection', function(socket){
 		socket.emit('respondClientCreateNewRoomEvent', data);
 		data.isHost = false;
 		data.rooms = getRoomsData();
-		console.log(data.rooms);
 		socket.broadcast.emit('respondClientCreateNewRoomEvent', data);
 		});
 	socket.on('cancelCreateNewRoomEvent',function(roomName){
@@ -43,7 +39,7 @@ io.on('connection', function(socket){
 		io.sockets.emit('resetRooms',getRoomsData());
 	});
 	socket.on('disconnect', function(){
-		console.log('user disconnected');
+		io.sockets.emit('resetRooms',getRoomsData());
 	})
 });
 

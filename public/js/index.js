@@ -50,6 +50,15 @@ var roomSystem = {
 		socket.emit('cancelCreateNewRoomEvent',roomName);
   },
   //below are useful function
+	resetRooms: function (rooms) {
+		while(roomSystem.roomsDiv.firstChild){
+			roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
+		}
+	  for (room in rooms) {
+	    roomSystem.appendNewRoom(room, rooms[room]);
+	  }
+		roomSystem.bindEvents();
+	},
   appendNewRoom: function(roomName, isFull) {
     var roomDiv = document.createElement('div');
     roomDiv.setAttribute('class', 'room-div');
@@ -100,15 +109,7 @@ var roomSystem = {
 
 }
 
-function resetRooms(rooms) {
-	while(roomSystem.roomsDiv.firstChild){
-		roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
-	}
-  for (room in rooms) {
-    roomSystem.appendNewRoom(room, rooms[room]);
-  }
-	roomSystem.bindEvents();
-}
+
 socket.on('respondClientCreateNewRoomEvent', function(data) {
   if (data.isHost) {
     if (data.nameRepeat) {
@@ -118,10 +119,14 @@ socket.on('respondClientCreateNewRoomEvent', function(data) {
     }
   }
 	else{
-		resetRooms(data.rooms);
+		roomSystem.resetRooms(data.rooms);
 	}
 });
-socket.on('resetRooms',resetRooms);
+socket.on('resetRooms',roomSystem.resetRooms);
+socket.on('roommateDisconnect',function(roomName){
+})
+socket.on('gameInit', function(data){
+	var playerId = data.id;
 
-
+})
 roomSystem.init();
