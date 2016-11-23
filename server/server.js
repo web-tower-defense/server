@@ -18,6 +18,7 @@ io.on('connection', function(socket){
 	socket.on('joinRoomEvent',function(roomName){
 		socket.join(roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
+		io.to(roomName).emit('gameInit', io.sockets.adapter.rooms[roomName]);
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
