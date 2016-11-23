@@ -126,7 +126,8 @@ socket.on('resetRooms',roomSystem.resetRooms);
 socket.on('roommateDisconnect',function(roomName){
 })
 socket.on('gameInit', function(data){
-	var playerId = data.id;
-
+	// var playerId = data.id;
+	console.log(data.sockets);
+	console.log(socket.id);
 })
 roomSystem.init();
