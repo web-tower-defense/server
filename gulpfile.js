@@ -1,16 +1,23 @@
 var gulp = require('gulp'),
-  nodemon = require('gulp-nodemon'),
-  plumber = require('gulp-plumber'),
-  livereload = require('gulp-livereload'),
-  sass = require('gulp-ruby-sass');
+nodemon = require('gulp-nodemon'),
+plumber = require('gulp-plumber'),
+livereload = require('gulp-livereload'),
+webpack = require('webpack-stream'),
+sass = require('gulp-ruby-sass');
 
+gulp.task('webpack', function() {
+  return gulp.src('./public/src/entry.js')
+  .pipe(webpack(require('./webpack.config')))
+  .pipe(gulp.dest('./public'));
+});
 gulp.task('sass', function () {
   return sass('./public/css/**/*.scss')
-    .pipe(gulp.dest('./public/css'))
-    .pipe(livereload());
+  .pipe(gulp.dest('./public/css'))
+  .pipe(livereload());
 });
 
 gulp.task('watch', function() {
+  gulp.watch('./public/src/*.js', ['webpack']);
   gulp.watch('./public/css/*.scss', ['sass']);
 });
 
@@ -32,6 +39,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task('default', [
+  'webpack',
   'sass',
   'develop',
   'watch'
