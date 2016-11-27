@@ -5,19 +5,21 @@ $join-room-btn-color: #607d8b;
 $ban-color: #37474f;
 $row-height: 44px;
 $room-color: #eee;
+
 body{
 	background-color: #fafafa;
-	display: flex;
-	flex-direction: column;
-	align-content: space-around;
 	margin-top: 40px;
-	&>div{
-		max-width: 400px;
+
+	#room-system-div{
 		margin:10px auto;
+		max-width: 400px;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
-
+		align-content: space-around;
+	}
+	#room-system-div>div{
+		flex-direction: column;
+		justify-content:center;
 	}
 }
 #main-div{
@@ -30,7 +32,7 @@ body{
 }
 #header-div{
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	justify-content: center;
 	h1{
 		font-size: 28px !important;

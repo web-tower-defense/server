@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 
-var fullRooms = [];
+var currFullRooms = {};
 io.on('connection', function(socket){
 	function getRoomsData () {
 		var roomsData = {};
@@ -18,7 +18,10 @@ io.on('connection', function(socket){
 	socket.on('joinRoomEvent',function(roomName){
 		socket.join(roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
-		io.to(roomName).emit('gameInit', io.sockets.adapter.rooms[roomName]);
+
+		var room = io.sockets.adapter.rooms[roomName];
+		io.to(roomName).emit('gameInit', room);
+		currFullRooms[roomName]=Object.keys(room.sockets);
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
@@ -40,7 +43,17 @@ io.on('connection', function(socket){
 		io.sockets.emit('resetRooms',getRoomsData());
 	});
 	socket.on('disconnect', function(){
+		for(let roomName in currFullRooms){
+			if(currFullRooms[roomName].indexOf(socket.id)!==-1){
+				io.to(roomName).emit('roommateDisconnect',roomName);
+				break;
+			}
+		}
+	})
+	socket.on('clientLeaveRoom', function(roomName){
+		socket.leave(roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
+
 	})
 });
 

@@ -1,3 +1,5 @@
+import gameInit from "./game/game-init";
+
 export default function startRoomSystem(socket:SocketIOClient.Socket){
 	var roomSystem = {
 	  init: function() {
@@ -106,6 +108,13 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 	    this.waitingDiv.style.display = 'none';
 	    this.mainDiv.style.display = 'flex';
 	  },
+		hideRoomSystem: function() {
+			document.getElementById('room-system-div').style.display = 'none';
+		},
+		showRoomSystem: function(){
+			document.getElementById('room-system-div').style.display = 'flex';
+			roomSystem.hideWaitingDivAndShowMainDiv();
+		}
 
 	} as any;
 
@@ -123,8 +132,17 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 		}
 	});
 	socket.on('resetRooms',roomSystem.resetRooms);
+	socket.on('gameInit', function(room){
+		// var playerId = data.id;
+		roomSystem.hideRoomSystem();
+		let socketIds = Object.keys(room.sockets);
+		let playerId = socketIds.indexOf(socket.id)===0? 1:2;
+		gameInit(playerId);
+	})
 	socket.on('roommateDisconnect',function(roomName){
+		socket.emit('clientLeaveRoom', roomName);
+		roomSystem.showRoomSystem();
+		alert('the other player lost connection');
 	})
 	roomSystem.init();
-
 }

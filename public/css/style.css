@@ -1,15 +1,15 @@
 body {
   background-color: #fafafa;
-  display: flex;
-  flex-direction: column;
-  align-content: space-around;
   margin-top: 40px; }
-  body > div {
-    max-width: 400px;
+  body #room-system-div {
     margin: 10px auto;
+    max-width: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; }
+    align-content: space-around; }
+  body #room-system-div > div {
+    flex-direction: column;
+    justify-content: center; }
 
 #main-div * {
   font-size: 18px; }
@@ -19,7 +19,7 @@ body {
 
 #header-div {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center; }
   #header-div h1 {
     font-size: 28px !important; }

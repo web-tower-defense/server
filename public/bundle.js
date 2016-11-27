@@ -48,18 +48,14 @@
 	var room_system_1 = __webpack_require__(1);
 	var socket = io();
 	room_system_1.default(socket);
-	socket.on('gameInit', function (data) {
-	    console.log(data.sockets);
-	    console.log(socket.id);
-	    console.log('hello webpack');
-	});
 
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var game_init_1 = __webpack_require__(2);
 	function startRoomSystem(socket) {
 	    var roomSystem = {
 	        init: function () {
@@ -169,6 +165,13 @@
 	            this.waitingDiv.style.display = 'none';
 	            this.mainDiv.style.display = 'flex';
 	        },
+	        hideRoomSystem: function () {
+	            document.getElementById('room-system-div').style.display = 'none';
+	        },
+	        showRoomSystem: function () {
+	            document.getElementById('room-system-div').style.display = 'flex';
+	            roomSystem.hideWaitingDivAndShowMainDiv();
+	        }
 	    };
 	    socket.on('respondClientCreateNewRoomEvent', function (data) {
 	        if (data.isHost) {
@@ -184,12 +187,32 @@
 	        }
 	    });
 	    socket.on('resetRooms', roomSystem.resetRooms);
+	    socket.on('gameInit', function (room) {
+	        roomSystem.hideRoomSystem();
+	        var socketIds = Object.keys(room.sockets);
+	        var playerId = socketIds.indexOf(socket.id) === 0 ? 1 : 2;
+	        game_init_1.default(playerId);
+	    });
 	    socket.on('roommateDisconnect', function (roomName) {
+	        socket.emit('clientLeaveRoom', roomName);
+	        roomSystem.showRoomSystem();
+	        alert('the other player lost connection');
 	    });
 	    roomSystem.init();
 	}
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = startRoomSystem;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function gameInit(playerId) {
+	}
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = gameInit;
 
 
 /***/ }
