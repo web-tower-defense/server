@@ -17,7 +17,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('./public/src/*.js', ['webpack']);
+  gulp.watch('./public/src/**/*.js', ['webpack']);
   gulp.watch('./public/css/*.scss', ['sass']);
 });
 
@@ -26,6 +26,7 @@ gulp.task('develop', function () {
   nodemon({
     script: 'bin/www',
     ext: 'js jade coffee',
+    ignore: ['public/src/**/*.js'],
     stdout: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {

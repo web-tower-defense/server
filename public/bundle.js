@@ -99,13 +99,13 @@
 	                this.showMessageDiv('Name must shorter than 18!');
 	            }
 	            else {
-	                socket.emit('clientCreateNewRoomEvent', roomName);
+	                socket.emit('checkIfNameExist', roomName);
 	                this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this, roomName);
 	            }
 	        },
 	        cancelCreateNewRoomEvent: function (roomName) {
 	            this.hideWaitingDivAndShowMainDiv();
-	            socket.emit('cancelCreateNewRoomEvent', roomName);
+	            socket.emit('leaveRoom', roomName);
 	        },
 	        resetRooms: function (rooms) {
 	            while (roomSystem.roomsDiv.firstChild) {
@@ -173,30 +173,25 @@
 	            roomSystem.hideWaitingDivAndShowMainDiv();
 	        }
 	    };
-	    socket.on('respondClientCreateNewRoomEvent', function (data) {
-	        if (data.isHost) {
-	            if (data.nameRepeat) {
-	                roomSystem.showMessageDiv('this name is already used');
-	            }
-	            else {
-	                roomSystem.showWaitingDivAndHideMainDiv();
-	            }
+	    socket.on('respondCheckIfNameExist', function (nameRepeat) {
+	        if (nameRepeat) {
+	            roomSystem.showMessageDiv('this name is already used');
 	        }
 	        else {
-	            roomSystem.resetRooms(data.rooms);
+	            roomSystem.showWaitingDivAndHideMainDiv();
 	        }
 	    });
 	    socket.on('resetRooms', roomSystem.resetRooms);
-	    socket.on('gameInit', function (room) {
+	    socket.on('gameInit', function (room, roomName) {
 	        roomSystem.hideRoomSystem();
 	        var socketIds = Object.keys(room.sockets);
 	        var playerId = socketIds.indexOf(socket.id) === 0 ? 1 : 2;
-	        game_init_1.default(playerId);
+	        game_init_1.default(playerId, socket, roomName);
 	    });
 	    socket.on('roommateDisconnect', function (roomName) {
-	        socket.emit('clientLeaveRoom', roomName);
-	        roomSystem.showRoomSystem();
+	        socket.emit('leaveRoom', roomName);
 	        alert('the other player lost connection');
+	        location.reload();
 	    });
 	    roomSystem.init();
 	}
@@ -209,7 +204,53 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	function gameInit(playerId) {
+	var game;
+	var socket;
+	var gameInfo;
+	var GameInfo = (function () {
+	    function GameInfo(playerId, roomName) {
+	        this.playerId = playerId;
+	        this.roomName = roomName;
+	        this.ready = false;
+	    }
+	    return GameInfo;
+	}());
+	var Soldier = (function () {
+	    function Soldier() {
+	    }
+	    return Soldier;
+	}());
+	var Tower = (function () {
+	    function Tower(playerId, roomName) {
+	        this.playerId = playerId;
+	        this.roomName = roomName;
+	    }
+	    return Tower;
+	}());
+	function preload() {
+	    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+	    game.scale.pageAlignHorizontally = true;
+	    game.scale.pageAlignVertically = true;
+	    game.stage.backgroundColor = '#eee';
+	    game.load.image('ball', 'img/ball.png');
+	    game.load.image('brown-tower', 'img/brown-tower.png');
+	}
+	function finishPreload() {
+	    function create() {
+	    }
+	}
+	function update() {
+	    if (!gameInfo.ready)
+	        return;
+	}
+	function gameInit(playerId, soc, roomName) {
+	    socket = soc;
+	    gameInfo = new GameInfo(playerId, roomName);
+	    game = new Phaser.Game(480, 320, Phaser.AUTO, null, {
+	        preload: preload,
+	        create: finishPreload,
+	        update: update
+	    });
 	}
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = gameInit;

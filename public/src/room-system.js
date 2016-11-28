@@ -43,13 +43,13 @@ function startRoomSystem(socket) {
                 this.showMessageDiv('Name must shorter than 18!');
             }
             else {
-                socket.emit('clientCreateNewRoomEvent', roomName);
+                socket.emit('checkIfNameExist', roomName);
                 this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this, roomName);
             }
         },
         cancelCreateNewRoomEvent: function (roomName) {
             this.hideWaitingDivAndShowMainDiv();
-            socket.emit('cancelCreateNewRoomEvent', roomName);
+            socket.emit('leaveRoom', roomName);
         },
         resetRooms: function (rooms) {
             while (roomSystem.roomsDiv.firstChild) {
@@ -117,30 +117,25 @@ function startRoomSystem(socket) {
             roomSystem.hideWaitingDivAndShowMainDiv();
         }
     };
-    socket.on('respondClientCreateNewRoomEvent', function (data) {
-        if (data.isHost) {
-            if (data.nameRepeat) {
-                roomSystem.showMessageDiv('this name is already used');
-            }
-            else {
-                roomSystem.showWaitingDivAndHideMainDiv();
-            }
+    socket.on('respondCheckIfNameExist', function (nameRepeat) {
+        if (nameRepeat) {
+            roomSystem.showMessageDiv('this name is already used');
         }
         else {
-            roomSystem.resetRooms(data.rooms);
+            roomSystem.showWaitingDivAndHideMainDiv();
         }
     });
     socket.on('resetRooms', roomSystem.resetRooms);
-    socket.on('gameInit', function (room) {
+    socket.on('gameInit', function (room, roomName) {
         roomSystem.hideRoomSystem();
         var socketIds = Object.keys(room.sockets);
         var playerId = socketIds.indexOf(socket.id) === 0 ? 1 : 2;
-        game_init_1.default(playerId);
+        game_init_1.default(playerId, socket, roomName);
     });
     socket.on('roommateDisconnect', function (roomName) {
-        socket.emit('clientLeaveRoom', roomName);
-        roomSystem.showRoomSystem();
+        socket.emit('leaveRoom', roomName);
         alert('the other player lost connection');
+        location.reload();
     });
     roomSystem.init();
 }
