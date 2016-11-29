@@ -1,7 +1,25 @@
 var app = require('../app');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var currFullRooms = {};
+var Player = (function () {
+    function Player() {
+        this.isReadyToStartGame = false;
+    }
+    return Player;
+}());
+var RoomData = (function () {
+    function RoomData(roomName) {
+        this.roomName = roomName;
+        this.player = [];
+        this.player[1] = new Player();
+        this.player[2] = new Player();
+    }
+    RoomData.prototype.isBothPlayerReady = function () {
+        return this.player[1].isReadyToStartGame && this.player[2].isReadyToStartGame;
+    };
+    return RoomData;
+}());
+var fullRooms = {};
 io.on('connection', socketHandler);
 function getRoomsData() {
     var roomsData = {};
@@ -18,8 +36,12 @@ function socketHandler(socket) {
         socket.join(roomName);
         io.sockets.emit('resetRooms', getRoomsData());
         var room = io.sockets.adapter.rooms[roomName];
+        var socketIds = Object.keys(room.sockets);
         io.to(roomName).emit('gameInit', room, roomName);
-        currFullRooms[roomName] = Object.keys(room.sockets);
+        fullRooms[roomName] = new RoomData(roomName);
+        for (var i = 0; i < room.length; i++) {
+            fullRooms[roomName].player[i + 1].socketId = socketIds[i];
+        }
     });
     socket.on('checkIfNameExist', function (roomName) {
         var nameRepeat;
@@ -35,16 +57,31 @@ function socketHandler(socket) {
     });
     socket.on('leaveRoom', function (roomName) {
         socket.leave(roomName);
+        if (fullRooms.hasOwnProperty(roomName)) {
+            delete fullRooms[roomName];
+        }
         io.sockets.emit('resetRooms', getRoomsData());
     });
+    socket.on('readyToStartGame', function (roomName, playerId) {
+        fullRooms[roomName].player[playerId].isReadyToStartGame = true;
+        console.log(fullRooms[roomName].isBothPlayerReady());
+        if (fullRooms[roomName].isBothPlayerReady()) {
+            io.to(roomName).emit('startGame');
+        }
+    });
     socket.on('disconnect', function () {
-        for (var roomName in currFullRooms) {
-            if (currFullRooms[roomName].indexOf(socket.id) !== -1) {
-                io.to(roomName).emit('roommateDisconnect', roomName);
-                break;
+        for (var roomName in fullRooms) {
+            for (var _i = 0, _a = fullRooms[roomName].player; _i < _a.length; _i++) {
+                var player = _a[_i];
+                if (player && player.socketId === socket.id) {
+                    io.to(roomName).emit('roommateDisconnect', roomName);
+                    io.sockets.emit('resetRooms', getRoomsData());
+                    return;
+                }
             }
         }
         io.sockets.emit('resetRooms', getRoomsData());
+        return;
     });
 }
 module.exports = http;
