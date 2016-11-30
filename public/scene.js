@@ -1,6 +1,6 @@
 
 function initScene(){
-	var path = "textures/cube/skybox/";
+	var path = "textures/cube/skybox2/";
 	var format = '.jpg';
 	var urls = [
 			path + 'px' + format, path + 'nx' + format,
@@ -8,7 +8,6 @@ function initScene(){
 			path + 'pz' + format, path + 'nz' + format
 		];
 	var reflectionCube = new THREE.CubeTextureLoader().load( urls );
-	console.log(reflectionCube);
 	reflectionCube.format = THREE.RGBFormat;
 
 	// scene

@@ -12,17 +12,19 @@ function loadBuilding(building){
 
 	var mtlLoader = new THREE.MTLLoader();
 
-	mtlLoader.setPath( 'obj/my_castle/' );
-	mtlLoader.load( 'castle.mtl', function( materials ) {
+	mtlLoader.setPath( 'obj/planets/' );
+	mtlLoader.load( 'Planet2.mtl', function( materials ) {
 		materials.preload();
+		console.log("load : Planet2.mtl");
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
-		objLoader.setPath( 'obj/my_castle/' );
-		objLoader.load( 'castle.obj', function ( object ) {
+		objLoader.setPath( 'obj/planets/' );
+		objLoader.load( 'Planet2.obj', function ( object ) {
+			console.log("load : Planet2.obj");
 			//object.position.y = - 10;
 			//object.scale.set(10,10,10);
 			object.name = "root";
-			console.log("~name : " + object.name);
+			//console.log("~name : " + object.name);
 			//scene.add( object );
 
 			console.log("building.positions.length : "+building.positions.length);
@@ -87,7 +89,7 @@ function loadMap(file){
 
     	var textureLoader = new THREE.TextureLoader();
 
-		var geometry = new THREE.PlaneGeometry( width*game_data.unitLen, height*game_data.unitLen, width, height);
+		/*var geometry = new THREE.PlaneGeometry( width*game_data.unitLen, height*game_data.unitLen, width, height);
 		geometry.faceVertexUvs[0] = [];
 		for(var i = 0; i < geometry.faces.length; i++){
 			geometry.faceVertexUvs[0].push([
@@ -110,7 +112,7 @@ function loadMap(file){
 		plane.position.y = -1;
 		plane.position.x = width*game_data.unitLen/2;
 		plane.position.z = -height*game_data.unitLen/2;
-		scene.add( plane );
+		scene.add( plane );*/
 
 		for(var i = 0; i < data.buildings.length; i++){
 			var building=new Building();

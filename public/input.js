@@ -28,6 +28,7 @@ function initInput(){
 	dragCurve = new THREE.Line( geometry, material );
 	dragCurve.dynamic = true;
 	dragCurve.visible = false;
+	dragCurve.selectable = false;
 	scene.add( dragCurve );
 }
 
@@ -200,11 +201,30 @@ var handleWheel = function (e){
 function rayCast(){
 	raycaster.setFromCamera( mouse, camera );
 	//console.log("len : " + scene.children.length);
+	var intersected_id = -1;
 	var intersects = raycaster.intersectObjects( scene.children, true );
 	//console.log("len : " + intersects.length);
 	if ( intersects.length > 0 ) {
-		cur_intersected = intersects[ 0 ].object;
-		intersected_point = intersects[ 0 ].point;
+
+		for(var i=0; i<intersects.length; i++){
+			if("selectable" in intersects[ 0 ].object){
+				if(intersects[ 0 ].object.selectable === false){
+					continue;
+				}
+				else{
+					intersected_id = i;
+					break;
+				}
+			}
+			else{
+				intersected_id = i;
+				break;
+			}
+		}
+		if(intersected_id === -1)return;
+
+		cur_intersected = intersects[ intersected_id ].object;
+		intersected_point = intersects[ intersected_id ].point;
 
 		while(cur_intersected.parent != scene){
 			//console.log("name : " + cur_intersected.name);
@@ -218,7 +238,7 @@ function rayCast(){
 			//cur_intersected.currentHex = cur_intersected.material.emissive.getHex();
 			//cur_intersected.material.emissive.setHex( 0x0000ff );
 
-			console.log(cur_intersected.position);
+			//console.log(cur_intersected.position);
 			mouse_pos=new Pos(
 				cur_intersected.position.x,
 				cur_intersected.position.y,
