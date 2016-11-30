@@ -1,0 +1,24 @@
+{
+    "mapName": "map01",
+    "mapUnitLen": 5,
+    "mapWidth": 20,
+    "mapHeight": 20,
+    "buildings": 
+    [
+        {
+            "type": "base",
+            "model": 
+            {
+                "path": "obj/my_castle/castle.obj",
+                "material":{
+                    "path": "obj/my_castle/castle.mtl"
+                }
+            },
+            "position":
+            [
+                [5,5],
+                [10,10]
+            ]
+        }
+    ]
+ }

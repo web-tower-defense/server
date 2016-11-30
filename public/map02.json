@@ -1,0 +1,46 @@
+{
+    "mapName": "map01",
+    "mapUnitLen": 5,
+    "mapWidth": 20,
+    "mapHeight": 20,
+    "models":
+    [
+        {
+            "name": "base",
+            "path": "obj/my_castle/castle.obj",
+            "material":{
+                "path": "obj/my_castle/castle.mtl"
+            }
+        }
+    ],
+    "buildings":
+    [
+        {
+            "name": "base",
+            "id": 0,
+            "owner": 1,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [5,10]
+        },
+		{
+            "name": "base",
+            "id": 1,
+      			"owner": 0,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [9,10]
+        },{
+            "name": "base",
+            "id": 2,
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [13,10]
+        }
+    ],
+    "paths":
+    [
+        [0,1]
+    ]
+ }

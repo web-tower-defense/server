@@ -2,7 +2,7 @@ doctype html
 html(lang='en')
   head
     meta(charset='UTF-8')
-    meta(name='viewport', content='width=device-width')
+    meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     title= title
     block css
       link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css")
@@ -12,5 +12,23 @@ html(lang='en')
         script(src='http://localhost:35729/livereload.js')
   body
     block content
+    script(src="/jquery.min.js")
     script(src="/socket.io/socket.io.js", charset="utf-8")
     script(src="/js/index.js", charset="utf-8")
+    script(src='/js/three.min.js')
+    script(src='/js/loaders/DDSLoader.js')
+    script(src='/js/loaders/MTLLoader.js')
+    script(src='/js/loaders/OBJLoader.js')
+    script(src='/js/Detector.js')
+    script(src='/js/libs/stats.min.js')
+    script(src='/js/utils/GeometryUtils.js')
+    script(src='/unit.js')
+    script(src='/input.js')
+    script(src='/font.js')
+    script(src='/camera.js')
+    script(src='/scene.js')
+    script(src='/building.js')
+    script(src='/map.js')
+    script(src='/command.js')
+    script(src='/gameloop.js')
+    script(src='/game.js')
