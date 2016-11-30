@@ -5,24 +5,32 @@ class GameInfo{
   public static playerId:number
   public static roomName:string
 }
-class Soldier extends Phaser.Sprite{
-  constructor(x:number, y:number){
-    super(game,x,y,'ball');
-    game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.anchor.set(0.5);
-  }
-}
+
 class Tower extends Phaser.Sprite{
   public level: number;
   public ownerId: number;
   public soldiers: number;
   public maxSoldiers: number;
+  private isSelected: boolean = false;
   constructor(x:number, y:number){
     super(game,x,y,'brown-tower');
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.immovable = true;
     this.anchor.set(0.5);
+    this.inputEnabled = true;
+    this.events.onInputDown.add(()=>{
+      if(this.ownerId===GameInfo.playerId){
+        this.isSelected = !this.isSelected;
+      }else{
+        //send soldiers to here;
+        //for every tower selected, send soldiers here;
+      }
+      console.log('select tower: '+this.isSelected);
+    });
+    game.add.existing(this);
+
   }
+
 
 }
 
@@ -30,9 +38,9 @@ class Tower extends Phaser.Sprite{
 // var ball:Phaser.Sprite;
 // var paddle1,paddle2:Phaser.Sprite;
 // var towers:Tower[] = [];
-var tower1:Phaser.Sprite;
-var tower2:Phaser.Sprite;
-var soldiers:Phaser.Group;
+var tower1:Tower;
+var tower2:Tower;
+var weapon;
 function preload() {
   //init socket
   bindSocketEvent();
@@ -50,22 +58,18 @@ function preload() {
 }
 function create() {
   // init physics engine
-  game.input.onTap.add(()=>{
-    renderText += "1";
-  })
   game.physics.startSystem(Phaser.Physics.ARCADE);
   //---------------------------------------------
   //put entity and enable its physics
   //tower
   tower1 = new Tower(game.world.width*0.1, game.world.height*0.5);
-  //soldiers
-  soldiers = game.add.group();
-  for(let i=0; i<10; i++){
-    soldiers.add(new Soldier(tower1.x, tower1.y));
-  }
+  tower1.ownerId = 1;
+
+  tower2 = new Tower(game.world.width*0.9, game.world.height*0.5);
+  tower2.ownerId = 2;
+
   //--------------------------------------
   //add tower so it can be render at the top
-  game.add.existing(tower1);
   // tower1.visible = false;
   //set ready btn
   let startButton = game.add.button(game.world.width*0.5, game.world.height*0.5, 'button', ready, this, 1, 0, 2);
@@ -85,6 +89,7 @@ function update() {
 var renderText:string = "debug text";
 function render () {
   game.debug.text(renderText, 16,24);
+
 }
 function bindSocketEvent () {
   socket.on('startGame', ()=>{

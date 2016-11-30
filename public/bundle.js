@@ -217,30 +217,31 @@
 	    return GameInfo;
 	}());
 	GameInfo.isGameStart = false;
-	var Soldier = (function (_super) {
-	    __extends(Soldier, _super);
-	    function Soldier(x, y) {
-	        var _this = _super.call(this, game, x, y, 'ball') || this;
-	        game.physics.enable(_this, Phaser.Physics.ARCADE);
-	        _this.anchor.set(0.5);
-	        return _this;
-	    }
-	    return Soldier;
-	}(Phaser.Sprite));
 	var Tower = (function (_super) {
 	    __extends(Tower, _super);
 	    function Tower(x, y) {
 	        var _this = _super.call(this, game, x, y, 'brown-tower') || this;
+	        _this.isSelected = false;
 	        game.physics.enable(_this, Phaser.Physics.ARCADE);
 	        _this.body.immovable = true;
 	        _this.anchor.set(0.5);
+	        _this.inputEnabled = true;
+	        _this.events.onInputDown.add(function () {
+	            if (_this.ownerId === GameInfo.playerId) {
+	                _this.isSelected = !_this.isSelected;
+	            }
+	            else {
+	            }
+	            console.log('select tower: ' + _this.isSelected);
+	        });
+	        game.add.existing(_this);
 	        return _this;
 	    }
 	    return Tower;
 	}(Phaser.Sprite));
 	var tower1;
 	var tower2;
-	var soldiers;
+	var weapon;
 	function preload() {
 	    bindSocketEvent();
 	    game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
@@ -253,16 +254,11 @@
 	    game.load.spritesheet('button', 'img/button.png', 120, 40);
 	}
 	function create() {
-	    game.input.onTap.add(function () {
-	        renderText += "1";
-	    });
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    tower1 = new Tower(game.world.width * 0.1, game.world.height * 0.5);
-	    soldiers = game.add.group();
-	    for (var i = 0; i < 10; i++) {
-	        soldiers.add(new Soldier(tower1.x, tower1.y));
-	    }
-	    game.add.existing(tower1);
+	    tower1.ownerId = 1;
+	    tower2 = new Tower(game.world.width * 0.9, game.world.height * 0.5);
+	    tower2.ownerId = 2;
 	    var startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
 	    function ready() {
 	        socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
