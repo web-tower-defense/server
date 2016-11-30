@@ -6,6 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var game;
 var socket;
+var renderText = "init";
 var GameInfo = (function () {
     function GameInfo() {
     }
@@ -26,6 +27,8 @@ var Tower = (function (_super) {
                 _this.isSelected = !_this.isSelected;
             }
             else {
+                weapon.fireAngle = game.physics.arcade.angleBetween(tower1, tower2);
+                weapon.fire();
             }
             console.log('select tower: ' + _this.isSelected);
         });
@@ -54,6 +57,11 @@ function create() {
     tower1.ownerId = 1;
     tower2 = new Tower(game.world.width * 0.9, game.world.height * 0.5);
     tower2.ownerId = 2;
+    weapon = game.add.weapon(30, 'ball');
+    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    weapon.bulletSpeed = 100;
+    weapon.fireRate = 100;
+    weapon.trackSprite(tower1, 0, 0, false);
     var startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
     function ready() {
         socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
@@ -66,7 +74,6 @@ function update() {
     if (!GameInfo.isGameStart)
         return;
 }
-var renderText = "debug text";
 function render() {
     game.debug.text(renderText, 16, 24);
 }

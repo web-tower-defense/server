@@ -1,11 +1,16 @@
 var game:Phaser.Game;
 var socket: SocketIOClient.Socket;
+var renderText = "init";
 class GameInfo{
   public static isGameStart:boolean = false;
   public static playerId:number
   public static roomName:string
 }
-
+// class Weapon extends Phaser.Weapon{
+//   constructor(){
+//     super(game, game.plugins);
+//   }
+// }
 class Tower extends Phaser.Sprite{
   public level: number;
   public ownerId: number;
@@ -22,8 +27,8 @@ class Tower extends Phaser.Sprite{
       if(this.ownerId===GameInfo.playerId){
         this.isSelected = !this.isSelected;
       }else{
-        //send soldiers to here;
-        //for every tower selected, send soldiers here;
+        weapon.fireAngle = game.physics.arcade.angleBetween(tower1, tower2);
+        weapon.fire();
       }
       console.log('select tower: '+this.isSelected);
     });
@@ -40,7 +45,7 @@ class Tower extends Phaser.Sprite{
 // var towers:Tower[] = [];
 var tower1:Tower;
 var tower2:Tower;
-var weapon;
+var weapon:Phaser.Weapon;
 function preload() {
   //init socket
   bindSocketEvent();
@@ -67,8 +72,13 @@ function create() {
 
   tower2 = new Tower(game.world.width*0.9, game.world.height*0.5);
   tower2.ownerId = 2;
-
   //--------------------------------------
+  //weapon
+  weapon = game.add.weapon(30, 'ball');
+  weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+  weapon.bulletSpeed = 100;
+  weapon.fireRate = 100;
+  weapon.trackSprite(tower1, 0, 0, false);
   //add tower so it can be render at the top
   // tower1.visible = false;
   //set ready btn
@@ -86,7 +96,6 @@ function update() {
   if(!GameInfo.isGameStart)return;
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
-var renderText:string = "debug text";
 function render () {
   game.debug.text(renderText, 16,24);
 
