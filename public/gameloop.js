@@ -1,20 +1,52 @@
 var game_data={};
 var loop_times=0;
-function game_update(){
-	loop_times++;
-	//alert("game_update");
-	//if(camera.position.x < 200 )camera.position.x += 1;
+var command_timer=0;
+var Command_data=function(roomName,commands,loop_times){
+	this.roomName=roomName;
+	this.commands=commands;
+	this.loop_times=loop_times;
+}
+function handle_commands(){
 	for(var i = 0; i < game_data.commands.length; i++){
 		game_data.buildings[game_data.commands[i].selected].target=game_data.commands[i].target;
 		console.log("command:"+game_data.commands[i].selected+","+game_data.commands[i].target);
 	}
 	game_data.commands=[];
+}
+function sent_commands(){
+	var data=new Command_data(game_data.roomName,game_data.commands,loop_times);
+	game_data.socket.emit('game_command',data);
+	game_data.commands=[];
+}
+socket.on('game_command', function(data) {
+	console.log('get game_command:'+data.length);
+	if(data.length!==0)game_data.web_commands=data;
+});
+function handle_web_commands(){
+	for(var i = 0; i < game_data.web_commands.length; i++){
+		game_data.buildings[game_data.web_commands[i].selected].target=game_data.web_commands[i].target;
+		console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
+	}
+	game_data.web_commands=[];
+}
+function game_update(){
+	loop_times++;
+
+	if(command_timer===1){
+		sent_commands();
+	}
+	if(command_timer===20){
+		handle_web_commands();
+		command_timer=0;
+	}
+	command_timer++;
+
+	//handle_commands();
+
 	for(var i = 0; i < game_data.buildings.length; i++){
 		//console.log(game_data.buildings[i].name);
 		//console.log(game_data.buildings[i].owner);
-		if(loop_times%4==0){
-			game_data.buildings[i].sent_unit();
-		}
+		game_data.buildings[i].sent_unit();
 		if(loop_times%10==0)game_data.buildings[i].update();
 			game_data.buildings[i].draw();
 		//console.log("building "+game_data.buildings[i].unitID+" unit : "+game_data.buildings[i].curUnit);
@@ -38,6 +70,7 @@ function game_init(){
 	game_data.units=[];
 	game_data.buildings=[];
 	game_data.commands=[];
+	game_data.web_commands=[];
 }
 function main_loop() {
 	console.log("mainloop start");

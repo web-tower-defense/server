@@ -8,6 +8,7 @@ function Building(){
 	this.mesh = 0;
 	this.textMesh = 0;
 	this.target=-1;
+	this.sent_unit_timer=0;
 	this.pos=new Pos(0,0,0);
 	this.path=[];
 	this.prev_str="";
@@ -46,8 +47,10 @@ Building.prototype.draw = function(){
 }
 Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
-	if(this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
+	if(this.sent_unit_timer>0)this.sent_unit_timer--;
+	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
 		this.curUnit--;
+		this.sent_unit_timer=4;
 		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target);
 		if(this.target>this.unitID){
 			unit.a=this.target;
@@ -57,7 +60,7 @@ Building.prototype.sent_unit = function(){
 			unit.a=this.unitID;
 		}
 		game_data.units.push(unit);
-		console.log("Building.prototype.sent_unit");
+		//console.log("Building.prototype.sent_unit");
 		//console.log("pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());
 	}else{
 		//console.log("Building.prototype.sent_unit fail");

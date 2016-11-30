@@ -125,10 +125,10 @@ socket.on('respondClientCreateNewRoomEvent', function(data) {
 socket.on('resetRooms',roomSystem.resetRooms);
 socket.on('roommateDisconnect',function(roomName){
 })
-socket.on('gameInit', function(data){
+socket.on('gameInit', function(roomName){
   while(document.body.firstChild){
     document.body.removeChild(document.body.firstChild);
   }
-  init(socket);
+  init(socket,roomName);
 })
 roomSystem.init();

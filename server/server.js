@@ -1,8 +1,10 @@
 var app = require('../app');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
-
+var Game_data=function(){
+	this.room_command=[];
+}
+var game_data=new Game_data();
 var fullRooms = [];
 io.on('connection', function(socket){
 	function getRoomsData () {
@@ -18,7 +20,8 @@ io.on('connection', function(socket){
 	socket.on('joinRoomEvent',function(roomName){
 		socket.join(roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
-		io.to(roomName).emit('gameInit', io.sockets.adapter.rooms[roomName]);
+		//io.sockets.adapter.rooms[roomName]
+		io.to(roomName).emit('gameInit',roomName);
 
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
@@ -43,8 +46,23 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		io.sockets.emit('resetRooms',getRoomsData());
 	})
-	socket.on('gameInit', function(){
-		console.log('socket successful passed');
+	socket.on('gameInit', function(test){
+		console.log('socket successful passed:'+test);
+	})
+	socket.on('game_command', function(data){
+		if(data.commands.length!==0)console.log('game_command room:'+
+		data.roomName+",length:"+data.commands.length);
+		if(game_data.room_command[data.roomName]===undefined){
+			game_data.room_command[data.roomName]=0;
+		}
+		if(game_data.room_command[data.roomName]===0){
+			game_data.room_command[data.roomName]=data.commands;
+		}else{
+			game_data.room_command[data.roomName].concat(data.commands);
+			io.to(data.roomName).emit('game_command',game_data.room_command[data.roomName]);
+			//console.log('sent_game_commands:'+game_data.room_command[data.roomName].length);
+			game_data.room_command[data.roomName]=0;
+		}
 	})
 });
 
