@@ -7,7 +7,8 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var currentlyPressedKeys = {};//new Array(300);
 
-function init() {
+function init(socket) {
+	socket.emit('gameInit');
 	container = document.createElement( 'div' );
 	container.className='game';
 	document.body.appendChild( container );

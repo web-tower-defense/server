@@ -20,17 +20,17 @@ var roomSystem = {
       }
     }
     for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
-			var room = this.roomsDiv.children[i];
-			if(room.lastChild.className==='join-room-btn'){
-				room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
-			}
+      var room = this.roomsDiv.children[i];
+      if(room.lastChild.className==='join-room-btn'){
+        room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
+      }
     }
   },
   //below are onclick events
   joinRoomEvent: function(roomName) {
     socket.emit('joinRoomEvent',roomName);
-		this.showWaitingDivAndHideMainDiv(true);
-		this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
+    this.showWaitingDivAndHideMainDiv(true);
+    this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
   },
   createNewRoomEvent: function() {
     var roomName = this.createNewRoomInput.value;
@@ -41,24 +41,24 @@ var roomSystem = {
       this.showMessageDiv('Name must shorter than 18!')
     } else {
       socket.emit('clientCreateNewRoomEvent', roomName);
-			this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
+      this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
     }
   },
   cancelCreateNewRoomEvent: function(roomName) {
     //cancel create new room
     this.hideWaitingDivAndShowMainDiv();
-		socket.emit('cancelCreateNewRoomEvent',roomName);
+    socket.emit('cancelCreateNewRoomEvent',roomName);
   },
   //below are useful function
-	resetRooms: function (rooms) {
-		while(roomSystem.roomsDiv.firstChild){
-			roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
-		}
-	  for (room in rooms) {
-	    roomSystem.appendNewRoom(room, rooms[room]);
-	  }
-		roomSystem.bindEvents();
-	},
+  resetRooms: function (rooms) {
+    while(roomSystem.roomsDiv.firstChild){
+      roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
+    }
+    for (room in rooms) {
+      roomSystem.appendNewRoom(room, rooms[room]);
+    }
+    roomSystem.bindEvents();
+  },
   appendNewRoom: function(roomName, isFull) {
     var roomDiv = document.createElement('div');
     roomDiv.setAttribute('class', 'room-div');
@@ -113,14 +113,14 @@ var roomSystem = {
 socket.on('respondClientCreateNewRoomEvent', function(data) {
   if (data.isHost) {
     if (data.nameRepeat) {
-			roomSystem.showMessageDiv('this name is already used');
+      roomSystem.showMessageDiv('this name is already used');
     } else {
-			roomSystem.showWaitingDivAndHideMainDiv();
+      roomSystem.showWaitingDivAndHideMainDiv();
     }
   }
-	else{
-		roomSystem.resetRooms(data.rooms);
-	}
+  else{
+    roomSystem.resetRooms(data.rooms);
+  }
 });
 socket.on('resetRooms',roomSystem.resetRooms);
 socket.on('roommateDisconnect',function(roomName){
@@ -129,6 +129,6 @@ socket.on('gameInit', function(data){
   while(document.body.firstChild){
     document.body.removeChild(document.body.firstChild);
   }
-	init();
+  init(socket);
 })
 roomSystem.init();

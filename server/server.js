@@ -42,6 +42,9 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		io.sockets.emit('resetRooms',getRoomsData());
 	})
+	socket.on('gameInit', function(){
+		console.log('socket successful passed');
+	})
 });
 
 module.exports=http;
