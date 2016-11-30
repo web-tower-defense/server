@@ -1,6 +1,10 @@
 var game:Phaser.Game;
 var socket: SocketIOClient.Socket;
 var renderText = "init";
+var towers:Tower[][] = [];
+var tower1:Tower;
+var tower2:Tower;
+var weapon:Phaser.Weapon;
 class GameInfo{
   public static isGameStart:boolean = false;
   public static playerId:number
@@ -39,13 +43,7 @@ class Tower extends Phaser.Sprite{
 
 }
 
-//Entities;
-// var ball:Phaser.Sprite;
-// var paddle1,paddle2:Phaser.Sprite;
-// var towers:Tower[] = [];
-var tower1:Tower;
-var tower2:Tower;
-var weapon:Phaser.Weapon;
+
 function preload() {
   //init socket
   bindSocketEvent();
@@ -53,7 +51,7 @@ function preload() {
   game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
   game.scale.pageAlignHorizontally = true;
   game.scale.pageAlignVertically = true;
-  game.stage.backgroundColor = '#eee';
+  game.stage.backgroundColor = '#efe';
   game.stage.disableVisibilityChange= true;
   //images
   game.load.image('ball', 'img/ball.png')

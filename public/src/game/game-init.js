@@ -7,6 +7,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 var game;
 var socket;
 var renderText = "init";
+var towers = [];
+var tower1;
+var tower2;
+var weapon;
 var GameInfo = (function () {
     function GameInfo() {
     }
@@ -37,15 +41,12 @@ var Tower = (function (_super) {
     }
     return Tower;
 }(Phaser.Sprite));
-var tower1;
-var tower2;
-var weapon;
 function preload() {
     bindSocketEvent();
     game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = '#eee';
+    game.stage.backgroundColor = '#efe';
     game.stage.disableVisibilityChange = true;
     game.load.image('ball', 'img/ball.png');
     game.load.image('brown-tower', 'img/brown-tower.png');
