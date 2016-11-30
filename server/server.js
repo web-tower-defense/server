@@ -64,10 +64,12 @@ function socketHandler(socket) {
     });
     socket.on('readyToStartGame', function (roomName, playerId) {
         fullRooms[roomName].player[playerId].isReadyToStartGame = true;
-        console.log(fullRooms[roomName].isBothPlayerReady());
         if (fullRooms[roomName].isBothPlayerReady()) {
             io.to(roomName).emit('startGame');
         }
+    });
+    socket.on('updateMouseY', function (roomName, playerId, inputY) {
+        io.to(roomName).emit('updateMouseY', playerId, inputY);
     });
     socket.on('disconnect', function () {
         for (var roomName in fullRooms) {

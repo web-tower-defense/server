@@ -8,7 +8,7 @@ sass = require('gulp-ruby-sass');
 gulp.task('webpack', function() {
   return gulp.src('./public/src/entry.js')
   .pipe(webpack(require('./webpack.config')))
-  .pipe(gulp.dest('./public'));
+  .pipe(gulp.dest('./public')).pipe(livereload());
 });
 gulp.task('sass', function () {
   return sass('./public/css/**/*.scss')
@@ -26,8 +26,8 @@ gulp.task('develop', function () {
   nodemon({
     script: 'bin/www',
     ext: 'js jade coffee',
-    ignore: ['public/src/**/*.js'],
-    stdout: false
+    stdout: false,
+    ignore:['public/**/*.js']
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
       if(/^Express server listening on port/.test(chunk)){

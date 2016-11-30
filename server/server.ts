@@ -70,11 +70,13 @@ function socketHandler(socket){
 	// during game
 	socket.on('readyToStartGame', (roomName, playerId)=>{
 		fullRooms[roomName].player[playerId].isReadyToStartGame = true;
-		console.log(fullRooms[roomName].isBothPlayerReady());
 		if(fullRooms[roomName].isBothPlayerReady()){
 
 			io.to(roomName).emit('startGame');
 		}
+	})
+	socket.on('updateMouseY', (roomName, playerId, inputY)=>{
+		io.to(roomName).emit('updateMouseY', playerId, inputY);
 	})
 	// outside the room
 	socket.on('disconnect', function(){
