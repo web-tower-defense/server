@@ -7,9 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var game;
 var socket;
 var renderText = "init";
-var towers = [];
-var tower1;
-var tower2;
+var towers;
 var weapon;
 var GameInfo = (function () {
     function GameInfo() {
@@ -17,28 +15,44 @@ var GameInfo = (function () {
     return GameInfo;
 }());
 GameInfo.isGameStart = false;
+GameInfo.MAX_PLAYERS = 3;
 var Tower = (function (_super) {
     __extends(Tower, _super);
-    function Tower(x, y) {
+    function Tower(x, y, ownerId) {
         var _this = _super.call(this, game, x, y, 'brown-tower') || this;
+        _this.ownerId = ownerId;
         _this.isSelected = false;
         game.physics.enable(_this, Phaser.Physics.ARCADE);
         _this.body.immovable = true;
         _this.anchor.set(0.5);
         _this.inputEnabled = true;
-        _this.events.onInputDown.add(function () {
-            if (_this.ownerId === GameInfo.playerId) {
-                _this.isSelected = !_this.isSelected;
-            }
-            else {
-                weapon.fireAngle = game.physics.arcade.angleBetween(tower1, tower2);
-                weapon.fire();
-            }
-            console.log('select tower: ' + _this.isSelected);
-        });
+        _this.events.onInputDown.add(Tower.onClickEvent, _this);
         game.add.existing(_this);
         return _this;
     }
+    Tower.changeOwner = function (tower, newOwnerId) {
+        tower.ownerId = newOwnerId;
+    };
+    Tower.onClickEvent = function (towerClicked) {
+        if (towerClicked.ownerId === GameInfo.playerId) {
+            towerClicked.isSelected = !towerClicked.isSelected;
+        }
+        else {
+            for (var i = 0; i < towers.children.length; i++) {
+                var tower = towers.getChildAt(i);
+                if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
+                    tower.fire(towerClicked);
+                }
+            }
+        }
+    };
+    Tower.prototype.fire = function (targetTower) {
+        weapon.trackSprite(this, 0, 0, false);
+        this.isSelected = false;
+        weapon.fireAngle = game.physics.arcade.angleBetween(this, targetTower);
+        weapon.fire();
+        console.log('tower' + this.ownerId + " fire to " + targetTower.ownerId);
+    };
     return Tower;
 }(Phaser.Sprite));
 function preload() {
@@ -46,7 +60,7 @@ function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = '#efe';
+    game.stage.backgroundColor = '#eee';
     game.stage.disableVisibilityChange = true;
     game.load.image('ball', 'img/ball.png');
     game.load.image('brown-tower', 'img/brown-tower.png');
@@ -54,15 +68,14 @@ function preload() {
 }
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    tower1 = new Tower(game.world.width * 0.1, game.world.height * 0.5);
-    tower1.ownerId = 1;
-    tower2 = new Tower(game.world.width * 0.9, game.world.height * 0.5);
-    tower2.ownerId = 2;
+    towers = game.add.group();
+    towers.classType = Tower;
+    towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1));
+    towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2));
     weapon = game.add.weapon(30, 'ball');
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     weapon.bulletSpeed = 100;
     weapon.fireRate = 100;
-    weapon.trackSprite(tower1, 0, 0, false);
     var startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
     function ready() {
         socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
