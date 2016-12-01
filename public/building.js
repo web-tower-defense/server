@@ -56,7 +56,7 @@ Building.prototype.sent_unit = function(){
 	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
 		this.curUnit--;
 		this.sent_unit_timer=4;
-		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target);
+		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,0.6);
 		if(this.target>this.unitID){
 			unit.a=this.target;
 			unit.b=this.unitID;

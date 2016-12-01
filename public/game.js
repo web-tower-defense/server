@@ -6,7 +6,9 @@ var mouse = new THREE.Vector2(), cur_intersected, prev_intersected, intersected_
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var currentlyPressedKeys = {};//new Array(300);
+function aiGameInit() {
 
+}
 function init(socket,roomName) {
 	game_data.socket=socket;
 	game_data.roomName=roomName;

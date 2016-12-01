@@ -44,11 +44,9 @@ function handle_web_commands(){
 }
 function game_update(){
 
-	command_timer++;
-	if(command_timer===1){
-		sent_commands();
-	}
-	if(command_timer>=5){
+
+
+	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){
 				console.log("game paused");
@@ -59,7 +57,10 @@ function game_update(){
 			command_timer=0;
 		}
 	}
-
+	if(command_timer===0){
+		sent_commands();
+	}
+	command_timer++;
 
 	if(pause_game){
 		return;
@@ -98,5 +99,5 @@ function game_init(){
 function main_loop() {
 	console.log("mainloop start");
 	game_init();
-	var timer = setInterval(game_update,50);
+	var timer = setInterval(game_update,40);
 }

@@ -19,7 +19,7 @@ var roomSystem = {
         roomSystem.createNewRoomEvent();
       }
     }
-    this.roomsDiv.firstChild.onclick = aiGameInit;
+    //this.roomsDiv.firstChild.onclick = new aiGameInit;
     for (var i = 1; i < this.roomsDiv.childElementCount; i++) {
       var room = this.roomsDiv.children[i];
       if(room.lastChild.className==='join-room-btn'){

@@ -21,7 +21,7 @@ Pos.prototype.unit_vec=function(){
 	return pos;
 }
 
-function Unit(x,y,z,_owner,_target){
+function Unit(x,y,z,_owner,_target,vel){
 	this.die=false;
 	this.owner = _owner;
 	if(this.owner==0){
@@ -39,6 +39,7 @@ function Unit(x,y,z,_owner,_target){
 	this.pos=new Pos(x,y,z);
 	this.a=0;
 	this.b=0;
+	this.vel=vel;
 	this.target_pos=game_data.buildings[this.target].pos;
 }
 Unit.prototype.check_collision = function(){
@@ -72,7 +73,7 @@ Unit.prototype.update = function(){
 	}else{
 		//console.log("unit dis="+del.len());
 	}
-	this.pos=this.pos.add((del.unit_vec()).mult(1.0));
+	this.pos=this.pos.add((del.unit_vec()).mult(this.vel));
 	this.check_collision();
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());

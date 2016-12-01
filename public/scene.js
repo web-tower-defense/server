@@ -1,6 +1,6 @@
 
 function initScene(){
-	var path = "textures/cube/skybox2/";
+	var path = "textures/cube/skybox/";
 	var format = '.jpg';
 	var urls = [
 			path + 'px' + format, path + 'nx' + format,

@@ -22,8 +22,7 @@
             "curUnit": 10,
             "maxUnit": 100,
             "position": [5,10]
-        },
-		{
+        },{
             "name": "base",
             "id": 1,
       			"owner": 0,
@@ -32,11 +31,16 @@
             "position": [9,10]
         },{
             "name": "base",
-            "id": 2,
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
             "position": [13,10]
+        },{
+            "name": "base",
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [7,10]
         }
     ],
     "paths":
