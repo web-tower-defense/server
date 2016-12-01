@@ -1,5 +1,6 @@
 "use strict";
 var game_init_1 = require("./game/game-init");
+var ai_game_init_1 = require("./game/ai-game-init");
 function startRoomSystem(socket) {
     var roomSystem = {
         init: function () {
@@ -21,6 +22,7 @@ function startRoomSystem(socket) {
                     roomSystem.createNewRoomEvent();
                 }
             };
+            this.roomsDiv.firstChild.onclick = ai_game_init_1.default.bind(null, 1, socket, 'play with ai');
             for (var i = 1; i < this.roomsDiv.childElementCount; i++) {
                 var room = this.roomsDiv.children[i];
                 if (room.lastChild.className === 'join-room-btn') {
