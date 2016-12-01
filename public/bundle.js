@@ -77,7 +77,7 @@
 	                    roomSystem.createNewRoomEvent();
 	                }
 	            };
-	            for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
+	            for (var i = 1; i < this.roomsDiv.childElementCount; i++) {
 	                var room = this.roomsDiv.children[i];
 	                if (room.lastChild.className === 'join-room-btn') {
 	                    room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
@@ -111,6 +111,7 @@
 	            while (roomSystem.roomsDiv.firstChild) {
 	                roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
 	            }
+	            roomSystem.appendNewRoom('Play with AI', false);
 	            for (var room in rooms) {
 	                roomSystem.appendNewRoom(room, rooms[room]);
 	            }

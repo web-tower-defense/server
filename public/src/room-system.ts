@@ -20,7 +20,7 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 	        roomSystem.createNewRoomEvent();
 	      }
 	    }
-	    for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
+	    for (var i = 1; i < this.roomsDiv.childElementCount; i++) {
 				var room = this.roomsDiv.children[i];
 				if(room.lastChild.className==='join-room-btn'){
 					room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
@@ -52,9 +52,11 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 	  },
 	  //below are useful function
 		resetRooms: function (rooms) {
+
 			while(roomSystem.roomsDiv.firstChild){
 				roomSystem.roomsDiv.removeChild(roomSystem.roomsDiv.firstChild);
 			}
+			roomSystem.appendNewRoom('Play with AI', false);
 		  for (let room in rooms) {
 		    roomSystem.appendNewRoom(room, rooms[room]);
 		  }
