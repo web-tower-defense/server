@@ -19,18 +19,29 @@ class Tower extends Phaser.Sprite {
   public soldiers: number;
   public maxSoldiers: number;
   private isSelected: boolean = false;
-  constructor(x: number, y: number, public ownerId: number) {
+  private renderText:Phaser.Text;
+
+  public constructor(x: number, y: number, public ownerId: number) {
     super(game, x, y, 'brown-tower');
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.immovable = true;
     this.anchor.set(0.5);
     this.inputEnabled = true;
     this.events.onInputDown.add(Tower.onClickEvent, this);
-    game.add.existing(this);
+    this.renderText = game.add.text(this.x, this.y+this.height*2/3, "test", {
+      font: '14px Arial',
+      fontWeight: '100',
+      align:'center'
 
+    });
+    this.renderText.anchor.set(0.5);
+    game.add.existing(this);
   }
   public static changeOwner(tower: Tower, newOwnerId: number) {
     tower.ownerId = newOwnerId;
+  }
+  public static onOverlapWithBullet(tower:Tower,bullet:Phaser.Bullet){
+
   }
   private static onClickEvent(towerClicked: Tower) {
     if (towerClicked.ownerId === GameInfo.playerId) {
@@ -45,11 +56,19 @@ class Tower extends Phaser.Sprite {
     }
   }
   private fire(targetTower: Tower) {
-    weapon.trackSprite(this, 0, 0, false);
     this.isSelected=false;
-    weapon.fireAngle = game.physics.arcade.angleBetween(this, targetTower);
-    weapon.fire();
+    // weapon.fireAngle = game.physics.arcade.angleBetween(this, targetTower);
+    weapon.bulletSpeed = 500;
+    weapon.trackSprite(this);
+    weapon.fireAtSprite(targetTower);
     console.log('tower'+this.ownerId+" fire to "+targetTower.ownerId);
+  }
+  public updateRenderText(){
+    this.renderText.setText(
+      "ownerId:"+this.ownerId+"\n"+
+      "isSelected:"+this.isSelected+"\n"+
+      "soldiers:"+this.soldiers
+    )
   }
 }
 
@@ -77,34 +96,40 @@ function create() {
   //tower
   towers = game.add.group();
   towers.classType = Tower;
-  towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1));
-  towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2));
+  towers.add(new Tower(game.world.width * 0.2, game.world.height * 0.3, 1));
+  towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.7, 2));
   //--------------------------------------
   //weapon
   weapon = game.add.weapon(30, 'ball');
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-  weapon.bulletSpeed = 100;
-  weapon.fireRate = 100;
 
   //add tower so it can be render at the top
   // tower1.visible = false;
   //set ready btn
-  let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
-  function ready() {
-    socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
-    startButton.destroy();
-    renderText = "you are ready, now waiting the other";
-  }
-  startButton.anchor.set(0.5);
-
+  // TODO: delte this after devmode
+  socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
+  //un comment this to there
+  //          let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
+  //          function ready() {
+  //            socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
+  //            startButton.destroy();
+  //            renderText = "you are ready, now waiting the other";
+  //          }
+  //          startButton.anchor.set(0.5);
+  // there
 
 }
 function update() {
   if (!GameInfo.isGameStart) return;
+  towers.forEach((tower:Tower)=>{
+    tower.updateRenderText();
+  }, null)
+  game.physics.arcade.overlap(towers, weapon.bullets, Tower.onOverlapWithBullet);
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
 function render() {
-  game.debug.text(renderText, 16, 24);
+  game.debug.text('you are player:'+GameInfo.playerId, 16, 24);
+  game.debug.text(renderText, 16, 48);
 
 }
 function bindSocketEvent() {
