@@ -156,6 +156,7 @@ function handleMouseUp(){
 				}
 		}
 		if(target_id!==-1)game_data.commands.push(new Command(seleted_id,target_id));
+		console.log("Sent : "+seleted_id+" to "+target_id);
 	}
 
 
@@ -164,7 +165,7 @@ function handleMouseUp(){
 	dragTarget = cur_intersected;
 	if(dragSource!==undefined&&dragTarget!==undefined){
 		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
-	}	
+	}
 	if(dragTarget === dragSource){
 		clickObject(dragSource);
 	}

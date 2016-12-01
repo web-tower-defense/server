@@ -32,7 +32,7 @@ socket.on('game_command', function(data) {
 function handle_web_commands(){
 	if(data_receive==0){
 		console.log("no data receive yet");
-		return 0;
+		return false;
 	}
 	for(var i = 0; i < game_data.web_commands.length; i++){
 		game_data.buildings[game_data.web_commands[i].selected].target=game_data.web_commands[i].target;
@@ -40,10 +40,10 @@ function handle_web_commands(){
 	}
 	game_data.web_commands=[];
 	data_receive=0;
-	return 1;
+	return true;
 }
 function game_update(){
-	loop_times++;
+
 	command_timer++;
 	if(command_timer===1){
 		sent_commands();
@@ -65,12 +65,12 @@ function game_update(){
 		return;
 	}
 	//handle_commands();
-
+	loop_times++;
 	for(var i = 0; i < game_data.buildings.length; i++){
 		//console.log(game_data.buildings[i].name);
 		//console.log(game_data.buildings[i].owner);
-		game_data.buildings[i].sent_unit();
-		if(loop_times%10==0)game_data.buildings[i].update();
+			game_data.buildings[i].sent_unit();
+			game_data.buildings[i].update();
 			game_data.buildings[i].draw();
 		//console.log("building "+game_data.buildings[i].unitID+" unit : "+game_data.buildings[i].curUnit);
 		}

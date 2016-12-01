@@ -9,12 +9,17 @@ function Building(){
 	this.textMesh = 0;
 	this.target=-1;
 	this.sent_unit_timer=0;
+	this.recruit_timer=0;
 	this.pos=new Pos(0,0,0);
 	this.path=[];
 	this.prev_str="";
 }
 Building.prototype.update = function(){
-	this.grow();
+	this.recruit_timer++;
+	if(this.recruit_timer>10){
+		this.recruit_timer=0;
+		this.grow();
+	}
 }
 Building.prototype.grow = function(){
 	if(this.curUnit < this.maxUnit&&this.owner>0){

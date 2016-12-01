@@ -58,7 +58,8 @@ io.on('connection', function(socket){
 		if(game_data.room_command[data.roomName]===0){
 			game_data.room_command[data.roomName]=data.commands;
 		}else{
-			game_data.room_command[data.roomName].concat(data.commands);
+			game_data.room_command[data.roomName]=
+				game_data.room_command[data.roomName].concat(data.commands);
 			io.to(data.roomName).emit('game_command',game_data.room_command[data.roomName]);
 			//console.log('sent_game_commands:'+game_data.room_command[data.roomName].length);
 			game_data.room_command[data.roomName]=0;
