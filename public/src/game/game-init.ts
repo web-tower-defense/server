@@ -2,7 +2,7 @@ var game: Phaser.Game;
 var socket: SocketIOClient.Socket;
 var renderText = "init";
 var towers: Phaser.Group;
-var weapon: Phaser.Weapon;
+var balloons: Phaser.Group;
 class GameInfo {
   public static isGameStart: boolean = false;
   public static playerId: number
@@ -41,7 +41,7 @@ class Tower extends Phaser.Sprite {
     tower.ownerId = newOwnerId;
   }
   public static onOverlapWithBullet(tower:Tower,bullet:Phaser.Bullet){
-
+    console.log(tower.ownerId);
   }
   private static onClickEvent(towerClicked: Tower) {
     if (towerClicked.ownerId === GameInfo.playerId) {
@@ -57,10 +57,14 @@ class Tower extends Phaser.Sprite {
   }
   private fire(targetTower: Tower) {
     this.isSelected=false;
-    // weapon.fireAngle = game.physics.arcade.angleBetween(this, targetTower);
-    weapon.bulletSpeed = 500;
-    weapon.trackSprite(this);
-    weapon.fireAtSprite(targetTower);
+
+    let balloon = balloons.getFirstDead() as Balloon;
+    if(!balloon){
+      balloon = new Balloon();
+      balloons.add(balloon);
+    }
+    balloon.position = this.position;
+    balloon.revive();
     console.log('tower'+this.ownerId+" fire to "+targetTower.ownerId);
   }
   public updateRenderText(){
@@ -69,6 +73,17 @@ class Tower extends Phaser.Sprite {
       "isSelected:"+this.isSelected+"\n"+
       "soldiers:"+this.soldiers
     )
+  }
+}
+class Balloon extends Phaser.Sprite{
+  public soldiers:number;
+  public ownerId:number;
+  constructor(){
+    super(game, 0,0,'ball');
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.anchor.set(0.5);
+    game.add.existing(this);
+    this.kill();
   }
 }
 
@@ -95,13 +110,11 @@ function create() {
   //put entity and enable its physics
   //tower
   towers = game.add.group();
-  towers.classType = Tower;
   towers.add(new Tower(game.world.width * 0.2, game.world.height * 0.3, 1));
   towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.7, 2));
+  //******
+  balloons = game.add.group();
   //--------------------------------------
-  //weapon
-  weapon = game.add.weapon(30, 'ball');
-  weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 
   //add tower so it can be render at the top
   // tower1.visible = false;
@@ -124,7 +137,7 @@ function update() {
   towers.forEach((tower:Tower)=>{
     tower.updateRenderText();
   }, null)
-  game.physics.arcade.overlap(towers, weapon.bullets, Tower.onOverlapWithBullet);
+  game.physics.arcade.overlap(towers, balloons, Tower.onOverlapWithBullet);
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
 function render() {

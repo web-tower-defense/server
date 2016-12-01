@@ -213,7 +213,7 @@
 	var socket;
 	var renderText = "init";
 	var towers;
-	var weapon;
+	var balloons;
 	var GameInfo = (function () {
 	    function GameInfo() {
 	    }
@@ -245,6 +245,7 @@
 	        tower.ownerId = newOwnerId;
 	    };
 	    Tower.onOverlapWithBullet = function (tower, bullet) {
+	        console.log(tower.ownerId);
 	    };
 	    Tower.onClickEvent = function (towerClicked) {
 	        if (towerClicked.ownerId === GameInfo.playerId) {
@@ -261,9 +262,13 @@
 	    };
 	    Tower.prototype.fire = function (targetTower) {
 	        this.isSelected = false;
-	        weapon.bulletSpeed = 500;
-	        weapon.trackSprite(this);
-	        weapon.fireAtSprite(targetTower);
+	        var balloon = balloons.getFirstDead();
+	        if (!balloon) {
+	            balloon = new Balloon();
+	            balloons.add(balloon);
+	        }
+	        balloon.position = this.position;
+	        balloon.revive();
 	        console.log('tower' + this.ownerId + " fire to " + targetTower.ownerId);
 	    };
 	    Tower.prototype.updateRenderText = function () {
@@ -272,6 +277,18 @@
 	            "soldiers:" + this.soldiers);
 	    };
 	    return Tower;
+	}(Phaser.Sprite));
+	var Balloon = (function (_super) {
+	    __extends(Balloon, _super);
+	    function Balloon() {
+	        var _this = _super.call(this, game, 0, 0, 'ball') || this;
+	        game.physics.enable(_this, Phaser.Physics.ARCADE);
+	        _this.anchor.set(0.5);
+	        game.add.existing(_this);
+	        _this.kill();
+	        return _this;
+	    }
+	    return Balloon;
 	}(Phaser.Sprite));
 	function preload() {
 	    bindSocketEvent();
@@ -287,11 +304,9 @@
 	function create() {
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    towers = game.add.group();
-	    towers.classType = Tower;
 	    towers.add(new Tower(game.world.width * 0.2, game.world.height * 0.3, 1));
 	    towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.7, 2));
-	    weapon = game.add.weapon(30, 'ball');
-	    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+	    balloons = game.add.group();
 	    socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
 	}
 	function update() {
@@ -300,7 +315,7 @@
 	    towers.forEach(function (tower) {
 	        tower.updateRenderText();
 	    }, null);
-	    game.physics.arcade.overlap(towers, weapon.bullets, Tower.onOverlapWithBullet);
+	    game.physics.arcade.overlap(towers, balloons, Tower.onOverlapWithBullet);
 	}
 	function render() {
 	    game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
