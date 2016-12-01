@@ -1,6 +1,8 @@
 var game_data={};
 var loop_times=0;
 var command_timer=0;
+var data_receive=0;
+var pause_game=false;
 var Command_data=function(roomName,commands,loop_times){
 	this.roomName=roomName;
 	this.commands=commands;
@@ -14,33 +16,54 @@ function handle_commands(){
 	game_data.commands=[];
 }
 function sent_commands(){
+
 	var data=new Command_data(game_data.roomName,game_data.commands,loop_times);
 	game_data.socket.emit('game_command',data);
 	game_data.commands=[];
 }
 socket.on('game_command', function(data) {
-	console.log('get game_command:'+data.length);
-	if(data.length!==0)game_data.web_commands=data;
+	if(data.length!==0)console.log('get game_command:'+data.length);
+
+  if(data_receive==0){
+		game_data.web_commands=data;
+		data_receive=1;
+	}
 });
 function handle_web_commands(){
+	if(data_receive==0){
+		console.log("no data receive yet");
+		return 0;
+	}
 	for(var i = 0; i < game_data.web_commands.length; i++){
 		game_data.buildings[game_data.web_commands[i].selected].target=game_data.web_commands[i].target;
 		console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
 	}
 	game_data.web_commands=[];
+	data_receive=0;
+	return 1;
 }
 function game_update(){
 	loop_times++;
-
+	command_timer++;
 	if(command_timer===1){
 		sent_commands();
 	}
-	if(command_timer===20){
-		handle_web_commands();
-		command_timer=0;
+	if(command_timer>=5){
+		if(!handle_web_commands()){
+			if(!pause_game){
+				console.log("game paused");
+				pause_game=true;
+			}
+		}else{
+			pause_game=false;
+			command_timer=0;
+		}
 	}
-	command_timer++;
 
+
+	if(pause_game){
+		return;
+	}
 	//handle_commands();
 
 	for(var i = 0; i < game_data.buildings.length; i++){

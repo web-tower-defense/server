@@ -162,7 +162,9 @@ function handleMouseUp(){
 
 	//console.log("up");
 	dragTarget = cur_intersected;
-	console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
+	if(dragSource!==undefined&&dragTarget!==undefined){
+		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
+	}	
 	if(dragTarget === dragSource){
 		clickObject(dragSource);
 	}
