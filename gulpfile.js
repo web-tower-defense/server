@@ -8,7 +8,8 @@ sass = require('gulp-ruby-sass');
 gulp.task('webpack', function() {
   return gulp.src('./public/src/entry.js')
   .pipe(webpack(require('./webpack.config')))
-  .pipe(gulp.dest('./public')).pipe(livereload());
+  .pipe(gulp.dest('./public'))
+  .pipe(livereload());
 });
 gulp.task('sass', function () {
   return sass('./public/css/**/*.scss')

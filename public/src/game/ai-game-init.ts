@@ -40,9 +40,6 @@ class Tower extends Phaser.Sprite {
   public static changeOwner(tower: Tower, newOwnerId: number) {
     tower.ownerId = newOwnerId;
   }
-  public static onOverlapWithBalloon(tower:Tower,bullet:Phaser.Bullet){
-    console.log("hello"+tower.ownerId);
-  }
   private static onClickEvent(towerClicked: Tower) {
     if (towerClicked.ownerId === GameInfo.playerId) {
       towerClicked.isSelected = !towerClicked.isSelected;
@@ -64,6 +61,7 @@ class Tower extends Phaser.Sprite {
       balloons.add(balloon);
     }
     balloon.revive();
+    balloon.soldiersNum = 3;
     balloon.x = this.x;
     balloon.y = this.y;
     let moveDuration = game.physics.arcade.distanceBetween(this, targetTower)*10;//distance equals 100-300
@@ -71,6 +69,14 @@ class Tower extends Phaser.Sprite {
       x: targetTower.x,
       y: targetTower.y
     }, moveDuration, null, true);
+    moveTween.onComplete.add((a:Balloon,b:Phaser.Tween,c,d,e)=>{
+      console.log('a '+a.soldiersNum);
+      console.log('b '+b.delay);
+      console.log('c '+c);
+      console.log('d '+d);
+      console.log('e '+e);
+
+    }, this, 1, 2, 3,4,5);
 
   }
   public updateRenderText(){
@@ -82,7 +88,7 @@ class Tower extends Phaser.Sprite {
   }
 }
 class Balloon extends Phaser.Sprite{
-  public soldiers:number;
+  public soldiersNum:number;
   public ownerId:number;
   constructor(){
     super(game, 0,0,'ball');
@@ -142,7 +148,6 @@ function update() {
   towers.forEach((tower:Tower)=>{
     tower.updateRenderText();
   }, null)
-  game.physics.arcade.overlap(towers, balloons, Tower.onOverlapWithBalloon);
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
 function render() {
@@ -166,7 +171,6 @@ function bindSocketEvent() {
   })
 }
 export default function gameInit(playerId: number, soc: SocketIOClient.Socket, roomName: string) {
-  console.log('ai mode');
   while(document.body.firstChild){
     document.body.removeChild(document.body.firstChild);
   }

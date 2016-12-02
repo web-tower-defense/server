@@ -39,9 +39,6 @@ var Tower = (function (_super) {
     Tower.changeOwner = function (tower, newOwnerId) {
         tower.ownerId = newOwnerId;
     };
-    Tower.onOverlapWithBalloon = function (tower, bullet) {
-        console.log("hello" + tower.ownerId);
-    };
     Tower.onClickEvent = function (towerClicked) {
         if (towerClicked.ownerId === GameInfo.playerId) {
             towerClicked.isSelected = !towerClicked.isSelected;
@@ -63,6 +60,7 @@ var Tower = (function (_super) {
             balloons.add(balloon);
         }
         balloon.revive();
+        balloon.soldiersNum = 3;
         balloon.x = this.x;
         balloon.y = this.y;
         var moveDuration = game.physics.arcade.distanceBetween(this, targetTower) * 10;
@@ -70,6 +68,13 @@ var Tower = (function (_super) {
             x: targetTower.x,
             y: targetTower.y
         }, moveDuration, null, true);
+        moveTween.onComplete.add(function (a, b, c, d, e) {
+            console.log('a ' + a.soldiersNum);
+            console.log('b ' + b.delay);
+            console.log('c ' + c);
+            console.log('d ' + d);
+            console.log('e ' + e);
+        }, this, 1, 2, 3, 4, 5);
     };
     Tower.prototype.updateRenderText = function () {
         this.renderText.setText("ownerId:" + this.ownerId + "\n" +
@@ -113,7 +118,6 @@ function update() {
     towers.forEach(function (tower) {
         tower.updateRenderText();
     }, null);
-    game.physics.arcade.overlap(towers, balloons, Tower.onOverlapWithBalloon);
 }
 function render() {
     game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
@@ -133,7 +137,6 @@ function bindSocketEvent() {
     });
 }
 function gameInit(playerId, soc, roomName) {
-    console.log('ai mode');
     while (document.body.firstChild) {
         document.body.removeChild(document.body.firstChild);
     }
