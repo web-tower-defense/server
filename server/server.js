@@ -18,10 +18,12 @@ io.on('connection', function(socket){
 	}
 	socket.emit('resetRooms',getRoomsData());
 	socket.on('joinRoomEvent',function(roomName){
+		var data = io.sockets.adapter.rooms[roomName];
+		data.name = roomName;
 		socket.join(roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
 		//io.sockets.adapter.rooms[roomName]
-		io.to(roomName).emit('gameInit',roomName);
+		io.to(roomName).emit('gameInit', data);
 
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {

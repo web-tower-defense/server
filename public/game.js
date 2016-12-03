@@ -2,6 +2,7 @@ var container, stats;
 var camera, scene, raycaster, renderer;
 var selectionLight;
 var mouse = new THREE.Vector2(), cur_intersected, prev_intersected, intersected_point;
+var player_id;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -9,10 +10,16 @@ var currentlyPressedKeys = {};//new Array(300);
 function aiGameInit() {
 
 }
-function init(socket,roomName) {
+function init(socket, data) {
 	game_data.socket=socket;
-	game_data.roomName=roomName;
-	var test="hihi";
+	game_data.roomName= data["roomName"];
+	var test="init ";
+	//console.log(data);
+	//console.log(socket);
+	player_id = data[socket.id];
+	console.log("roomName : "+game_data.roomName);
+	console.log("player : "+player_id);
+
 	game_data.socket.emit('gameInit',test);
 
 	container = document.createElement( 'div' );
@@ -22,7 +29,8 @@ function init(socket,roomName) {
 	loadFont();
 	initCamera();
 	initScene();
-	initInput()
+	initInput();
+	loadUnit();
 	loadMap("map02.json")
 
 	animate();

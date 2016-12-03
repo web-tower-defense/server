@@ -1,3 +1,5 @@
+var unit_mesh;
+
 function Pos(_x,_y,_z){
 	this.x=_x;
 	this.y=_y;
@@ -21,10 +23,30 @@ Pos.prototype.unit_vec=function(){
 	return pos;
 }
 
+function loadUnit(){
+	var mtlLoader = new THREE.MTLLoader();
+
+	mtlLoader.setPath("obj/unit/");
+	mtlLoader.load( "spaceship1.mtl", function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath("obj/unit/");
+		objLoader.load("spaceship1.obj", function ( object ) {
+
+			//console.log(object);
+			unit_mesh = object;
+			unit_mesh.selectable = false;
+			unit_mesh.scale.set(0.2, 0.2, 0.2);
+
+		}, onProgress, onError );
+	});
+}
+
 function Unit(x,y,z,_owner,_target,vel){
 	this.die=false;
 	this.owner = _owner;
-	this.mesh = createTextMesh("o",this.owner);
+	this.mesh = unit_mesh.clone();//createTextMesh("o",this.owner);
 	//console.log("ss");
 	this.mesh.selectable = false;
 	this.mesh.dynamic = true;
@@ -36,6 +58,7 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.vel=vel;
 	this.target_pos=game_data.buildings[this.target].pos;
 }
+
 Unit.prototype.check_collision = function(){
 		for(var i = 0; i < game_data.units.length; i++){
 				var unit=game_data.units[i];
@@ -72,7 +95,31 @@ Unit.prototype.update = function(){
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());
 }
+
 Unit.prototype.remove = function(){
+	//clearScene(this.mesh);
+	//this.mesh.geometry.dispose();
+	//this.mesh.dispose();
 	scene.remove(this.mesh);
-	this.mesh.geometry.dispose();
+}
+
+clearScene = function (obj) {
+    if (obj instanceof THREE.Mesh)
+    {
+        obj.geometry.dispose();
+        obj.geometry = null;
+        obj.material.dispose();
+        obj.material = null;
+        obj.dispose(); // required in r69dev to remove references from the renderer.
+        obj = null;
+    }
+    else
+    {
+        if (obj.children !== undefined) {
+            while (obj.children.length > 0) {
+                this.clearScene(obj.children[0]);
+                obj.remove(obj.children[0]);
+            }
+        }
+    }
 }

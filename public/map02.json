@@ -7,9 +7,41 @@
         {
             "name": "venus",
             "dirpath": "obj/planets/",
-            "path": "Planet2.obj",
+            "path": "venus.obj",
             "material":{
-                "path": "Planet2.mtl"
+                "path": "venus.mtl"
+            }
+        },
+        {
+            "name": "mercury",
+            "dirpath": "obj/planets/",
+            "path": "mercury.obj",
+            "material":{
+                "path": "mercury.mtl"
+            }
+        },
+        {
+            "name": "mars",
+            "dirpath": "obj/planets/",
+            "path": "mars.obj",
+            "material":{
+                "path": "mars.mtl"
+            }
+        },
+        {
+            "name": "pluto",
+            "dirpath": "obj/planets/",
+            "path": "pluto.obj",
+            "material":{
+                "path": "pluto.mtl"
+            }
+        },
+        {
+            "name": "moon",
+            "dirpath": "obj/planets/",
+            "path": "moon.obj",
+            "material":{
+                "path": "moon.mtl"
             }
         }
     ],
@@ -23,34 +55,22 @@
             "unit_vel": 0.6,
             "grow_cycle":8,
             "sent_unit_cycle":3,
-            "position": [5,7]
+            "position": [0,0]
 
         },{
-            "name": "venus",
+            "name": "mercury",
       			"owner": 0,
             "curUnit": 30,
             "maxUnit": 100,
-            "position": [30,10]
+            "position": [10,10]
         },{
-            "name": "venus",
-      			"owner": 0,
-            "curUnit": 30,
-            "maxUnit": 100,
-            "position": [10,30]
-        },{
-            "name": "venus",
+            "name": "moon",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
             "position": [30,30]
         },{
-            "name": "venus",
-            "owner": 1,
-            "curUnit": 10,
-            "maxUnit": 100,
-            "position": [40,20]
-        },{
-            "name": "venus",
+            "name": "mars",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,

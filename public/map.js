@@ -54,7 +54,7 @@ function loadBuilding(building,data){
     			var new_building = new Building();
     			new_building.mesh = instance;
 					new_building.pos=pos;
-    			new_building.unitID = j;//instance.unitID;
+    			new_building.unitID = game_data.buildings.length;//instance.unitID;
     			new_building.curUnit = data.buildings[j].curUnit;
     			new_building.maxUnit = data.buildings[j].maxUnit;
 					new_building.owner= data.buildings[j].owner;

@@ -35,6 +35,7 @@ var roomSystem = {
   },
   createNewRoomEvent: function() {
     var roomName = this.createNewRoomInput.value;
+    this.roomName = roomName;
     this.hideMessageDiv();
     if (roomName === '') {
       this.showMessageDiv('please Enter the name!')
@@ -127,10 +128,18 @@ socket.on('respondClientCreateNewRoomEvent', function(data) {
 socket.on('resetRooms',roomSystem.resetRooms);
 socket.on('roommateDisconnect',function(roomName){
 })
-socket.on('gameInit', function(roomName){
+socket.on('gameInit', function(data){
   while(document.body.firstChild){
     document.body.removeChild(document.body.firstChild);
   }
-  init(socket,roomName);
+  //console.log(data);
+  var socketIDs = [];
+  var player_id = 1;
+  Object.keys(data.sockets).forEach( function(socketId){
+    //console.log("Room client socket Id: " + socketId );
+    socketIDs[socketId] = player_id++;
+  });
+  socketIDs["roomName"] = data.name;
+  init(socket,socketIDs);
 })
 roomSystem.init();
