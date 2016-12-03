@@ -42,8 +42,14 @@ function handle_web_commands(){
 	data_receive=0;
 	return true;
 }
+var loop_block=false;
 function game_update(){
-
+	var block_times=0;
+	while(loop_block&&block_times<30000){
+		if(block_times===0)console.log("game_update blocking!!");
+		block_times++;
+	}
+	loop_block=true;
 	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){
@@ -53,6 +59,7 @@ function game_update(){
 		}else{
 			pause_game=false;
 			command_timer=0;
+			//console.log("update_cycle:"+loop_times);
 		}
 	}
 	if(command_timer===0){
@@ -82,6 +89,7 @@ function game_update(){
 			if(i < game_data.units.length)game_data.units[i].update();
 		}
 	}
+	loop_block=false;
 	// console.log("mouse_pos:"+mouse_pos.x+","+mouse_pos.y+","+mouse_pos.z);
 
 	//console.log("mousepos="+game_data.mouse_pos.x+","+game_data.mouse_pos.y+","+game_data.mouse_pos.z);

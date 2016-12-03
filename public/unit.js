@@ -39,7 +39,7 @@ function Unit(x,y,z,_owner,_target,vel){
 Unit.prototype.check_collision = function(){
 		for(var i = 0; i < game_data.units.length; i++){
 				var unit=game_data.units[i];
-				if(unit.owner!==this.owner&&unit.a==this.a&&unit.b==this.b){
+				if(unit.owner!==this.owner){//&&unit.a==this.a&&unit.b==this.b
 					if(this.pos.sub(unit.pos).len()<0.5){
 						this.die=true;
 						game_data.units[i].die=true;
