@@ -65,6 +65,9 @@ function socketHandler(socket) {
     socket.on('readyToStartGame', function (roomName, playerId) {
         fullRooms[roomName].player[playerId].isReadyToStartGame = true;
         if (fullRooms[roomName].isBothPlayerReady()) {
+            fullRooms[roomName].updateTowersTimer = setInterval(function () {
+                io.to(roomName).emit('updateTowers');
+            }, 1500);
             io.to(roomName).emit('startGame');
         }
     });

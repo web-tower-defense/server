@@ -10,6 +10,7 @@ class Player{
 }
 class RoomData{
 	public player: Array<Player> = [];
+	public updateTowersTimer:NodeJS.Timer;
 	public constructor(public roomName:string){
 		this.player[1] = new Player();
 		this.player[2] = new Player();
@@ -34,6 +35,8 @@ function getRoomsData () {
 	return roomsData;
 }
 function socketHandler(socket){
+
+
 	socket.emit('resetRooms',getRoomsData());
 	// build room
 	socket.on('joinRoomEvent',function(roomName){
@@ -71,8 +74,11 @@ function socketHandler(socket){
 	socket.on('readyToStartGame', (roomName, playerId)=>{
 		fullRooms[roomName].player[playerId].isReadyToStartGame = true;
 		if(fullRooms[roomName].isBothPlayerReady()){
-
+			fullRooms[roomName].updateTowersTimer = setInterval(()=>{
+				io.to(roomName).emit('updateTowers');
+			}, 1500)
 			io.to(roomName).emit('startGame');
+
 		}
 	})
 	socket.on('updateMouseY', (roomName, playerId, inputY)=>{

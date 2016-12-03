@@ -322,7 +322,7 @@
 	    };
 	    Tower.prototype.updateCirCleGraphic = function () {
 	        this.circleGraphic.clear();
-	        this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 0.4);
+	        this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 1);
 	        this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
 	        this.circleGraphic.endFill();
 	        this.circleGraphic.visible = false;
@@ -339,7 +339,6 @@
 	        this.textBubble.anchor.set(0.5);
 	        this.soldierNumText.moveUp();
 	        this.soldierNumText.moveUp();
-	        game.time.events.loop(1500, this.updateRenderTextContent, this);
 	    };
 	    Tower.prototype.fire = function (targetTower, soildersBeSent) {
 	        var balloon = Balloon.getAReadyBalloon(this, soildersBeSent);
@@ -354,12 +353,6 @@
 	        this.ownerId = newOwnerId;
 	        this.updateTextBubble();
 	        this.updateCirCleGraphic();
-	    };
-	    Tower.prototype.updateRenderTextContent = function () {
-	        if (this.ownerId === 0)
-	            return;
-	        var newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
-	        this.soldierNumText.setText(newSoldiersNum + "");
 	    };
 	    Tower.prototype.updateTextBubble = function () {
 	        this.textBubble.frame = this.ownerId;
@@ -474,6 +467,7 @@
 	    for (var i = 0; i < 40; i++) {
 	        balloons.add(new Balloon());
 	    }
+	    socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
 	}
 	function update() {
 	}
@@ -484,6 +478,7 @@
 	    game.debug.text("Pointer Target: " + name, 16, 64);
 	}
 	function bindSocketEvent() {
+	    var _this = this;
 	    socket.on('startGame', function () {
 	        GameInfo.isGameStart = true;
 	        renderText = "game start";
@@ -493,6 +488,15 @@
 	        var targetTower = towers.getChildAt(targetTowerIdx);
 	        var soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll);
 	        tower.fire(targetTower, soildersBeSent);
+	    });
+	    socket.on('updateTowers', function () {
+	        towers.forEach(function (tower) {
+	            if (tower.ownerId !== 0) {
+	                var totalSoldiers = parseInt(tower.soldierNumText.text);
+	                totalSoldiers += 1;
+	                tower.soldierNumText.setText("" + totalSoldiers);
+	            }
+	        }, _this);
 	    });
 	}
 	function gameInit(playerId, soc, roomName) {

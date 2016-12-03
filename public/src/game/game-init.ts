@@ -23,9 +23,9 @@ class Tower extends Phaser.Sprite {
   private isSelected: boolean = false;
   public soldierNumText: Phaser.Text;
   private circleGraphic: Phaser.Graphics;
-  private textBubble :Phaser.Image;
+  private textBubble: Phaser.Image;
 
-  public constructor(x: number, y: number, public ownerId: number, initSoldiers?:number) {
+  public constructor(x: number, y: number, public ownerId: number, initSoldiers?: number) {
 
     super(game, x, y, 'brown-tower');
     game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -39,8 +39,8 @@ class Tower extends Phaser.Sprite {
     this.updateCirCleGraphic();
 
     this.createTextAndTextBubble();
-    if(initSoldiers){
-      this.soldierNumText.text=initSoldiers+"";
+    if (initSoldiers) {
+      this.soldierNumText.text = initSoldiers + "";
     }
   }
   public static isNoneOfMyTowersSelected(): boolean {
@@ -109,7 +109,7 @@ class Tower extends Phaser.Sprite {
     } else {
       soldiersLeft = Math.floor(totalSoldiers / 2);
     }
-    this.soldierNumText.setText(soldiersLeft+"");
+    this.soldierNumText.setText(soldiersLeft + "");
     return totalSoldiers - soldiersLeft;
   }
   public setSelected(wantSelect: boolean) {
@@ -124,7 +124,7 @@ class Tower extends Phaser.Sprite {
   }
   private updateCirCleGraphic() {
     this.circleGraphic.clear();
-    this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 0.4);
+    this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 1);
     this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
     this.circleGraphic.endFill();
     this.circleGraphic.visible = false;
@@ -147,7 +147,7 @@ class Tower extends Phaser.Sprite {
     this.soldierNumText.moveUp();
     this.soldierNumText.moveUp();
 
-    game.time.events.loop(1500, this.updateRenderTextContent, this);
+    // game.time.events.loop(1500, this.emitUpdateTowerSoldiersNumEvent, this);
   }
   public fire(targetTower: Tower, soildersBeSent: number) {
 
@@ -168,12 +168,14 @@ class Tower extends Phaser.Sprite {
     this.updateCirCleGraphic();
 
   }
-  public updateRenderTextContent() {
-    if(this.ownerId===0)return;
-    let newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
-    this.soldierNumText.setText(newSoldiersNum + "");
-
-  }
+  // public emitUpdateTowerSoldiersNumEvent() {
+  //   if(this.ownerId===GameInfo.playerId){
+  //     socket.emit('updateTowerSoldiersNum', GameInfo.roomName, towers.getChildIndex(this))
+  //   }
+  //   let newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
+  //   this.soldierNumText.setText(newSoldiersNum + "");
+  //
+  // }
   public updateTextBubble() {
     this.textBubble.frame = this.ownerId;
   }
@@ -313,7 +315,7 @@ function create() {
   //un comment this to there
   //          let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
   //          function ready() {
-  //            socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
+  socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
   //            startButton.destroy();
   //            renderText = "you are ready, now waiting the other";
   //          }
@@ -332,7 +334,7 @@ function render() {
   game.debug.text(renderText, 16, 48);
   var name = (game.input.activePointer.targetObject) ? game.input.activePointer.targetObject.sprite.key : 'none';
 
-    game.debug.text("Pointer Target: " + name, 16, 64);
+  game.debug.text("Pointer Target: " + name, 16, 64);
 
 }
 function bindSocketEvent() {
@@ -341,11 +343,20 @@ function bindSocketEvent() {
     renderText = "game start";
   });
   //register socket event
-  socket.on('fire', (roomName, towerIdx,isFireAll,targetTowerIdx)=>{
+  socket.on('fire', (roomName, towerIdx, isFireAll, targetTowerIdx) => {
     let tower = towers.getChildAt(towerIdx) as Tower;
     let targetTower = towers.getChildAt(targetTowerIdx) as Tower;
     let soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll)
     tower.fire(targetTower, soildersBeSent);
+  })
+  socket.on('updateTowers', ()=>{
+    towers.forEach((tower:Tower)=>{
+      if(tower.ownerId!==0){
+        let totalSoldiers = parseInt(tower.soldierNumText.text)
+        totalSoldiers+=1;
+        tower.soldierNumText.setText(""+totalSoldiers);
+      }
+    }, this);
   })
 }
 export default function gameInit(playerId: number, soc: SocketIOClient.Socket, roomName: string) {
