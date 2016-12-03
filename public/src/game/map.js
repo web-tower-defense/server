@@ -8,20 +8,19 @@ var onProgress = function ( xhr ) {
 
 var onError = function ( xhr ) { };
 var tmp_data;
-
-function loadBuilding(building,data){
+function loadBuilding(building){
 
 	var mtlLoader = new THREE.MTLLoader();
 
-	mtlLoader.setPath( building.dirpath);
-	mtlLoader.load( building.material.path, function( materials ) {
+	mtlLoader.setPath( 'obj/planets/' );
+	mtlLoader.load( 'Planet2.mtl', function( materials ) {
 		materials.preload();
-		//console.log("load : Planet2.mtl");
+		console.log("load : Planet2.mtl");
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
-		objLoader.setPath( building.dirpath );
-		objLoader.load(building.path, function ( object ) {
-			//console.log("load : Planet2.obj");
+		objLoader.setPath( 'obj/planets/' );
+		objLoader.load( 'Planet2.obj', function ( object ) {
+			console.log("load : Planet2.obj");
 			//object.position.y = - 10;
 			//object.scale.set(10,10,10);
 			object.name = "root";
@@ -38,9 +37,9 @@ function loadBuilding(building,data){
 				] );
 
 				console.log("positions : "+building.positions[j]);
-				var pos=new Pos(building.positions[j][0],
+				var pos=new Pos(building.positions[j][0]*game_data.unitLen,
 					0,
-					-building.positions[j][1]);
+					-building.positions[j][1]*game_data.unitLen);
 				instance.position.set(
 					pos.x,
 					pos.y,
@@ -55,25 +54,16 @@ function loadBuilding(building,data){
     			new_building.mesh = instance;
 					new_building.pos=pos;
     			new_building.unitID = j;//instance.unitID;
-    			new_building.curUnit = data.buildings[j].curUnit;
-    			new_building.maxUnit = data.buildings[j].maxUnit;
-					new_building.owner= data.buildings[j].owner;
-					var cur_building=data.buildings[j];
-					if(cur_building.hasOwnProperty('unit_vel')){
-						new_building.unit_vel = cur_building.unit_vel;
-					}
-					if(cur_building.hasOwnProperty('grow_cycle')){
-						new_building.grow_cycle = cur_building.grow_cycle;
-					}
-					if(cur_building.hasOwnProperty('sent_unit_cycle')){
-						new_building.sent_unit_cycle = cur_building.sent_unit_cycle;
-					}
+    			new_building.curUnit = building.curUnits[j];
+    			new_building.maxUnit = building.maxUnits[j];
+
+				new_building.owner=tmp_data.buildings[j].owner;
     			var capacity_text = createTextMesh(new_building.curUnit.toString(), new_building.unitID);
     			capacity_text.position.set(
 					pos.x,
 					pos.y+5,
 					pos.z
-				  );
+				);
 				capacity_text.selectable = false;
 				capacity_text.dynamic = true;
     			scene.add( capacity_text );
@@ -92,14 +82,14 @@ function loadMap(file){
     	//console.log(data);
 		tmp_data=data;
 		game_data.unitLen=data.mapUnitLen;
-    var width = data.mapWidth;
-    var height = data.mapHeight;
+    	var width = data.mapWidth;
+    	var height = data.mapHeight;
 
 
 
-    var textureLoader = new THREE.TextureLoader();
+    	var textureLoader = new THREE.TextureLoader();
 
-		var geometry = new THREE.PlaneGeometry( width*4, height*4);
+		/*var geometry = new THREE.PlaneGeometry( width*game_data.unitLen, height*game_data.unitLen, width, height);
 		geometry.faceVertexUvs[0] = [];
 		for(var i = 0; i < geometry.faces.length; i++){
 			geometry.faceVertexUvs[0].push([
@@ -110,21 +100,28 @@ function loadMap(file){
 			]);
 		}
 		geometry.computeFaceNormals();
-    geometry.dynamic = true;
-    geometry.uvsNeedUpdate = true;
+        geometry.dynamic = true;
+        geometry.uvsNeedUpdate = true;
 		var material = new THREE.MeshPhongMaterial( {
-			opacity: 0.0,
-			transparent: true,
+			map :textureLoader.load( "grass_green_d.jpg" ),
+			normalMap: textureLoader.load( "grass_green_n.jpg" ),
 			side: THREE.DoubleSide
 		});
 		var plane = new THREE.Mesh( geometry, material );
 		plane.rotation.x = Math.PI / 2;
 		plane.position.y = -1;
-		plane.position.x = width;
-		plane.position.z = -height;
-		scene.add( plane );
+		plane.position.x = width*game_data.unitLen/2;
+		plane.position.z = -height*game_data.unitLen/2;
+		scene.add( plane );*/
 
-
+		for(var i = 0; i < data.buildings.length; i++){
+			var building=new Building();
+			building.id=data.buildings[i].id;
+			building.name=data.buildings[i].name;
+			building.owner=data.buildings[i].owner;
+			//game_data.buildings.push(building);
+			//console.log("game_data.buildings.push(building)");
+		}
 		for(var i = 0; i < data.models.length; i++){
 			data.models[i].positions = [];
 			data.models[i].unitIDs = [];
@@ -138,7 +135,7 @@ function loadMap(file){
 					data.models[i].maxUnits.push(data.buildings[j].maxUnit);
 				}
 			}
-			loadBuilding(data.models[i],data);
+			loadBuilding(data.models[i]);
 
 		}
 	});

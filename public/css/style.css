@@ -3,10 +3,10 @@ body {
   display: flex;
   flex-direction: column;
   align-content: space-around;
-  margin-top: 40px; }
+  margin-top: 0px; }
   body > div {
     max-width: 400px;
-    margin: 10px auto;
+    margin: 0px ;
     display: flex;
     flex-direction: column;
     justify-content: space-between; }
@@ -81,3 +81,4 @@ body {
       align-items: center;
       padding-left: 14px;
       flex-grow: 1; }
+*/

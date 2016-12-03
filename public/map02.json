@@ -1,8 +1,7 @@
 {
-    "mapName": "map01",
-    "mapUnitLen": 5,
-    "mapWidth": 20,
-    "mapHeight": 20,
+    "mapName": "map02",
+    "mapWidth": 100,
+    "mapHeight": 100,
     "models":
     [
         {
@@ -24,30 +23,26 @@
             "unit_vel": 0.6,
             "grow_cycle":8,
             "sent_unit_cycle":3,
-            "position": [5,10]
+            "position": [0,0]
 
         },{
             "name": "venus",
       			"owner": 0,
             "curUnit": 30,
             "maxUnit": 100,
-            "position": [9,10]
+            "position": [10,10]
         },{
             "name": "venus",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
-            "position": [13,10]
+            "position": [30,30]
         },{
             "name": "venus",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
-            "position": [7,15]
+            "position": [60,60]
         }
-    ],
-    "paths":
-    [
-        [0,1]
     ]
  }
