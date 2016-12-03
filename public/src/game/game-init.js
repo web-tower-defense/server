@@ -36,6 +36,15 @@ var Tower = (function (_super) {
         }
         return _this;
     }
+    Tower.isGameOver = function () {
+        var winnerId = towers.getChildAt(0).ownerId;
+        for (var i = 0; i < towers.length; i++) {
+            if (towers.getChildAt(i).ownerId !== winnerId) {
+                return false;
+            }
+        }
+        return true;
+    };
     Tower.isNoneOfMyTowersSelected = function () {
         for (var i = 0; i < towers.length; i++) {
             var tower = towers.getChildAt(i);
@@ -115,7 +124,7 @@ var Tower = (function (_super) {
     Tower.prototype.updateCirCleGraphic = function () {
         this.circleGraphic.clear();
         this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 1);
-        this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
+        this.circleGraphic.drawCircle(0, 0, this.height * 1.5);
         this.circleGraphic.endFill();
         this.circleGraphic.visible = false;
     };
@@ -191,6 +200,7 @@ var Balloon = (function (_super) {
             if (targetSoldiersNum < 0) {
                 targetTower.switchOwner(balloon.getOwnerId());
                 targetSoldiersNum *= -1;
+                Tower.isGameOver();
             }
         }
         targetTower.soldierNumText.setText(targetSoldiersNum + "");

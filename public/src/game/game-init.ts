@@ -43,6 +43,15 @@ class Tower extends Phaser.Sprite {
       this.soldierNumText.text = initSoldiers + "";
     }
   }
+  public static isGameOver(){
+    let winnerId = (towers.getChildAt(0) as Tower).ownerId;
+    for(let i=0; i<towers.length; i++){
+      if((towers.getChildAt(i) as Tower).ownerId!==winnerId){
+        return false;
+      }
+    }
+    return true;
+  }
   public static isNoneOfMyTowersSelected(): boolean {
     for (let i = 0; i < towers.length; i++) {
       let tower = (towers.getChildAt(i) as Tower);
@@ -125,7 +134,7 @@ class Tower extends Phaser.Sprite {
   private updateCirCleGraphic() {
     this.circleGraphic.clear();
     this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 1);
-    this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
+    this.circleGraphic.drawCircle(0, 0, this.height * 1.5);
     this.circleGraphic.endFill();
     this.circleGraphic.visible = false;
   }
@@ -203,6 +212,7 @@ class Balloon extends Phaser.Sprite {
       if (targetSoldiersNum < 0) {
         targetTower.switchOwner(balloon.getOwnerId());
         targetSoldiersNum *= -1;
+        Tower.isGameOver();
       }
     }
     targetTower.soldierNumText.setText(targetSoldiersNum + "");
