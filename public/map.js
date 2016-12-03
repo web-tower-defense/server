@@ -8,7 +8,7 @@ var onProgress = function ( xhr ) {
 
 var onError = function ( xhr ) { };
 var tmp_data;
-function loadBuilding(building){
+function loadBuilding(building,data){
 
 	var mtlLoader = new THREE.MTLLoader();
 
@@ -54,10 +54,19 @@ function loadBuilding(building){
     			new_building.mesh = instance;
 					new_building.pos=pos;
     			new_building.unitID = j;//instance.unitID;
-    			new_building.curUnit = building.curUnits[j];
-    			new_building.maxUnit = building.maxUnits[j];
-
-				new_building.owner=tmp_data.buildings[j].owner;
+    			new_building.curUnit = data.buildings[j].curUnit;
+    			new_building.maxUnit = data.buildings[j].maxUnit;
+					new_building.owner= data.buildings[j].owner;
+					var cur_building=data.buildings[j];
+					if(cur_building.hasOwnProperty('unit_vel')){
+						new_building.unit_vel = cur_building.unit_vel;
+					}
+					if(cur_building.hasOwnProperty('grow_cycle')){
+						new_building.grow_cycle = cur_building.grow_cycle;
+					}
+					if(cur_building.hasOwnProperty('sent_unit_cycle')){
+						new_building.sent_unit_cycle = cur_building.sent_unit_cycle;
+					}
     			var capacity_text = createTextMesh(new_building.curUnit.toString(), new_building.unitID);
     			capacity_text.position.set(
 					pos.x,
@@ -114,14 +123,14 @@ function loadMap(file){
 		plane.position.z = -height*game_data.unitLen/2;
 		scene.add( plane );*/
 
-		for(var i = 0; i < data.buildings.length; i++){
-			var building=new Building();
-			building.id=data.buildings[i].id;
-			building.name=data.buildings[i].name;
-			building.owner=data.buildings[i].owner;
+		//for(var i = 0; i < data.buildings.length; i++){
+			//var building=new Building();
+			//building.id=data.buildings[i].id;
+			//building.name=data.buildings[i].name;
+			//building.owner=data.buildings[i].owner;
 			//game_data.buildings.push(building);
 			//console.log("game_data.buildings.push(building)");
-		}
+		//}
 		for(var i = 0; i < data.models.length; i++){
 			data.models[i].positions = [];
 			data.models[i].unitIDs = [];
@@ -135,7 +144,7 @@ function loadMap(file){
 					data.models[i].maxUnits.push(data.buildings[j].maxUnit);
 				}
 			}
-			loadBuilding(data.models[i]);
+			loadBuilding(data.models[i],data);
 
 		}
 	});

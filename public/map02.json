@@ -17,16 +17,18 @@
     [
         {
             "name": "base",
-            "id": 0,
             "owner": 1,
             "curUnit": 10,
             "maxUnit": 100,
+            "unit_vel": 0.6,
+            "grow_cycle":8,
+            "sent_unit_cycle":3,
             "position": [5,10]
+
         },{
             "name": "base",
-            "id": 1,
       			"owner": 0,
-            "curUnit": 10,
+            "curUnit": 30,
             "maxUnit": 100,
             "position": [9,10]
         },{
@@ -40,7 +42,7 @@
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
-            "position": [7,10]
+            "position": [7,15]
         }
     ],
     "paths":

@@ -10,13 +10,16 @@ function Building(){
 	this.target=-1;
 	this.sent_unit_timer=0;
 	this.recruit_timer=0;
+	this.unit_vel=0.4;
+	this.sent_unit_cycle=5;
+	this.grow_cycle=15;
 	this.pos=new Pos(0,0,0);
 	this.path=[];
 	this.prev_str="";
 }
 Building.prototype.update = function(){
 	this.recruit_timer++;
-	if(this.recruit_timer>10){
+	if(this.recruit_timer>this.grow_cycle){
 		this.recruit_timer=0;
 		this.grow();
 	}
@@ -55,8 +58,8 @@ Building.prototype.sent_unit = function(){
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;
 	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
 		this.curUnit--;
-		this.sent_unit_timer=4;
-		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,0.6);
+		this.sent_unit_timer=this.sent_unit_cycle;
+		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,this.unit_vel);
 		if(this.target>this.unitID){
 			unit.a=this.target;
 			unit.b=this.unitID;

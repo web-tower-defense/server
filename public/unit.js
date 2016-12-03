@@ -24,13 +24,7 @@ Pos.prototype.unit_vec=function(){
 function Unit(x,y,z,_owner,_target,vel){
 	this.die=false;
 	this.owner = _owner;
-	if(this.owner==0){
-		this.mesh = createTextMesh("o",this.owner);
-	}else if(this.owner==1){
-		this.mesh = createTextMesh("x",this.owner);
-	}else if(this.owner==2){
-		this.mesh = createTextMesh("y",this.owner);
-	}
+	this.mesh = createTextMesh("o",this.owner);
 	//console.log("ss");
 	this.mesh.selectable = false;
 	this.mesh.dynamic = true;

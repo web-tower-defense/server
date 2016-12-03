@@ -50,8 +50,11 @@ io.on('connection', function(socket){
 		console.log('socket successful passed:'+test);
 	})
 	socket.on('game_command', function(data){
-		if(data.commands.length!==0)console.log('game_command room:'+
-		data.roomName+",length:"+data.commands.length);
+		//if(data.commands.length!==0)console.log('game_command room:'+
+		//data.roomName+",length:"+data.commands.length);
+		//console.log('game_command room:'+
+		//data.roomName+",loop_times:"+data.loop_times);
+
 		if(game_data.room_command[data.roomName]===undefined){
 			game_data.room_command[data.roomName]=0;
 		}

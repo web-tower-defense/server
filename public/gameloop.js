@@ -44,8 +44,6 @@ function handle_web_commands(){
 }
 function game_update(){
 
-
-
 	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){
