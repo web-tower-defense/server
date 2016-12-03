@@ -571,6 +571,47 @@
 	var renderText = "init";
 	var towers;
 	var balloons;
+	var AI = (function () {
+	    function AI() {
+	    }
+	    AI.prototype.updateInfo = function () {
+	        this.allSoldiers = 0;
+	        for (var i = 0; i < towers.length; i++) {
+	            var tower = towers.getChildAt(i);
+	            if (tower.ownerId === 2) {
+	                this.allSoldiers += parseInt(tower.soldierNumText.text);
+	            }
+	        }
+	        this.analize();
+	    };
+	    AI.prototype.getMinTowerSoldierNumIdxArray = function () {
+	        var minNum = 1000, idx = 0;
+	        for (var i = 0; i < towers.length; i++) {
+	            var tower = towers.getChildAt(i);
+	            if (tower.ownerId !== 2) {
+	                var currNum = parseInt(tower.soldierNumText.text);
+	                if (minNum > currNum) {
+	                    minNum = currNum;
+	                    idx = i;
+	                }
+	            }
+	        }
+	        return [minNum, idx];
+	    };
+	    AI.prototype.analize = function () {
+	        var numIdxArray = this.getMinTowerSoldierNumIdxArray();
+	        if (this.allSoldiers > numIdxArray[0]) {
+	            var targetTower = towers.getChildAt(numIdxArray[1]);
+	            for (var i = 0; i < towers.length; i++) {
+	                var tower = towers.getChildAt(i);
+	                if (tower.ownerId === 2) {
+	                    tower.fire(targetTower, tower.getSolidersBeSentAndUpdate(true));
+	                }
+	            }
+	        }
+	    };
+	    return AI;
+	}());
 	var GameInfo = (function () {
 	    function GameInfo() {
 	    }
@@ -719,7 +760,6 @@
 	        this.textBubble.anchor.set(0.5);
 	        this.soldierNumText.moveUp();
 	        this.soldierNumText.moveUp();
-	        game.time.events.loop(1500, this.updateRenderTextContent, this);
 	    };
 	    Tower.prototype.fire = function (targetTower, soildersBeSent) {
 	        var balloon = Balloon.getAReadyBalloon(this, soildersBeSent);
@@ -734,12 +774,6 @@
 	        this.ownerId = newOwnerId;
 	        this.updateTextBubble();
 	        this.updateCirCleGraphic();
-	    };
-	    Tower.prototype.updateRenderTextContent = function () {
-	        if (this.ownerId === 0)
-	            return;
-	        var newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
-	        this.soldierNumText.setText(newSoldiersNum + "");
 	    };
 	    Tower.prototype.updateTextBubble = function () {
 	        this.textBubble.frame = this.ownerId;
@@ -849,7 +883,9 @@
 	    game.load.spritesheet('button', 'img/button.png', 120, 40);
 	}
 	function create() {
+	    var _this = this;
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
+	    var ai = new AI();
 	    var background = game.add.image(0, 0, 'background');
 	    background.height = game.height;
 	    background.width = game.width;
@@ -869,6 +905,16 @@
 	    for (var i = 0; i < 40; i++) {
 	        balloons.add(new Balloon());
 	    }
+	    setInterval(function () {
+	        towers.forEach(function (tower) {
+	            if (tower.ownerId !== 0) {
+	                var totalSoldiers = parseInt(tower.soldierNumText.text);
+	                totalSoldiers += 1;
+	                tower.soldierNumText.setText("" + totalSoldiers);
+	            }
+	            ai.updateInfo();
+	        }, _this);
+	    }, 1500);
 	}
 	function update() {
 	}

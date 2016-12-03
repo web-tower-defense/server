@@ -3,6 +3,47 @@ var socket: SocketIOClient.Socket;
 var renderText = "init";
 var towers: Phaser.Group;
 var balloons: Phaser.Group;
+class AI{
+  private allSoldiers:number;
+  public updateInfo(){
+    this.allSoldiers=0;
+    for(let i=0; i<towers.length; i++){
+      let tower = (towers.getChildAt(i) as Tower);
+      if(tower.ownerId===2){
+        this.allSoldiers+=parseInt(tower.soldierNumText.text);
+      }
+    }
+    this.analize();
+  }
+  private getMinTowerSoldierNumIdxArray():[number, number]{
+    let minNum=1000, idx=0;
+    for(let i=0; i<towers.length; i++){
+      let tower = towers.getChildAt(i) as Tower;
+      if(tower.ownerId!==2){
+        let currNum=parseInt(tower.soldierNumText.text);
+        if(minNum>currNum){
+          minNum=currNum;
+          idx=i;
+        }
+
+      }
+    }
+    return [minNum, idx];
+  }
+  private analize(){
+    let numIdxArray = this.getMinTowerSoldierNumIdxArray();
+    if(this.allSoldiers>numIdxArray[0]){
+      let targetTower = towers.getChildAt(numIdxArray[1]) as Tower
+      for(let i=0; i<towers.length; i++){
+        let tower= towers.getChildAt(i) as Tower;
+        if(tower.ownerId===2){
+          tower.fire(targetTower, tower.getSolidersBeSentAndUpdate(true));
+
+        }
+      }
+    }
+  }
+}
 class GameInfo {
   public static isGameStart: boolean = false;
   public static playerId: number
@@ -172,9 +213,9 @@ class Tower extends Phaser.Sprite {
     this.soldierNumText.moveUp();
     this.soldierNumText.moveUp();
 
-    game.time.events.loop(1500, this.updateRenderTextContent, this);
+
   }
-  private fire(targetTower: Tower, soildersBeSent: number) {
+  public fire(targetTower: Tower, soildersBeSent: number) {
 
     let balloon = Balloon.getAReadyBalloon(this, soildersBeSent);
 
@@ -191,12 +232,6 @@ class Tower extends Phaser.Sprite {
     this.ownerId = newOwnerId;
     this.updateTextBubble();
     this.updateCirCleGraphic();
-
-  }
-  public updateRenderTextContent() {
-    if(this.ownerId===0)return;
-    let newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
-    this.soldierNumText.setText(newSoldiersNum + "");
 
   }
   public updateTextBubble() {
@@ -311,6 +346,9 @@ function preload() {
 function create() {
   // init physics engine
   game.physics.startSystem(Phaser.Physics.ARCADE);
+  //ai
+  let ai = new AI();
+
   //background
   let background = game.add.image(0, 0, 'background');
   background.height = game.height;
@@ -347,7 +385,17 @@ function create() {
     balloons.add(new Balloon());
   }
   //--------------------------------------
-
+  //start to update game
+  setInterval(()=>{
+    towers.forEach((tower: Tower) => {
+      if (tower.ownerId !== 0) {
+        let totalSoldiers = parseInt(tower.soldierNumText.text)
+        totalSoldiers += 1;
+        tower.soldierNumText.setText("" + totalSoldiers);
+      }
+      ai.updateInfo();
+    }, this);
+  }, 1500);
   //add tower so it can be render at the top
   // tower1.visible = false;
   //set ready btn
