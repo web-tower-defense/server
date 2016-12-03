@@ -42,31 +42,73 @@ class Tower extends Phaser.Sprite {
 
     this.createText();
   }
+  public static isNoneOfMyTowersSelected(): boolean{
+    for (let i = 0; i < towers.length; i++) {
+      let tower = (towers.getChildAt(i) as Tower);
+      if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
+         return false;
+      }
+    }
+    return true;
+  }
+  public static isAllOfMyTowersSelected() : boolean{
+    for (let i = 0; i < towers.length; i++) {
+      let tower = (towers.getChildAt(i) as Tower);
+      if (tower.ownerId === GameInfo.playerId && !tower.isSelected) {
+         return false;
+      }
+    }
+    return true;
+  }
+  public static toggleSelectAllTowers() {
+    let isAllMyTowersSelected = Tower.isAllOfMyTowersSelected();
+
+    for (let i = 0; i < towers.length; i++) {
+      let tower = (towers.getChildAt(i) as Tower);
+      if (tower.ownerId === GameInfo.playerId) {
+        if(isAllMyTowersSelected){
+          tower.setSelected(false);
+        }else{
+          tower.setSelected(true);
+        }
+      }
+    }
+  }
   public static changeOwner(tower: Tower, newOwnerId: number) {
     tower.ownerId = newOwnerId;
   }
   private static onClickEvent(towerClicked: Tower) {
-    if(towerClicked.isSelected){
-      towerClicked.isSelected=false;
-      towerClicked.circleGraphic.visible = false;
-      return;
+
+    if(towerClicked.ownerId===GameInfo.playerId){
+      if(Tower.isNoneOfMyTowersSelected()&&!towerClicked.isSelected){
+        towerClicked.setSelected(true);
+        return;
+      }
+      towerClicked.setSelected(false);
     }
-    let selectAnyTowersBefore = false;
+    //fire all my selected towers
+
     for (let i = 0; i < towers.children.length; i++) {
       let tower = towers.getChildAt(i) as Tower;
       if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
-        tower.fire(towerClicked);
-        selectAnyTowersBefore = true;
-        tower.isSelected = false;
-        tower.circleGraphic.visible = false;
+        if(parseInt(tower.soldierNumText.text)>=1){
+          tower.fire(towerClicked, game.input.keyboard.isDown(Phaser.Keyboard.CONTROL));
+        }
+        tower.setSelected(false);
       }
     }
-    if(!selectAnyTowersBefore&&towerClicked.ownerId===GameInfo.playerId){
-      towerClicked.isSelected = true;
-      towerClicked.circleGraphic.visible = true;
+  }
+  public setSelected(wantSelect: boolean){
+    if(wantSelect){
+      this.isSelected = true;
+      this.circleGraphic.visible = true;
+    }else{
+      this.isSelected = false;
+      this.circleGraphic.visible = false;
+
     }
   }
-  private updateCirCleGraphic(){
+  private updateCirCleGraphic() {
     this.circleGraphic.clear();
     this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 0.4);
     this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
@@ -94,31 +136,23 @@ class Tower extends Phaser.Sprite {
     }
     game.time.events.loop(1500, this.updateRenderTextContent, this);
   }
-  private fire(targetTower: Tower, isFireAll?:boolean) {
-    this.isSelected = false;
-    this.circleGraphic.visible = false;
+  private fire(targetTower: Tower, isFireAll: boolean) {
     let balloon = balloons.getFirstDead() as Balloon;
     if (!balloon) {
       balloon = new Balloon();
       balloons.add(balloon);
     }
-    if(this.ownerId===1){
-      balloon.frame=Balloon.PLAYER1_BALLOON_FRAME_INDEX;
-    }else{
-      balloon.frame=Balloon.PLAYER2_BALLOON_FRAME_INDEX;
-    }
-    balloon.revive();
-    balloon.soldierNumText.revive();
 
-    if(isFireAll){
-      balloon.setText(this.soldierNumText.text+"");
-      this.soldierNumText.text='0';
-    }else{
-      let soldierNum = parseInt(this.soldierNumText.text);
-      let fireSoldierNum = Math.floor(soldierNum/2);
-      balloon.setText(fireSoldierNum+"");
-      this.soldierNumText.text=(soldierNum-fireSoldierNum)+"";
+    let totalSoilders = parseInt(this.soldierNumText.text);
+    let soildersBeSent = 0;
+    if (isFireAll) {
+      soildersBeSent = parseInt(this.soldierNumText.text);
+      this.soldierNumText.text = '0';
+    } else {
+      soildersBeSent = Math.floor(totalSoilders/2)+1;
+      this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
     }
+    balloon.setReadyToFire(this.ownerId, soildersBeSent);
 
 
     balloon.x = this.x;
@@ -130,31 +164,31 @@ class Tower extends Phaser.Sprite {
     }, moveDuration, null, true);
     moveTween.onComplete.add((balloon: Balloon, tween: Phaser.Tween, targetTower: Tower) => {
       let targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
-      if(balloon.getOwnerId()===targetTower.ownerId){
-        targetSoldiersNum+=parseInt(balloon.soldierNumText.text);
-      }else{
-        targetSoldiersNum-=parseInt(balloon.soldierNumText.text);
-        if(targetSoldiersNum<0){
+      if (balloon.getOwnerId() === targetTower.ownerId) {
+        targetSoldiersNum += parseInt(balloon.soldierNumText.text);
+      } else {
+        targetSoldiersNum -= parseInt(balloon.soldierNumText.text);
+        if (targetSoldiersNum < 0) {
           targetTower.switchOwner(balloon.getOwnerId());
-          targetSoldiersNum *=-1;
+          targetSoldiersNum *= -1;
         }
       }
-      targetTower.soldierNumText.setText(targetSoldiersNum+"");
+      targetTower.soldierNumText.setText(targetSoldiersNum + "");
       balloon.kill();
       balloon.soldierNumText.kill();
 
     }, this, 1, targetTower);
 
   }
-  public switchOwner(newOwnerId:number){
+  public switchOwner(newOwnerId: number) {
     this.ownerId = newOwnerId;
     this.updateRenderTextStyle();
     this.updateCirCleGraphic();
 
   }
   public updateRenderTextContent() {
-    let newSoldiersNum = parseInt(this.soldierNumText.text)+1;
-    this.soldierNumText.setText(newSoldiersNum+"");
+    let newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
+    this.soldierNumText.setText(newSoldiersNum + "");
     // this.renderText.addColor('white',4);
     // // this.renderText.width = this.height;
     // this.renderText.lineSpacing=-20;
@@ -184,10 +218,24 @@ class Balloon extends Phaser.Sprite {
   public static PLAYER1_BALLOON_FRAME_INDEX = 0;
   public static PLAYER2_BALLOON_FRAME_INDEX = 1;
   public soldierNumText: Phaser.Text;
-  public getOwnerId(){
-    if(this.frame===Balloon.PLAYER1_BALLOON_FRAME_INDEX){
+  public hide(){
+
+  }
+  public setReadyToFire(ownerId:number, soildersBeSent:number){
+    if (ownerId === 1) {
+      this.frame = Balloon.PLAYER1_BALLOON_FRAME_INDEX;
+    } else {
+      this.frame = Balloon.PLAYER2_BALLOON_FRAME_INDEX;
+    }
+    this.revive();
+    this.soldierNumText.revive();
+    this.soldierNumText.setText(soildersBeSent+"");
+  }
+  public getOwnerId() {
+
+    if (this.frame === Balloon.PLAYER1_BALLOON_FRAME_INDEX) {
       return 1;
-    }else{
+    } else {
       return 2;
     }
   }
@@ -205,9 +253,7 @@ class Balloon extends Phaser.Sprite {
     this.soldierNumText.anchor.set(0.5, 0.7);
     this.soldierNumText.position = this.position;
   }
-  public setText(soldiersNum: string) {
-    this.soldierNumText.setText(soldiersNum);
-  }
+
 
 }
 
@@ -237,6 +283,9 @@ function preload() {
 function create() {
   // init physics engine
   game.physics.startSystem(Phaser.Physics.ARCADE);
+  // input
+  let spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  spaceKey.onDown.add(Tower.toggleSelectAllTowers, this);
   //---------------------------------------------
   //put entity and enable its physics
   //tower
@@ -248,7 +297,9 @@ function create() {
   towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.3, 2));
   //******
   balloons = game.add.group();
-
+  for(let i=0; i<40; i++){
+    balloons.add(new Balloon());
+  }
   //--------------------------------------
 
   //add tower so it can be render at the top
@@ -275,6 +326,7 @@ function update() {
 function render() {
   game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
   game.debug.text(renderText, 16, 48);
+
 
 }
 function bindSocketEvent() {
