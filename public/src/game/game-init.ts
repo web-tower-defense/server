@@ -243,7 +243,6 @@ class Balloon extends Phaser.Sprite {
     }
     targetTower.soldierNumText.setText(targetSoldiersNum + "");
 
-
   }
   public static getAReadyBalloon(tower: Tower, soildersBeSent: number) {
     let balloon = balloons.getFirstDead() as Balloon;
@@ -320,8 +319,6 @@ function create() {
   background.inputEnabled = true;
   background.events.onInputDown.add(Tower.toggleSelectAllTowers, null, 0, true);
   // input
-  // game.input.onTap.add(Tower.toggleSelectAllTowers, self, 0, true);
-
   let spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   spaceKey.onDown.add(Tower.toggleSelectAllTowers, this, 1);
   //---------------------------------------------

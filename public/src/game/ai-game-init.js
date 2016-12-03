@@ -26,7 +26,7 @@ var Tower = (function (_super) {
         _this.body.immovable = true;
         _this.anchor.set(0.5);
         _this.inputEnabled = true;
-        _this.events.onInputDown.add(Tower.onClickEvent, _this);
+        _this.events.onInputDown.add(Tower.onClickEvent, _this, 2);
         game.add.existing(_this);
         _this.circleGraphic = game.add.graphics(_this.x, _this.y);
         _this.updateCirCleGraphic();
@@ -36,6 +36,29 @@ var Tower = (function (_super) {
         }
         return _this;
     }
+    Tower.isGameOver = function () {
+        var winnerId;
+        for (var i = 0; i < towers.length; i++) {
+            var towerId = towers.getChildAt(i).ownerId;
+            if (towerId !== 0) {
+                winnerId = towerId;
+                break;
+            }
+        }
+        for (var i = 0; i < towers.length; i++) {
+            var towerId = towers.getChildAt(i).ownerId;
+            if (towerId !== winnerId && towerId !== 0) {
+                return false;
+            }
+        }
+        for (var i = 0; i < balloons.length; i++) {
+            var balloon = balloons.getChildAt(i);
+            if (balloon.alive && balloon.getOwnerId() !== winnerId) {
+                return false;
+            }
+        }
+        return true;
+    };
     Tower.isNoneOfMyTowersSelected = function () {
         for (var i = 0; i < towers.length; i++) {
             var tower = towers.getChildAt(i);
@@ -54,17 +77,18 @@ var Tower = (function (_super) {
         }
         return true;
     };
-    Tower.toggleSelectAllTowers = function () {
-        var isAllMyTowersSelected = Tower.isAllOfMyTowersSelected();
+    Tower.toggleSelectAllTowers = function (a, b, cancelAllSelect) {
+        var selectAll;
+        if (cancelAllSelect) {
+            selectAll = false;
+        }
+        else {
+            selectAll = !Tower.isAllOfMyTowersSelected();
+        }
         for (var i = 0; i < towers.length; i++) {
             var tower = towers.getChildAt(i);
             if (tower.ownerId === GameInfo.playerId) {
-                if (isAllMyTowersSelected) {
-                    tower.setSelected(false);
-                }
-                else {
-                    tower.setSelected(true);
-                }
+                tower.setSelected(selectAll);
             }
         }
     };
@@ -79,12 +103,13 @@ var Tower = (function (_super) {
             }
             towerClicked.setSelected(false);
         }
+        var isFireAll = game.input.keyboard.isDown(Phaser.Keyboard.A);
         for (var i = 0; i < towers.children.length; i++) {
             var tower = towers.getChildAt(i);
             if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
                 if (parseInt(tower.soldierNumText.text) >= 1) {
-                    var isFireAll = game.input.keyboard.isDown(Phaser.Keyboard.A);
-                    var soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll);
+                    var isFireAll_1 = game.input.keyboard.isDown(Phaser.Keyboard.A);
+                    var soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll_1);
                     tower.fire(towerClicked, soildersBeSent);
                 }
                 tower.setSelected(false);
@@ -115,8 +140,8 @@ var Tower = (function (_super) {
     };
     Tower.prototype.updateCirCleGraphic = function () {
         this.circleGraphic.clear();
-        this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 0.4);
-        this.circleGraphic.drawCircle(0, 0, this.height * 1.3);
+        this.circleGraphic.lineStyle(5, parseInt("0x" + this.getColorByOwnerId().split('#')[1]), 1);
+        this.circleGraphic.drawCircle(0, 0, this.height * 1.5);
         this.circleGraphic.endFill();
         this.circleGraphic.visible = false;
     };
@@ -190,6 +215,8 @@ var Balloon = (function (_super) {
         return _this;
     }
     Balloon.onArriveEvent = function (balloon, tween, targetTower) {
+        balloon.kill();
+        balloon.soldierNumText.kill();
         var targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
         if (balloon.getOwnerId() === targetTower.ownerId) {
             targetSoldiersNum += parseInt(balloon.soldierNumText.text);
@@ -200,10 +227,19 @@ var Balloon = (function (_super) {
                 targetTower.switchOwner(balloon.getOwnerId());
                 targetSoldiersNum *= -1;
             }
+            if (Tower.isGameOver()) {
+                setTimeout(function () {
+                    if (towers.getFirstAlive().ownerId === GameInfo.playerId) {
+                        alert('You won the game, congratulation!!');
+                    }
+                    else {
+                        alert('You lose the game, but it is a Good Game');
+                    }
+                    location.reload(true);
+                }, 1000);
+            }
         }
         targetTower.soldierNumText.setText(targetSoldiersNum + "");
-        balloon.kill();
-        balloon.soldierNumText.kill();
     };
     Balloon.getAReadyBalloon = function (tower, soildersBeSent) {
         var balloon = balloons.getFirstDead();
@@ -243,6 +279,7 @@ function preload() {
     game.scale.pageAlignVertically = true;
     game.stage.backgroundColor = '#eee';
     game.stage.disableVisibilityChange = true;
+    game.load.image('background', 'img/background-mountain.png');
     game.load.image('ball', 'img/player2-balloon.png');
     game.load.image('brown-tower', 'img/brown-tower.png');
     game.load.spritesheet('text-bubbles', 'img/text-bubble50*40*3.png', 50, 40, 3);
@@ -251,16 +288,19 @@ function preload() {
 }
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
+    var background = game.add.image(0, 0, 'background');
+    background.height = game.height;
+    background.width = game.width;
+    background.inputEnabled = true;
+    background.events.onInputDown.add(Tower.toggleSelectAllTowers, null, 0, true);
     var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    spaceKey.onDown.add(Tower.toggleSelectAllTowers, this);
+    spaceKey.onDown.add(Tower.toggleSelectAllTowers, this, 1);
     towers = game.add.group();
     towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1, 0));
-    towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 20));
+    towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 10));
     towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 20));
-    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.1, 0, 5));
     towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.5, 0, 0));
-    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.9, 0, 5));
-    towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 20));
+    towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 10));
     towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 20));
     towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2, 0));
     balloons = game.add.group();
