@@ -330,15 +330,15 @@ function create() {
   towers = game.add.group();
   towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1, 0));
 
-  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 10));
-  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 20));
+  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 5));
+  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 10));
 
   // towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.1, 0, 5));
   towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.5, 0, 0));
   // towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.9, 0, 5));
 
-  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 10));
-  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 20));
+  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 5));
+  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 10));
 
   towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2, 0));
   //******

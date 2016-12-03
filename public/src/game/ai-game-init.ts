@@ -336,8 +336,9 @@ function preload() {
   game.load.image('background', 'img/background-mountain.png');
   game.load.image('ball', 'img/player2-balloon.png')
   game.load.image('brown-tower', 'img/brown-tower.png');
+  game.load.spritesheet('button', 'img/button.png',120,40);
   game.load.spritesheet('text-bubbles', 'img/text-bubble50*40*3.png', 50, 40, 3);
-  game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2)
+  game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2);
 
 
   //sprite sheet
@@ -367,15 +368,15 @@ function create() {
   towers = game.add.group();
   towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1, 0));
 
-  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 10));
-  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 20));
+  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 5));
+  towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 10));
 
   // towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.1, 0, 5));
   towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.5, 0, 0));
   // towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.9, 0, 5));
 
-  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 10));
-  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 20));
+  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 5));
+  towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 10));
 
   towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2, 0));
   //******
@@ -386,16 +387,25 @@ function create() {
   }
   //--------------------------------------
   //start to update game
-  setInterval(()=>{
+  //start button
+  let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.6, 'button', ()=>{
+    startButton.destroy();
+    updateTowersAndAi();
+  }, this, 1, 0, 2);
+  startButton.anchor.set(0.5);
+
+  function updateTowersAndAi () {
+    startButton.destroy();
     towers.forEach((tower: Tower) => {
       if (tower.ownerId !== 0) {
         let totalSoldiers = parseInt(tower.soldierNumText.text)
         totalSoldiers += 1;
         tower.soldierNumText.setText("" + totalSoldiers);
       }
-      ai.updateInfo();
     }, this);
-  }, 1500);
+    ai.updateInfo();
+    setTimeout(updateTowersAndAi, 1500);
+  }
   //add tower so it can be render at the top
   // tower1.visible = false;
   //set ready btn
@@ -409,7 +419,8 @@ function create() {
   //          }
   //          startButton.anchor.set(0.5);
   // there
-
+  //add text
+  game.add.text(16, game.world.height-40, "Use Mouse, A, Space to send balloon and take other's castle", {});
 }
 function update() {
   // towers.forEach((tower:Tower)=>{
@@ -418,10 +429,14 @@ function update() {
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
 function render() {
-  game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
+  if(GameInfo.playerId===1){
+    game.debug.text('you are player1, blue team', 16, 24);
+  }else{
+    game.debug.text('you are player2, orange team', 16, 24);
+
+  }
   game.debug.text(renderText, 16, 48);
   var name = (game.input.activePointer.targetObject) ? game.input.activePointer.targetObject.sprite.key : 'none';
-
   game.debug.text("Pointer Target: " + name, 16, 64);
 
 }
