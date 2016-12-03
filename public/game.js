@@ -22,7 +22,8 @@ function init(socket,roomName) {
 	loadFont();
 	initCamera();
 	initScene();
-	initInput()
+	initInput();
+	loadUnit();
 	loadMap("map02.json")
 
 	animate();
