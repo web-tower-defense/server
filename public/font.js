@@ -119,7 +119,7 @@ function loadFont() {
 	var loader = new THREE.FontLoader();
 	loader.load( 'fonts/' + fontName + '_' + fontWeight + '.typeface.json', function ( response ) {
 		font = response;
-		console.log("font : "+font);
+		//console.log("font : "+font);
 		//var textMesh1 = createText("haha");
 		//scene.add( textMesh1 );
 	} );

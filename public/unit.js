@@ -34,7 +34,7 @@ function loadUnit(){
 		objLoader.setPath("obj/unit/");
 		objLoader.load("spaceship1.obj", function ( object ) {
 
-			console.log(object);
+			//console.log(object);
 			unit_mesh = object;
 			unit_mesh.selectable = false;
 			unit_mesh.scale.set(0.2, 0.2, 0.2);

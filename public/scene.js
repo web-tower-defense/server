@@ -70,6 +70,6 @@ function generateSprite() {
 		var particle = this instanceof THREE.Sprite ? this : particle;
 		particle.position.set( Math.random() * 200 - 100,
 											Math.random() * 100 - 70,
-											Math.random() * -200 + 100 );
+											Math.random() * -200 + 70 );
 		particle.scale.x = particle.scale.y = Math.random() * 5;
 }
