@@ -376,7 +376,7 @@
 	GameInfo.MAX_PLAYERS = 3;
 	var Tower = (function (_super) {
 	    __extends(Tower, _super);
-	    function Tower(x, y, ownerId) {
+	    function Tower(x, y, ownerId, initSoldiers) {
 	        var _this = _super.call(this, game, x, y, 'brown-tower') || this;
 	        _this.ownerId = ownerId;
 	        _this.isSelected = false;
@@ -388,7 +388,10 @@
 	        game.add.existing(_this);
 	        _this.circleGraphic = game.add.graphics(_this.x, _this.y);
 	        _this.updateCirCleGraphic();
-	        _this.createText();
+	        _this.createTextAndTextBubble();
+	        if (initSoldiers) {
+	            _this.soldierNumText.text = initSoldiers + "";
+	        }
 	        return _this;
 	    }
 	    Tower.isNoneOfMyTowersSelected = function () {
@@ -438,24 +441,25 @@
 	            var tower = towers.getChildAt(i);
 	            if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
 	                if (parseInt(tower.soldierNumText.text) >= 1) {
-	                    tower.fire(towerClicked, game.input.keyboard.isDown(Phaser.Keyboard.CONTROL));
+	                    var isFireAll = game.input.keyboard.isDown(Phaser.Keyboard.A);
+	                    var soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll);
+	                    tower.fire(towerClicked, soildersBeSent);
 	                }
 	                tower.setSelected(false);
 	            }
 	        }
 	    };
-	    Tower.prototype.getAndUpdateFiredSoildersNum = function (isFireAll) {
-	        var totalSoilders = parseInt(this.soldierNumText.text);
-	        var soildersBeSent = 0;
+	    Tower.prototype.getSolidersBeSentAndUpdate = function (isFireAll) {
+	        var totalSoldiers = parseInt(this.soldierNumText.text);
+	        var soldiersLeft = 0;
 	        if (isFireAll) {
-	            soildersBeSent = parseInt(this.soldierNumText.text);
-	            this.soldierNumText.text = '0';
+	            soldiersLeft = 0;
 	        }
 	        else {
-	            soildersBeSent = Math.floor(totalSoilders / 2) + 1;
-	            this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
+	            soldiersLeft = Math.floor(totalSoldiers / 2);
 	        }
-	        return soildersBeSent;
+	        this.soldierNumText.setText(soldiersLeft + "");
+	        return totalSoldiers - soldiersLeft;
 	    };
 	    Tower.prototype.setSelected = function (wantSelect) {
 	        if (wantSelect) {
@@ -474,30 +478,22 @@
 	        this.circleGraphic.endFill();
 	        this.circleGraphic.visible = false;
 	    };
-	    Tower.prototype.createText = function () {
-	        this.soldierNumText = game.add.text(0, 0, "10", {
+	    Tower.prototype.createTextAndTextBubble = function () {
+	        this.soldierNumText = game.add.text(0, 0, "0", {
 	            font: 'bold 20px Arial',
 	            fill: 'white'
 	        });
 	        this.soldierNumText.setShadow(3, 3, 'rgba(0,0,0,0.2)', 2);
 	        this.soldierNumText.anchor.set(0.5);
 	        this.soldierNumText.alignTo(this, Phaser.TOP_RIGHT, 33, 0);
-	        this.player1TextBubbleImg = game.add.image(this.soldierNumText.x, this.soldierNumText.y, 'player1-text-bubble');
-	        this.player1TextBubbleImg.anchor.set(0.5);
-	        this.player2TextBubbleImg = game.add.image(this.soldierNumText.x, this.soldierNumText.y, 'player2-text-bubble');
-	        this.player2TextBubbleImg.anchor.set(0.5);
+	        this.textBubble = game.add.image(this.soldierNumText.x, this.soldierNumText.y, 'text-bubbles', this.ownerId);
+	        this.textBubble.anchor.set(0.5);
 	        this.soldierNumText.moveUp();
 	        this.soldierNumText.moveUp();
-	        if (this.ownerId === 1) {
-	            this.player2TextBubbleImg.visible = false;
-	        }
-	        else {
-	            this.player1TextBubbleImg.visible = false;
-	        }
 	        game.time.events.loop(1500, this.updateRenderTextContent, this);
 	    };
-	    Tower.prototype.fire = function (targetTower, isFireAll) {
-	        var balloon = Balloon.getAReadyBalloon(this, this.getAndUpdateFiredSoildersNum(isFireAll));
+	    Tower.prototype.fire = function (targetTower, soildersBeSent) {
+	        var balloon = Balloon.getAReadyBalloon(this, soildersBeSent);
 	        var moveDuration = game.physics.arcade.distanceBetween(this, targetTower) * 10;
 	        var moveTween = game.add.tween(balloon).to({
 	            x: targetTower.x,
@@ -507,22 +503,17 @@
 	    };
 	    Tower.prototype.switchOwner = function (newOwnerId) {
 	        this.ownerId = newOwnerId;
-	        this.updateRenderTextStyle();
+	        this.updateTextBubble();
 	        this.updateCirCleGraphic();
 	    };
 	    Tower.prototype.updateRenderTextContent = function () {
+	        if (this.ownerId === 0)
+	            return;
 	        var newSoldiersNum = parseInt(this.soldierNumText.text) + 1;
 	        this.soldierNumText.setText(newSoldiersNum + "");
 	    };
-	    Tower.prototype.updateRenderTextStyle = function () {
-	        if (this.ownerId === 1) {
-	            this.player2TextBubbleImg.visible = false;
-	            this.player1TextBubbleImg.visible = true;
-	        }
-	        else {
-	            this.player2TextBubbleImg.visible = false;
-	            this.player1TextBubbleImg.visible = true;
-	        }
+	    Tower.prototype.updateTextBubble = function () {
+	        this.textBubble.frame = this.ownerId;
 	    };
 	    Tower.prototype.getColorByOwnerId = function () {
 	        switch (this.ownerId) {
@@ -556,8 +547,6 @@
 	        _this.soldierNumText.position = _this.position;
 	        return _this;
 	    }
-	    Balloon.prototype.hide = function () {
-	    };
 	    Balloon.onArriveEvent = function (balloon, tween, targetTower) {
 	        var targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
 	        if (balloon.getOwnerId() === targetTower.ownerId) {
@@ -614,8 +603,7 @@
 	    game.stage.disableVisibilityChange = true;
 	    game.load.image('ball', 'img/player2-balloon.png');
 	    game.load.image('brown-tower', 'img/brown-tower.png');
-	    game.load.image('player1-text-bubble', 'img/player1-text-bubble.png');
-	    game.load.image('player2-text-bubble', 'img/player2-text-bubble.png');
+	    game.load.spritesheet('text-bubbles', 'img/text-bubble50*40*3.png', 50, 40, 3);
 	    game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2);
 	    game.load.spritesheet('button', 'img/button.png', 120, 40);
 	}
@@ -624,11 +612,15 @@
 	    var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	    spaceKey.onDown.add(Tower.toggleSelectAllTowers, this);
 	    towers = game.add.group();
-	    towers.add(new Tower(game.world.width * 0.2, game.world.height * 0.3, 1));
-	    towers.add(new Tower(game.world.width * 0.2, game.world.height * 0.9, 1));
-	    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.6, 1));
-	    towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.9, 2));
-	    towers.add(new Tower(game.world.width * 0.8, game.world.height * 0.3, 2));
+	    towers.add(new Tower(game.world.width * 0.1, game.world.height * 0.5, 1, 0));
+	    towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.3, 0, 20));
+	    towers.add(new Tower(game.world.width * 0.3, game.world.height * 0.7, 0, 20));
+	    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.1, 0, 5));
+	    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.5, 0, 0));
+	    towers.add(new Tower(game.world.width * 0.5, game.world.height * 0.9, 0, 5));
+	    towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.7, 0, 20));
+	    towers.add(new Tower(game.world.width * 0.7, game.world.height * 0.3, 0, 20));
+	    towers.add(new Tower(game.world.width * 0.9, game.world.height * 0.5, 2, 0));
 	    balloons = game.add.group();
 	    for (var i = 0; i < 40; i++) {
 	        balloons.add(new Balloon());
@@ -639,6 +631,8 @@
 	function render() {
 	    game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
 	    game.debug.text(renderText, 16, 48);
+	    var name = (game.input.activePointer.targetObject) ? game.input.activePointer.targetObject.sprite.key : 'none';
+	    game.debug.text("Pointer Target: " + name, 16, 64);
 	}
 	function bindSocketEvent() {
 	    socket.on('startGame', function () {
@@ -660,7 +654,7 @@
 	    socket = soc;
 	    GameInfo.playerId = playerId;
 	    GameInfo.roomName = roomName;
-	    game = new Phaser.Game(480, 320, Phaser.AUTO, null, {
+	    game = new Phaser.Game(960, 640, Phaser.AUTO, null, {
 	        preload: preload,
 	        create: create,
 	        update: update,
