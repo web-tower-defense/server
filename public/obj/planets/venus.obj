@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'RockyPlanets.blend'
 # www.blender.org
-mtllib Planet2.mtl
+mtllib venus.mtl
 o Venus.001_Sphere.007
 v -0.090753 -3.011429 0.283444
 v -0.180633 -2.967857 0.564160
