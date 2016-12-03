@@ -444,6 +444,19 @@
 	            }
 	        }
 	    };
+	    Tower.prototype.getAndUpdateFiredSoildersNum = function (isFireAll) {
+	        var totalSoilders = parseInt(this.soldierNumText.text);
+	        var soildersBeSent = 0;
+	        if (isFireAll) {
+	            soildersBeSent = parseInt(this.soldierNumText.text);
+	            this.soldierNumText.text = '0';
+	        }
+	        else {
+	            soildersBeSent = Math.floor(totalSoilders / 2) + 1;
+	            this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
+	        }
+	        return soildersBeSent;
+	    };
 	    Tower.prototype.setSelected = function (wantSelect) {
 	        if (wantSelect) {
 	            this.isSelected = true;
@@ -484,45 +497,13 @@
 	        game.time.events.loop(1500, this.updateRenderTextContent, this);
 	    };
 	    Tower.prototype.fire = function (targetTower, isFireAll) {
-	        var balloon = balloons.getFirstDead();
-	        if (!balloon) {
-	            balloon = new Balloon();
-	            balloons.add(balloon);
-	        }
-	        var totalSoilders = parseInt(this.soldierNumText.text);
-	        var soildersBeSent = 0;
-	        if (isFireAll) {
-	            soildersBeSent = parseInt(this.soldierNumText.text);
-	            this.soldierNumText.text = '0';
-	        }
-	        else {
-	            soildersBeSent = Math.floor(totalSoilders / 2) + 1;
-	            this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
-	        }
-	        balloon.setReadyToFire(this.ownerId, soildersBeSent);
-	        balloon.x = this.x;
-	        balloon.y = this.y;
+	        var balloon = Balloon.getAReadyBalloon(this, this.getAndUpdateFiredSoildersNum(isFireAll));
 	        var moveDuration = game.physics.arcade.distanceBetween(this, targetTower) * 10;
 	        var moveTween = game.add.tween(balloon).to({
 	            x: targetTower.x,
 	            y: targetTower.y
 	        }, moveDuration, null, true);
-	        moveTween.onComplete.add(function (balloon, tween, targetTower) {
-	            var targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
-	            if (balloon.getOwnerId() === targetTower.ownerId) {
-	                targetSoldiersNum += parseInt(balloon.soldierNumText.text);
-	            }
-	            else {
-	                targetSoldiersNum -= parseInt(balloon.soldierNumText.text);
-	                if (targetSoldiersNum < 0) {
-	                    targetTower.switchOwner(balloon.getOwnerId());
-	                    targetSoldiersNum *= -1;
-	                }
-	            }
-	            targetTower.soldierNumText.setText(targetSoldiersNum + "");
-	            balloon.kill();
-	            balloon.soldierNumText.kill();
-	        }, this, 1, targetTower);
+	        moveTween.onComplete.add(Balloon.onArriveEvent, this, 1, targetTower);
 	    };
 	    Tower.prototype.switchOwner = function (newOwnerId) {
 	        this.ownerId = newOwnerId;
@@ -577,16 +558,40 @@
 	    }
 	    Balloon.prototype.hide = function () {
 	    };
-	    Balloon.prototype.setReadyToFire = function (ownerId, soildersBeSent) {
-	        if (ownerId === 1) {
-	            this.frame = Balloon.PLAYER1_BALLOON_FRAME_INDEX;
+	    Balloon.onArriveEvent = function (balloon, tween, targetTower) {
+	        var targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
+	        if (balloon.getOwnerId() === targetTower.ownerId) {
+	            targetSoldiersNum += parseInt(balloon.soldierNumText.text);
 	        }
 	        else {
-	            this.frame = Balloon.PLAYER2_BALLOON_FRAME_INDEX;
+	            targetSoldiersNum -= parseInt(balloon.soldierNumText.text);
+	            if (targetSoldiersNum < 0) {
+	                targetTower.switchOwner(balloon.getOwnerId());
+	                targetSoldiersNum *= -1;
+	            }
 	        }
-	        this.revive();
-	        this.soldierNumText.revive();
-	        this.soldierNumText.setText(soildersBeSent + "");
+	        targetTower.soldierNumText.setText(targetSoldiersNum + "");
+	        balloon.kill();
+	        balloon.soldierNumText.kill();
+	    };
+	    Balloon.getAReadyBalloon = function (tower, soildersBeSent) {
+	        var balloon = balloons.getFirstDead();
+	        if (!balloon) {
+	            balloon = new Balloon();
+	            balloons.add(balloon);
+	        }
+	        if (tower.ownerId === 1) {
+	            balloon.frame = Balloon.PLAYER1_BALLOON_FRAME_INDEX;
+	        }
+	        else {
+	            balloon.frame = Balloon.PLAYER2_BALLOON_FRAME_INDEX;
+	        }
+	        balloon.revive();
+	        balloon.soldierNumText.revive();
+	        balloon.soldierNumText.setText(soildersBeSent + "");
+	        balloon.x = tower.x;
+	        balloon.y = tower.y;
+	        return balloon;
 	    };
 	    Balloon.prototype.getOwnerId = function () {
 	        if (this.frame === Balloon.PLAYER1_BALLOON_FRAME_INDEX) {

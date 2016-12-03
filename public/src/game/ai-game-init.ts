@@ -21,7 +21,7 @@ class Tower extends Phaser.Sprite {
   public level: number;
   public maxSoldiers: number;
   private isSelected: boolean = false;
-  private soldierNumText: Phaser.Text;
+  public soldierNumText: Phaser.Text;
   private circleGraphic: Phaser.Graphics;
   private player1TextBubbleImg: Phaser.Image;
   private player2TextBubbleImg: Phaser.Image;
@@ -98,6 +98,18 @@ class Tower extends Phaser.Sprite {
       }
     }
   }
+  private getAndUpdateFiredSoildersNum(isFireAll:boolean):number{
+    let totalSoilders = parseInt(this.soldierNumText.text);
+    let soildersBeSent = 0;
+    if (isFireAll) {
+      soildersBeSent = parseInt(this.soldierNumText.text);
+      this.soldierNumText.text = '0';
+    } else {
+      soildersBeSent = Math.floor(totalSoilders/2)+1;
+      this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
+    }
+    return soildersBeSent;
+  }
   public setSelected(wantSelect: boolean){
     if(wantSelect){
       this.isSelected = true;
@@ -137,47 +149,16 @@ class Tower extends Phaser.Sprite {
     game.time.events.loop(1500, this.updateRenderTextContent, this);
   }
   private fire(targetTower: Tower, isFireAll: boolean) {
-    let balloon = balloons.getFirstDead() as Balloon;
-    if (!balloon) {
-      balloon = new Balloon();
-      balloons.add(balloon);
-    }
 
-    let totalSoilders = parseInt(this.soldierNumText.text);
-    let soildersBeSent = 0;
-    if (isFireAll) {
-      soildersBeSent = parseInt(this.soldierNumText.text);
-      this.soldierNumText.text = '0';
-    } else {
-      soildersBeSent = Math.floor(totalSoilders/2)+1;
-      this.soldierNumText.text = (totalSoilders - soildersBeSent) + "";
-    }
-    balloon.setReadyToFire(this.ownerId, soildersBeSent);
+    let balloon = Balloon.getAReadyBalloon(this, this.getAndUpdateFiredSoildersNum(isFireAll));
 
 
-    balloon.x = this.x;
-    balloon.y = this.y;
     let moveDuration = game.physics.arcade.distanceBetween(this, targetTower) * 10;//distance equals 100-300
     let moveTween = game.add.tween(balloon).to({
       x: targetTower.x,
       y: targetTower.y
     }, moveDuration, null, true);
-    moveTween.onComplete.add((balloon: Balloon, tween: Phaser.Tween, targetTower: Tower) => {
-      let targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
-      if (balloon.getOwnerId() === targetTower.ownerId) {
-        targetSoldiersNum += parseInt(balloon.soldierNumText.text);
-      } else {
-        targetSoldiersNum -= parseInt(balloon.soldierNumText.text);
-        if (targetSoldiersNum < 0) {
-          targetTower.switchOwner(balloon.getOwnerId());
-          targetSoldiersNum *= -1;
-        }
-      }
-      targetTower.soldierNumText.setText(targetSoldiersNum + "");
-      balloon.kill();
-      balloon.soldierNumText.kill();
-
-    }, this, 1, targetTower);
+    moveTween.onComplete.add(Balloon.onArriveEvent, this, 1, targetTower);
 
   }
   public switchOwner(newOwnerId: number) {
@@ -221,15 +202,39 @@ class Balloon extends Phaser.Sprite {
   public hide(){
 
   }
-  public setReadyToFire(ownerId:number, soildersBeSent:number){
-    if (ownerId === 1) {
-      this.frame = Balloon.PLAYER1_BALLOON_FRAME_INDEX;
+  public static onArriveEvent(balloon: Balloon, tween: Phaser.Tween, targetTower: Tower){
+    let targetSoldiersNum = parseInt(targetTower.soldierNumText.text);
+    if (balloon.getOwnerId() === targetTower.ownerId) {
+      targetSoldiersNum += parseInt(balloon.soldierNumText.text);
     } else {
-      this.frame = Balloon.PLAYER2_BALLOON_FRAME_INDEX;
+      targetSoldiersNum -= parseInt(balloon.soldierNumText.text);
+      if (targetSoldiersNum < 0) {
+        targetTower.switchOwner(balloon.getOwnerId());
+        targetSoldiersNum *= -1;
+      }
     }
-    this.revive();
-    this.soldierNumText.revive();
-    this.soldierNumText.setText(soildersBeSent+"");
+    targetTower.soldierNumText.setText(targetSoldiersNum + "");
+    balloon.kill();
+    balloon.soldierNumText.kill();
+
+  }
+  public static getAReadyBalloon(tower:Tower, soildersBeSent:number){
+    let balloon = balloons.getFirstDead() as Balloon;
+    if (!balloon) {
+      balloon = new Balloon();
+      balloons.add(balloon);
+    }
+    if (tower.ownerId === 1) {
+      balloon.frame = Balloon.PLAYER1_BALLOON_FRAME_INDEX;
+    } else {
+      balloon.frame = Balloon.PLAYER2_BALLOON_FRAME_INDEX;
+    }
+    balloon.revive();
+    balloon.soldierNumText.revive();
+    balloon.soldierNumText.setText(soildersBeSent+"");
+    balloon.x = tower.x;
+    balloon.y = tower.y;
+    return balloon;
   }
   public getOwnerId() {
 
