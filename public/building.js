@@ -57,7 +57,7 @@ Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;
 	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
-		console.log("sent from:"+this.unitID+"to:"+this.target);
+		//console.log("sent from:"+this.unitID+"to:"+this.target);
 		this.curUnit--;
 		this.sent_unit_timer=this.sent_unit_cycle;
 		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,this.unit_vel);
