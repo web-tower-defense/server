@@ -83,6 +83,8 @@ function socketHandler(socket) {
                 var player = _a[_i];
                 if (player && player.socketId === socket.id) {
                     io.to(roomName).emit('roommateDisconnect', roomName);
+                    clearInterval(fullRooms[roomName].updateTowersTimer);
+                    delete fullRooms[roomName];
                     io.sockets.emit('resetRooms', getRoomsData());
                     return;
                 }
