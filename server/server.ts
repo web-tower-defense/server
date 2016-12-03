@@ -78,7 +78,10 @@ function socketHandler(socket){
 	socket.on('updateMouseY', (roomName, playerId, inputY)=>{
 		io.to(roomName).emit('updateMouseY', playerId, inputY);
 	})
-	// outside the room
+  socket.on('fire', (roomName, towerIdx,isFireAll,targetTowerIdx)=>{
+    io.to(roomName).emit('fire', roomName, towerIdx,isFireAll,targetTowerIdx);
+  })
+  // outside the room
 	socket.on('disconnect', function(){
 		for(let roomName in fullRooms){
 			for(let player of fullRooms[roomName].player){

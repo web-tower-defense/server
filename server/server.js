@@ -71,6 +71,9 @@ function socketHandler(socket) {
     socket.on('updateMouseY', function (roomName, playerId, inputY) {
         io.to(roomName).emit('updateMouseY', playerId, inputY);
     });
+    socket.on('fire', function (roomName, towerIdx, isFireAll, targetTowerIdx) {
+        io.to(roomName).emit('fire', roomName, towerIdx, isFireAll, targetTowerIdx);
+    });
     socket.on('disconnect', function () {
         for (var roomName in fullRooms) {
             for (var _i = 0, _a = fullRooms[roomName].player; _i < _a.length; _i++) {
