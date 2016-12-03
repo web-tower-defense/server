@@ -7,9 +7,9 @@
         {
             "name": "venus",
             "dirpath": "obj/planets/",
-            "path": "Planet2.obj",
+            "path": "venus.obj",
             "material":{
-                "path": "Planet2.mtl"
+                "path": "venus.mtl"
             }
         }
     ],
