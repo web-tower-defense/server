@@ -8,19 +8,20 @@ var onProgress = function ( xhr ) {
 
 var onError = function ( xhr ) { };
 var tmp_data;
+
 function loadBuilding(building,data){
 
 	var mtlLoader = new THREE.MTLLoader();
 
-	mtlLoader.setPath( 'obj/planets/' );
-	mtlLoader.load( 'Planet2.mtl', function( materials ) {
+	mtlLoader.setPath( building.dirpath);
+	mtlLoader.load( building.material.path, function( materials ) {
 		materials.preload();
-		console.log("load : Planet2.mtl");
+		//console.log("load : Planet2.mtl");
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
-		objLoader.setPath( 'obj/planets/' );
-		objLoader.load( 'Planet2.obj', function ( object ) {
-			console.log("load : Planet2.obj");
+		objLoader.setPath( building.dirpath );
+		objLoader.load(building.path, function ( object ) {
+			//console.log("load : Planet2.obj");
 			//object.position.y = - 10;
 			//object.scale.set(10,10,10);
 			object.name = "root";
@@ -72,7 +73,7 @@ function loadBuilding(building,data){
 					pos.x,
 					pos.y+5,
 					pos.z
-				);
+				  );
 				capacity_text.selectable = false;
 				capacity_text.dynamic = true;
     			scene.add( capacity_text );

@@ -6,17 +6,18 @@
     "models":
     [
         {
-            "name": "base",
-            "path": "obj/my_castle/castle.obj",
+            "name": "venus",
+            "dirpath": "obj/planets/",
+            "path": "Planet2.obj",
             "material":{
-                "path": "obj/my_castle/castle.mtl"
+                "path": "Planet2.mtl"
             }
         }
     ],
     "buildings":
     [
         {
-            "name": "base",
+            "name": "venus",
             "owner": 1,
             "curUnit": 10,
             "maxUnit": 100,
@@ -26,19 +27,19 @@
             "position": [5,10]
 
         },{
-            "name": "base",
+            "name": "venus",
       			"owner": 0,
             "curUnit": 30,
             "maxUnit": 100,
             "position": [9,10]
         },{
-            "name": "base",
+            "name": "venus",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
             "position": [13,10]
         },{
-            "name": "base",
+            "name": "venus",
             "owner": 2,
             "curUnit": 10,
             "maxUnit": 100,
