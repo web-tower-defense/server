@@ -327,9 +327,13 @@ function preload() {
   //init socket
   bindSocketEvent();
   //game props
-  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-  game.scale.pageAlignHorizontally = true;
-  game.scale.pageAlignVertically = true;
+  if(game.device.desktop){
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+  }else{
+    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+  }
   game.stage.backgroundColor = '#eee';
   game.stage.disableVisibilityChange = true;
   //images
@@ -464,7 +468,7 @@ export default function gameInit(playerId: number, soc: SocketIOClient.Socket, r
   socket = soc;
   GameInfo.playerId = playerId;
   GameInfo.roomName = roomName;
-  game = new Phaser.Game(960, 640, Phaser.AUTO, null, {
+  game = new Phaser.Game(1300, 600, Phaser.AUTO, null, {
     preload: preload,
     create: create,
     update: update,

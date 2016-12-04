@@ -1,8 +1,9 @@
 body {
   background-color: #fafafa;
-  margin-top: 40px; }
+  background-size: cover;
+  margin: 0px; }
   body #room-system-div {
-    margin: 10px auto;
+    margin: 0px auto;
     max-width: 400px;
     display: flex;
     flex-direction: column;

@@ -1,5 +1,4 @@
 import gameInit from "./game/game-init";
-import aiGameInit from "./game/ai-game-init";
 export default function startRoomSystem(socket:SocketIOClient.Socket){
 	var roomSystem = {
 	  init: function() {
@@ -21,7 +20,7 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 	        roomSystem.createNewRoomEvent();
 	      }
 	    }
-			this.roomsDiv.firstChild.onclick = aiGameInit.bind(null, 1, socket, 'play with ai');
+			this.roomsDiv.firstChild.onclick = gameInit.bind(null, 1, socket, 'play with ai', true);
 	    for (var i = 1; i < this.roomsDiv.childElementCount; i++) {
 				var room = this.roomsDiv.children[i];
 				if(room.lastChild.className==='join-room-btn'){

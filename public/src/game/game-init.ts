@@ -3,11 +3,53 @@ var socket: SocketIOClient.Socket;
 var renderText = "init";
 var towers: Phaser.Group;
 var balloons: Phaser.Group;
+class AI{
+  private allSoldiers:number;
+  public updateInfo(){
+    this.allSoldiers=0;
+    for(let i=0; i<towers.length; i++){
+      let tower = (towers.getChildAt(i) as Tower);
+      if(tower.ownerId===2){
+        this.allSoldiers+=parseInt(tower.soldierNumText.text);
+      }
+    }
+    this.analize();
+  }
+  private getMinTowerSoldierNumIdxArray():[number, number]{
+    let minNum=1000, idx=0;
+    for(let i=0; i<towers.length; i++){
+      let tower = towers.getChildAt(i) as Tower;
+      if(tower.ownerId!==2){
+        let currNum=parseInt(tower.soldierNumText.text);
+        if(minNum>currNum){
+          minNum=currNum;
+          idx=i;
+        }
+
+      }
+    }
+    return [minNum, idx];
+  }
+  private analize(){
+    let numIdxArray = this.getMinTowerSoldierNumIdxArray();
+    if(this.allSoldiers>numIdxArray[0]){
+      let targetTower = towers.getChildAt(numIdxArray[1]) as Tower
+      for(let i=0; i<towers.length; i++){
+        let tower= towers.getChildAt(i) as Tower;
+        if(tower.ownerId===2){
+          tower.fire(targetTower, tower.getSolidersBeSentAndUpdate(true));
+
+        }
+      }
+    }
+  }
+}
 class GameInfo {
   public static isGameStart: boolean = false;
   public static playerId: number
   public static roomName: string
   public static MAX_PLAYERS: number = 3;
+  public static isSinglePlayer: boolean;
 }
 // class Weapon extends Phaser.Weapon{
 //   constructor(){
@@ -25,7 +67,7 @@ class Tower extends Phaser.Sprite {
   private circleGraphic: Phaser.Graphics;
   private textBubble: Phaser.Image;
 
-  public constructor(x: number, y: number, public ownerId: number, initSoldiers?: number) {
+  public constructor(x: number, y: number, public ownerId: number, initSoldiers?:number) {
 
     super(game, x, y, 'brown-tower');
     game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -118,7 +160,10 @@ class Tower extends Phaser.Sprite {
       let tower = towers.getChildAt(i) as Tower;
       if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
         if (parseInt(tower.soldierNumText.text) >= 1) {
-          // TODO: emit a socket event
+          if(GameInfo.isSinglePlayer){
+            let soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll)
+            tower.fire(towerClicked, soildersBeSent);
+          }
           socket.emit('fire', GameInfo.roomName, towers.getChildIndex(tower), isFireAll, towers.getChildIndex(towerClicked))
         }
         tower.setSelected(false);
@@ -293,17 +338,22 @@ function preload() {
   //init socket
   bindSocketEvent();
   //game props
-  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-  game.scale.pageAlignHorizontally = true;
-  game.scale.pageAlignVertically = true;
+  if(game.device.desktop){
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+  }else{
+    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+  }
   game.stage.backgroundColor = '#eee';
   game.stage.disableVisibilityChange = true;
   //images
   game.load.image('background', 'img/background-mountain.png');
   game.load.image('ball', 'img/player2-balloon.png')
   game.load.image('brown-tower', 'img/brown-tower.png');
+  game.load.spritesheet('button', 'img/button.png',120,40);
   game.load.spritesheet('text-bubbles', 'img/text-bubble50*40*3.png', 50, 40, 3);
-  game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2)
+  game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2);
 
 
   //sprite sheet
@@ -312,6 +362,9 @@ function preload() {
 function create() {
   // init physics engine
   game.physics.startSystem(Phaser.Physics.ARCADE);
+  //ai
+
+
   //background
   let background = game.add.image(0, 0, 'background');
   background.height = game.height;
@@ -348,21 +401,36 @@ function create() {
     balloons.add(new Balloon());
   }
   //--------------------------------------
+  function updateAi (ai:any) {
+    ai.updateInfo();
+    setTimeout(updateAi, 4000);
+  }
+  function updateTowers () {
+    towers.forEach((tower: Tower) => {
+      if (tower.ownerId !== 0) {
+        let totalSoldiers = parseInt(tower.soldierNumText.text)
+        totalSoldiers += 1;
+        tower.soldierNumText.setText("" + totalSoldiers);
+      }
+    }, this);
+    setTimeout(updateTowers, 1500);
+  }
+  if(GameInfo.isSinglePlayer){
 
-  //add tower so it can be render at the top
-  // tower1.visible = false;
-  //set ready btn
-  // TODO: delte this after devmode
-  //un comment this to there
-  //          let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', ready, this, 1, 0, 2);
-  //          function ready() {
-  socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
-  //            startButton.destroy();
-  //            renderText = "you are ready, now waiting the other";
-  //          }
-  //          startButton.anchor.set(0.5);
-  // there
+    let ai = new AI();
+    //start to update game
+    //start button
+    let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.6, 'button', ()=>{
+      startButton.destroy();
+      updateTowers();
+      updateAi(ai);
+    }, this, 1, 0, 2);
+    startButton.anchor.set(0.5);
+  }else{
+    socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
 
+  }
+  game.add.text(16, game.world.height-40, "Use Mouse, A, Space to send balloon and take other's castle", {});
 }
 function update() {
   // towers.forEach((tower:Tower)=>{
@@ -371,7 +439,12 @@ function update() {
   // socket.emit('updateMouseY', GameInfo.roomName, GameInfo.playerId, game.input.y);
 }
 function render() {
-  game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
+  if(GameInfo.playerId===1){
+    game.debug.text('you are player1, blue team', 16, 24);
+  }else{
+    game.debug.text('you are player2, orange team', 16, 24);
+
+  }
   game.debug.text(renderText, 16, 48);
   var name = (game.input.activePointer.targetObject) ? game.input.activePointer.targetObject.sprite.key : 'none';
 
@@ -407,14 +480,15 @@ function bindSocketEvent() {
 		location.reload();
 	})
 }
-export default function gameInit(playerId: number, soc: SocketIOClient.Socket, roomName: string) {
+export default function gameInit(playerId: number, soc: SocketIOClient.Socket, roomName: string, isSinglePlayer?:boolean) {
   while (document.body.firstChild) {
     document.body.removeChild(document.body.firstChild);
   }
   socket = soc;
   GameInfo.playerId = playerId;
   GameInfo.roomName = roomName;
-  game = new Phaser.Game(960, 640, Phaser.AUTO, null, {
+  GameInfo.isSinglePlayer = isSinglePlayer;
+  game = new Phaser.Game(1300, 600, Phaser.AUTO, null, {
     preload: preload,
     create: create,
     update: update,

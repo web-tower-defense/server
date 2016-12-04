@@ -9,6 +9,47 @@ var socket;
 var renderText = "init";
 var towers;
 var balloons;
+var AI = (function () {
+    function AI() {
+    }
+    AI.prototype.updateInfo = function () {
+        this.allSoldiers = 0;
+        for (var i = 0; i < towers.length; i++) {
+            var tower = towers.getChildAt(i);
+            if (tower.ownerId === 2) {
+                this.allSoldiers += parseInt(tower.soldierNumText.text);
+            }
+        }
+        this.analize();
+    };
+    AI.prototype.getMinTowerSoldierNumIdxArray = function () {
+        var minNum = 1000, idx = 0;
+        for (var i = 0; i < towers.length; i++) {
+            var tower = towers.getChildAt(i);
+            if (tower.ownerId !== 2) {
+                var currNum = parseInt(tower.soldierNumText.text);
+                if (minNum > currNum) {
+                    minNum = currNum;
+                    idx = i;
+                }
+            }
+        }
+        return [minNum, idx];
+    };
+    AI.prototype.analize = function () {
+        var numIdxArray = this.getMinTowerSoldierNumIdxArray();
+        if (this.allSoldiers > numIdxArray[0]) {
+            var targetTower = towers.getChildAt(numIdxArray[1]);
+            for (var i = 0; i < towers.length; i++) {
+                var tower = towers.getChildAt(i);
+                if (tower.ownerId === 2) {
+                    tower.fire(targetTower, tower.getSolidersBeSentAndUpdate(true));
+                }
+            }
+        }
+    };
+    return AI;
+}());
 var GameInfo = (function () {
     function GameInfo() {
     }
@@ -108,6 +149,10 @@ var Tower = (function (_super) {
             var tower = towers.getChildAt(i);
             if (tower.ownerId === GameInfo.playerId && tower.isSelected) {
                 if (parseInt(tower.soldierNumText.text) >= 1) {
+                    if (GameInfo.isSinglePlayer) {
+                        var soildersBeSent = tower.getSolidersBeSentAndUpdate(isFireAll);
+                        tower.fire(towerClicked, soildersBeSent);
+                    }
                     socket.emit('fire', GameInfo.roomName, towers.getChildIndex(tower), isFireAll, towers.getChildIndex(towerClicked));
                 }
                 tower.setSelected(false);
@@ -265,14 +310,20 @@ Balloon.PLAYER1_BALLOON_FRAME_INDEX = 0;
 Balloon.PLAYER2_BALLOON_FRAME_INDEX = 1;
 function preload() {
     bindSocketEvent();
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    game.scale.pageAlignHorizontally = true;
-    game.scale.pageAlignVertically = true;
+    if (game.device.desktop) {
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVertically = true;
+    }
+    else {
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+    }
     game.stage.backgroundColor = '#eee';
     game.stage.disableVisibilityChange = true;
     game.load.image('background', 'img/background-mountain.png');
     game.load.image('ball', 'img/player2-balloon.png');
     game.load.image('brown-tower', 'img/brown-tower.png');
+    game.load.spritesheet('button', 'img/button.png', 120, 40);
     game.load.spritesheet('text-bubbles', 'img/text-bubble50*40*3.png', 50, 40, 3);
     game.load.spritesheet('balloons', 'img/balloon-sprite-sheet-60*180.png', 60, 90, 2);
     game.load.spritesheet('button', 'img/button.png', 120, 40);
@@ -298,12 +349,43 @@ function create() {
     for (var i = 0; i < 40; i++) {
         balloons.add(new Balloon());
     }
-    socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
+    function updateAi(ai) {
+        ai.updateInfo();
+        setTimeout(updateAi, 4000);
+    }
+    function updateTowers() {
+        towers.forEach(function (tower) {
+            if (tower.ownerId !== 0) {
+                var totalSoldiers = parseInt(tower.soldierNumText.text);
+                totalSoldiers += 1;
+                tower.soldierNumText.setText("" + totalSoldiers);
+            }
+        }, this);
+        setTimeout(updateTowers, 1500);
+    }
+    if (GameInfo.isSinglePlayer) {
+        var ai_1 = new AI();
+        var startButton_1 = game.add.button(game.world.width * 0.5, game.world.height * 0.6, 'button', function () {
+            startButton_1.destroy();
+            updateTowers();
+            updateAi(ai_1);
+        }, this, 1, 0, 2);
+        startButton_1.anchor.set(0.5);
+    }
+    else {
+        socket.emit('readyToStartGame', GameInfo.roomName, GameInfo.playerId);
+    }
+    game.add.text(16, game.world.height - 40, "Use Mouse, A, Space to send balloon and take other's castle", {});
 }
 function update() {
 }
 function render() {
-    game.debug.text('you are player:' + GameInfo.playerId, 16, 24);
+    if (GameInfo.playerId === 1) {
+        game.debug.text('you are player1, blue team', 16, 24);
+    }
+    else {
+        game.debug.text('you are player2, orange team', 16, 24);
+    }
     game.debug.text(renderText, 16, 48);
     var name = (game.input.activePointer.targetObject) ? game.input.activePointer.targetObject.sprite.key : 'none';
     game.debug.text("Pointer Target: " + name, 16, 64);
@@ -337,14 +419,15 @@ function bindSocketEvent() {
         location.reload();
     });
 }
-function gameInit(playerId, soc, roomName) {
+function gameInit(playerId, soc, roomName, isSinglePlayer) {
     while (document.body.firstChild) {
         document.body.removeChild(document.body.firstChild);
     }
     socket = soc;
     GameInfo.playerId = playerId;
     GameInfo.roomName = roomName;
-    game = new Phaser.Game(960, 640, Phaser.AUTO, null, {
+    GameInfo.isSinglePlayer = isSinglePlayer;
+    game = new Phaser.Game(1300, 600, Phaser.AUTO, null, {
         preload: preload,
         create: create,
         update: update,
