@@ -308,7 +308,7 @@ Balloon.PLAYER1_BALLOON_FRAME_INDEX = 0;
 Balloon.PLAYER2_BALLOON_FRAME_INDEX = 1;
 function preload() {
     bindSocketEvent();
-    game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
     game.stage.backgroundColor = '#eee';
@@ -345,11 +345,15 @@ function create() {
     }
     var startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.6, 'button', function () {
         startButton.destroy();
-        updateTowersAndAi();
+        updateTowers();
+        updateAi();
     }, this, 1, 0, 2);
     startButton.anchor.set(0.5);
-    function updateTowersAndAi() {
-        startButton.destroy();
+    function updateAi() {
+        ai.updateInfo();
+        setTimeout(updateAi, 4000);
+    }
+    function updateTowers() {
         towers.forEach(function (tower) {
             if (tower.ownerId !== 0) {
                 var totalSoldiers = parseInt(tower.soldierNumText.text);
@@ -357,8 +361,7 @@ function create() {
                 tower.soldierNumText.setText("" + totalSoldiers);
             }
         }, this);
-        ai.updateInfo();
-        setTimeout(updateTowersAndAi, 1500);
+        setTimeout(updateTowers, 1500);
     }
     game.add.text(16, game.world.height - 40, "Use Mouse, A, Space to send balloon and take other's castle", {});
 }

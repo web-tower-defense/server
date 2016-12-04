@@ -137,10 +137,5 @@ export default function startRoomSystem(socket:SocketIOClient.Socket){
 		let playerId = socketIds.indexOf(socket.id)===0? 1:2;
 		gameInit(playerId, socket, roomName);
 	})
-	socket.on('roommateDisconnect',function(roomName){
-		socket.emit('leaveRoom', roomName);
-		alert('the other player lost connection');
-		location.reload();
-	})
 	roomSystem.init();
 }

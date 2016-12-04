@@ -293,7 +293,7 @@ function preload() {
   //init socket
   bindSocketEvent();
   //game props
-  game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   game.scale.pageAlignHorizontally = true;
   game.scale.pageAlignVertically = true;
   game.stage.backgroundColor = '#eee';
@@ -399,6 +399,13 @@ function bindSocketEvent() {
       }
     }, this);
   })
+  socket.on('roommateDisconnect',function(roomName){
+    if(Tower.isGameOver())return;
+
+		socket.emit('leaveRoom', roomName);
+		alert('the other player lost connection');
+		location.reload();
+	})
 }
 export default function gameInit(playerId: number, soc: SocketIOClient.Socket, roomName: string) {
   while (document.body.firstChild) {

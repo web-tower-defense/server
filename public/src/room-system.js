@@ -135,11 +135,6 @@ function startRoomSystem(socket) {
         var playerId = socketIds.indexOf(socket.id) === 0 ? 1 : 2;
         game_init_1.default(playerId, socket, roomName);
     });
-    socket.on('roommateDisconnect', function (roomName) {
-        socket.emit('leaveRoom', roomName);
-        alert('the other player lost connection');
-        location.reload();
-    });
     roomSystem.init();
 }
 Object.defineProperty(exports, "__esModule", { value: true });

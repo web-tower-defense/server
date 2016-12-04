@@ -265,7 +265,7 @@ Balloon.PLAYER1_BALLOON_FRAME_INDEX = 0;
 Balloon.PLAYER2_BALLOON_FRAME_INDEX = 1;
 function preload() {
     bindSocketEvent();
-    game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
     game.stage.backgroundColor = '#eee';
@@ -328,6 +328,13 @@ function bindSocketEvent() {
                 tower.soldierNumText.setText("" + totalSoldiers);
             }
         }, _this);
+    });
+    socket.on('roommateDisconnect', function (roomName) {
+        if (Tower.isGameOver())
+            return;
+        socket.emit('leaveRoom', roomName);
+        alert('the other player lost connection');
+        location.reload();
     });
 }
 function gameInit(playerId, soc, roomName) {

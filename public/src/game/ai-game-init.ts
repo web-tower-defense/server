@@ -327,7 +327,7 @@ function preload() {
   //init socket
   bindSocketEvent();
   //game props
-  game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   game.scale.pageAlignHorizontally = true;
   game.scale.pageAlignVertically = true;
   game.stage.backgroundColor = '#eee';
@@ -390,12 +390,15 @@ function create() {
   //start button
   let startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.6, 'button', ()=>{
     startButton.destroy();
-    updateTowersAndAi();
+    updateTowers();
+    updateAi();
   }, this, 1, 0, 2);
   startButton.anchor.set(0.5);
-
-  function updateTowersAndAi () {
-    startButton.destroy();
+  function updateAi () {
+    ai.updateInfo();
+    setTimeout(updateAi, 4000);
+  }
+  function updateTowers () {
     towers.forEach((tower: Tower) => {
       if (tower.ownerId !== 0) {
         let totalSoldiers = parseInt(tower.soldierNumText.text)
@@ -403,8 +406,7 @@ function create() {
         tower.soldierNumText.setText("" + totalSoldiers);
       }
     }, this);
-    ai.updateInfo();
-    setTimeout(updateTowersAndAi, 1500);
+    setTimeout(updateTowers, 1500);
   }
   //add tower so it can be render at the top
   // tower1.visible = false;
