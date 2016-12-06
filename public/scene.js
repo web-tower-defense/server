@@ -1,11 +1,11 @@
 
 function initScene(){
-	var path = "textures/cube/skybox2/";
-	var format = '.jpg';
+	var path = "textures/cube/skybox4/";
+	var format = '.png';
 	var urls = [
-			path + 'px' + format, path + 'nx' + format,
-			path + 'py' + format, path + 'ny' + format,
-			path + 'pz' + format, path + 'nz' + format
+			path + 'right' + format, path + 'left' + format,
+			path + 'top' + format, path + 'bot' + format,
+			path + 'front' + format, path + 'back' + format
 		];
 	var reflectionCube = new THREE.CubeTextureLoader().load( urls );
 	reflectionCube.format = THREE.RGBFormat;
