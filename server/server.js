@@ -24,7 +24,7 @@ io.on('connection', function(socket){
 		io.sockets.emit('resetRooms',getRoomsData());
 		//io.sockets.adapter.rooms[roomName]
 		io.to(roomName).emit('gameInit', data);
-
+		room_init(roomName);
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName) {
 		var data = {};
@@ -51,6 +51,10 @@ io.on('connection', function(socket){
 	socket.on('gameInit', function(test){
 		console.log('socket successful passed:'+test);
 	})
+	function room_init(name){
+		console.log("room_init:"+name);
+		game_data.room_command[name]=0;
+	}
 	socket.on('game_command', function(data){
 		//if(data.commands.length!==0)console.log('game_command room:'+
 		//data.roomName+",length:"+data.commands.length);

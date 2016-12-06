@@ -133,37 +133,24 @@ function onDragStart(){
 function clickObject(obj){
 
 }
-var seleted_id=-1;
+//var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
 	dragSource = cur_intersected;
-	for(var i=0;i<game_data.buildings.length;i++){
-			if(mouse_pos.sub(game_data.buildings[i].pos).len()<1.0){
-				if(game_data.buildings[i].owner === player_id) seleted_id=i;
-			}
-	}
-
-
+	//if(dragSource!==undefined){
+		//seleted_id=dragSource.unitID;
+	//}
 }
 
 function handleMouseUp(){
-	if(seleted_id!==-1){
-		var target_id=-1;
-		for(var i=0;i<game_data.buildings.length;i++){
-				if(mouse_pos.sub(game_data.buildings[i].pos).len()<1.0){
-					target_id=i;
-				}
-		}
-		if(target_id!==-1)game_data.commands.push(new Command(seleted_id,target_id));
-		console.log("Sent : "+seleted_id+" to "+target_id);
-	}
-
-
-
 	//console.log("up");
 	dragTarget = cur_intersected;
-	if(dragSource!==undefined&&dragTarget!==undefined){
+	if(dragSource!==undefined&&dragTarget!==undefined
+	&&dragSource!==null&&dragTarget!==null
+	&&dragSource.unitID!==undefined&&dragTarget.unitID!==undefined){
 		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
+		game_data.commands.push(new Command(dragSource.unitID,
+			dragTarget.unitID));
 	}
 	if(dragTarget === dragSource){
 		clickObject(dragSource);
