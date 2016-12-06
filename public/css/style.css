@@ -1,17 +1,22 @@
 body {
   background-color: #fafafa;
   background-image: url("../textures/Background-3.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   align-content: space-around;
   margin-top: 0px; }
   body > div {
     max-width: 600px;
-    margin-left: 0px ;
+    margin-left: 0px;
     align-items: center; }
+#main-div{
 
+}
 #main-div * {
-  font-size: 18px; }
+  font-size: 18px;
+}
 
 #waiting-div {
   display: none; }
