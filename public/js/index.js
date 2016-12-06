@@ -141,5 +141,6 @@ socket.on('gameInit', function(data){
   });
   socketIDs["roomName"] = data.name;
   init(socket,socketIDs);
+  document.body.getElementsByTagName('div')[0].style.margin = '0px 0px';
 })
 roomSystem.init();

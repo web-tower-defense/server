@@ -1,4 +1,4 @@
-$create-new-room-div-input-color:  #313e50;
+$create-new-room-div-input-color:  #029395;
 $message-div-color: #607d8b;
 $create-new-room-div-btn-color: #b0bec5;
 $join-room-btn-color: #607d8b;
@@ -6,7 +6,9 @@ $ban-color: #37474f;
 $row-height: 44px;
 $room-color: #eee;
 body{
-	background-color: #fafafa;
+    background-image: url('/textures/Background-3.jpg');
+    background-size: cover;
+    background-color: #fafafa;
 	display: flex;
 	flex-direction: column;
 	align-content: space-around;
@@ -27,8 +29,10 @@ body{
 }
 #waiting-div{
 	display: none;
+	color:white;
 }
 #header-div{
+	color:white;
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
