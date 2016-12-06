@@ -89,5 +89,13 @@
             "grow_cycle":12,
             "position": [45,40]
         }
+        ,{
+            "name": "pluto",
+            "owner": 0,
+            "curUnit": 50,
+            "maxUnit": 150,
+            "grow_cycle":12,
+            "position": [15,30]
+        }
     ]
  }

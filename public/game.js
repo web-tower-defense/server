@@ -53,6 +53,6 @@ function render() {
 	camera.updateMatrixWorld();
 	// find intersections
 	rayCast();
-	composer.render();
-	//renderer.render( scene, camera );
+	//composer.render();
+	renderer.render( scene, camera );
 }
