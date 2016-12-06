@@ -12,7 +12,7 @@ function initScene(){
 
 	// scene
 	scene = new THREE.Scene();
-	scene.background = reflectionCube;
+	//scene.background = reflectionCube;
 
 	var ambient = new THREE.AmbientLight( 0x444444 );
 	ambient.intensity = 1.5;
