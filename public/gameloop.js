@@ -44,6 +44,7 @@ function handle_web_commands(){
 	}
 	game_data.web_commands=[];
 	data_receive=false;
+	//console.log("handle_web_commands done:"+loop_times);
 	return true;
 }
 function game_update(){
@@ -58,6 +59,7 @@ function game_update(){
 			command_timer=0;
 			//console.log("update_cycle:"+loop_times);
 		}
+		//console.log("update_cycle:"+loop_times);
 	}
 	if(command_timer===0){
 		sent_commands();
@@ -99,6 +101,7 @@ function game_init(){
 	game_data.buildings=[];
 	game_data.commands=[];
 	game_data.web_commands=[];
+	game_data.players=[];
 }
 function main_loop() {
 	console.log("mainloop start");

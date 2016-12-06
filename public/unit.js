@@ -72,7 +72,7 @@ Unit.prototype.check_collision = function(){
 }
 Unit.prototype.update = function(){
 	var del=this.target_pos.sub(this.pos);
-	if(del.len()<2.0){
+	if(del.len()<1.2*this.vel){
 		this.die=true;
 		//console.log("unit die");
 		if(game_data.buildings[this.target].owner===this.owner){
@@ -80,12 +80,11 @@ Unit.prototype.update = function(){
 			game_data.buildings[this.target].curUnit++;
 		}else{
 			if(game_data.buildings[this.target].curUnit==0){
-				game_data.buildings[this.target].owner=this.owner;
+				game_data.buildings[this.target].captured(this.owner);
+				//game_data.buildings[this.target].owner=this.owner;
 			}else{
 				game_data.buildings[this.target].curUnit--;
 			}
-
-
 		}
 	}else{
 		//console.log("unit dis="+del.len());

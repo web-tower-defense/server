@@ -53,6 +53,9 @@ Building.prototype.draw = function(){
 	//this.textMesh.geometry = createTextGeo("P"+this.owner+":"+this.curUnit.toString()+"/"+this.maxUnit.toString());
 
 }
+Building.prototype.captured=function(new_owner){
+	this.owner=new_owner;
+}
 Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;

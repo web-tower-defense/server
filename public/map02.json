@@ -51,30 +51,43 @@
             "name": "venus",
             "owner": 1,
             "curUnit": 10,
-            "maxUnit": 100,
+            "maxUnit": 200,
             "unit_vel": 0.6,
             "grow_cycle":8,
             "sent_unit_cycle":3,
-            "position": [0,0]
+            "position": [15,10]
+
+        },{
+            "name": "venus",
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 200,
+            "unit_vel": 0.6,
+            "grow_cycle":8,
+            "sent_unit_cycle":3,
+            "position": [55,30]
 
         },{
             "name": "mercury",
       			"owner": 0,
             "curUnit": 30,
             "maxUnit": 100,
-            "position": [10,10]
+            "grow_cycle":15,
+            "position": [25,15]
         },{
             "name": "moon",
-            "owner": 2,
+            "owner": 0,
             "curUnit": 10,
-            "maxUnit": 100,
-            "position": [30,30]
+            "maxUnit": 50,
+            "grow_cycle":20,
+            "position": [30,20]
         },{
             "name": "mars",
-            "owner": 2,
-            "curUnit": 10,
-            "maxUnit": 100,
-            "position": [60,60]
+            "owner": 0,
+            "curUnit": 50,
+            "maxUnit": 150,
+            "grow_cycle":12,
+            "position": [45,40]
         }
     ]
  }
