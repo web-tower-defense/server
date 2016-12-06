@@ -39,6 +39,8 @@ function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	composer.setSize( window.innerWidth, window.innerHeight );
+	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 }
 function onDocumentMouseMove( event ) {
 	event.preventDefault();
@@ -135,12 +137,9 @@ var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
 	dragSource = cur_intersected;
-
-
-
 	for(var i=0;i<game_data.buildings.length;i++){
 			if(mouse_pos.sub(game_data.buildings[i].pos).len()<1.0){
-				seleted_id=i;
+				if(game_data.buildings[i].owner === player_id) seleted_id=i;
 			}
 	}
 

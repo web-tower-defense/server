@@ -1,11 +1,11 @@
 
 function initScene(){
-	var path = "textures/cube/skybox2/";
-	var format = '.jpg';
+	var path = "textures/cube/skybox4/";
+	var format = '.png';
 	var urls = [
-			path + 'px' + format, path + 'nx' + format,
-			path + 'py' + format, path + 'ny' + format,
-			path + 'pz' + format, path + 'nz' + format
+			path + 'right' + format, path + 'left' + format,
+			path + 'top' + format, path + 'bot' + format,
+			path + 'front' + format, path + 'back' + format
 		];
 	var reflectionCube = new THREE.CubeTextureLoader().load( urls );
 	reflectionCube.format = THREE.RGBFormat;
@@ -37,8 +37,6 @@ function initScene(){
 		scene.add( particle );
 	}
 
-
-
 	raycaster = new THREE.Raycaster();
 	//
 	renderer = new THREE.WebGLRenderer();
@@ -48,6 +46,37 @@ function initScene(){
 
 	stats = new Stats();
 	container.appendChild( stats.dom );
+
+	composer = new THREE.EffectComposer( renderer );
+
+	renderPass = new THREE.RenderPass( scene, camera );
+	composer.addPass( renderPass );
+	outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+	outlinePass.edgeStrength = 2;
+	outlinePass.edgeGlow  = 0.5;
+	outlinePass.edgeThickness  = 1.0;
+	outlinePass.pulsePeriod  = 0;
+	outlinePass.visibleEdgeColor = {r:100, g:100, b:100};
+	outlinePass.hiddenEdgeColor = {r:100, g:100, b:100};
+	composer.addPass( outlinePass );
+	var outlineTextureOnLoad = function ( texture ) {
+		outlinePass.patternTexture = texture;
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+	};
+	var loader = new THREE.TextureLoader();
+	// load a resource
+	loader.load(
+		// resource URL
+		'textures/tri_pattern.jpg',
+		// Function when resource is loaded
+		outlineTextureOnLoad
+	);
+
+	effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+  effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
+  effectFXAA.renderToScreen = true;
+	composer.addPass( effectFXAA );
 
 }
 
