@@ -39,6 +39,8 @@ function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	composer.setSize( window.innerWidth, window.innerHeight );
+	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 }
 function onDocumentMouseMove( event ) {
 	event.preventDefault();

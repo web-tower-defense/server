@@ -1,15 +1,14 @@
 body {
   background-color: #fafafa;
+  background-image: url("../textures/Background-3.jpg");
   display: flex;
   flex-direction: column;
   align-content: space-around;
   margin-top: 0px; }
   body > div {
-    max-width: 400px;
-    margin: 0px ;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; }
+    max-width: 600px;
+    margin-left: 0px ;
+    align-items: center; }
 
 #main-div * {
   font-size: 18px; }
@@ -18,6 +17,10 @@ body {
   display: none; }
 
 #header-div {
+  color: #fafafa;
+  max-width: 600px;
+  margin-left: 100px ;
+  align-items: center;
   display: flex;
   align-items: flex-end;
   justify-content: center; }

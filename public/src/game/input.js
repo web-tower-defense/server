@@ -39,6 +39,7 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 }
+
 function onDocumentMouseMove( event ) {
 	event.preventDefault();
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;

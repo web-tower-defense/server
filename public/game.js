@@ -1,8 +1,9 @@
 var container, stats;
-var camera, scene, raycaster, renderer;
+var camera, scene, raycaster, renderer, controls;
 var selectionLight;
 var mouse = new THREE.Vector2(), cur_intersected, prev_intersected, intersected_point;
 var player_id;
+var composer, effectFXAA, outlinePass, outlinePass;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -52,5 +53,6 @@ function render() {
 	camera.updateMatrixWorld();
 	// find intersections
 	rayCast();
+	//composer.render();
 	renderer.render( scene, camera );
 }

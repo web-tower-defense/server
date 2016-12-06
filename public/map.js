@@ -93,7 +93,19 @@ function load_building_model(building,data){
 		objLoader.setMaterials( materials );
 		objLoader.setPath( building.dirpath );
 		objLoader.load(building.path, function ( object ) {
+
+			object.traverse( function ( child ) {
+				if ( child instanceof THREE.Mesh ) {
+					child.geometry.center();
+					child.geometry.computeBoundingSphere();
+					child.material.side = THREE.DoubleSide;
+					child.receiveShadow = true;
+					child.castShadow = true;
+				}
+			} );
+
 			object.name = "root";
+			//console.log(object);
 			all_models[building.name]=object;
 			model_loaded++;
 			if(model_loaded===data.models.length){
@@ -135,7 +147,9 @@ function create_building(building,id){
 	scene.add( capacity_text );
 	new_building.textMesh = capacity_text;
 	game_data.buildings.push(new_building);
-
+	//console.log(new_building);
+	outlinePass.selectedObjects.push(new_building.mesh);
+	console.log(outlinePass.selectedObjects);
 }
 
 function loadMap(file){
