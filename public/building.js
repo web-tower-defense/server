@@ -54,7 +54,21 @@ Building.prototype.draw = function(){
 
 }
 Building.prototype.captured=function(new_owner){
+	game_data.playerbuildings_count[this.owner] --;
+	game_data.playerbuildings_count[new_owner] ++;
+
+	if(game_data.playerbuildings_count[this.owner] === 0){
+		if(player_id === this.owner){
+			alert("YOU LOSE");
+		}
+		else{
+			alert("YOU WIN");
+		}
+	}
+
 	this.owner=new_owner;
+	this.mesh.owner = new_owner;
+	this.target = -1;
 }
 Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");

@@ -42,6 +42,7 @@ function onWindowResize() {
 	composer.setSize( window.innerWidth, window.innerHeight );
 	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 }
+
 function onDocumentMouseMove( event ) {
 	event.preventDefault();
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -136,7 +137,10 @@ function clickObject(obj){
 //var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
-	dragSource = cur_intersected;
+	console.log(cur_intersected);
+	if(cur_intersected.owner === player_id){
+		dragSource = cur_intersected;
+	}
 	//if(dragSource!==undefined){
 		//seleted_id=dragSource.unitID;
 	//}
