@@ -52,6 +52,7 @@ function create_building(building,id){
 	var pos=new Pos(building.position[0],0,-building.position[1]);
 	instance.position.set(pos.x,pos.y,pos.z);
 	instance.unitID = id;
+	instance.owner = building.owner;
 	scene.add( instance );
 
 	var new_building = new Building();
@@ -61,6 +62,7 @@ function create_building(building,id){
 	new_building.curUnit = building.curUnit;
 	new_building.maxUnit = building.maxUnit;
 	new_building.owner= building.owner;
+	game_data.playerbuildings_count[building.owner] ++;
 	if(building.hasOwnProperty('unit_vel')){
 		new_building.unit_vel = building.unit_vel;
 	}
@@ -119,6 +121,9 @@ function loadMap(file){
 		for(var i = 0; i < data.models.length; i++){
 			load_building_model(data.models[i],data);
 		}
+
+		game_data.buildings_count = data.buildings.length;
+		game_data.playerbuildings_count = [0,0,0];
 	});
 
 }

@@ -62,8 +62,8 @@ function createTextMesh(input, id) {
 	if(player_id!==1){
 		if(id===player_id){
 			id=1;
-		}else if(id>0){
-			id++;
+		}else if(id===1){
+			id=player_id;
 		}
 	}
 

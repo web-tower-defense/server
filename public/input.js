@@ -42,6 +42,7 @@ function onWindowResize() {
 	composer.setSize( window.innerWidth, window.innerHeight );
 	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 }
+
 function onDocumentMouseMove( event ) {
 	event.preventDefault();
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -136,7 +137,6 @@ function clickObject(obj){
 //var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
-
 	if(cur_intersected!==undefined&&cur_intersected!==null&&cur_intersected.unitID!==undefined){
 		if(game_data.buildings[cur_intersected.unitID].owner === player_id){
 			dragSource = cur_intersected;

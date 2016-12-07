@@ -1,32 +1,27 @@
 body {
-  background-color: #fafafa;
-  background-image: url("../textures/Background-3.jpg");
+  background-image: url("/textures/Background-3.jpg");
   background-size: cover;
-  background-repeat: no-repeat;
+  background-color: #fafafa;
   display: flex;
   flex-direction: column;
   align-content: space-around;
-  margin-top: 0px; }
+  margin-top: 40px; }
   body > div {
-    max-width: 600px;
-    margin-left: 0px;
-    align-items: center; }
-#main-div{
+    max-width: 400px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; }
 
-}
 #main-div * {
-  font-size: 18px;
-}
+  font-size: 18px; }
 
 #waiting-div {
-  color: white;
-  display: none; }
+  display: none;
+  color: white; }
 
 #header-div {
-  color: #fafafa;
-  max-width: 600px;
-  margin-left: 100px ;
-  align-items: center;
+  color: white;
   display: flex;
   align-items: flex-end;
   justify-content: center; }
@@ -41,7 +36,7 @@ body {
     padding-left: 14px;
     border: 0;
     color: white;
-    background-color: #313e50;
+    background-color: #029395;
     flex-grow: 1; }
   #create-new-room-div button {
     border: 0;
@@ -90,4 +85,3 @@ body {
       align-items: center;
       padding-left: 14px;
       flex-grow: 1; }
-*/

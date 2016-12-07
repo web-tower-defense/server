@@ -63,6 +63,7 @@ Unit.prototype.update = function(){
 		}else{
 			if(game_data.buildings[this.target].curUnit==0){
 				game_data.buildings[this.target].owner=this.owner;
+				game_data.buildings[this.target].mesh.owner = this.owner;
 			}else{
 				game_data.buildings[this.target].curUnit--;
 			}
