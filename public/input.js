@@ -1,4 +1,5 @@
-var dragSource=null, dragTarget=null, dragCurve;
+var dragSource=null, dragTarget=null;
+var dragCurve, dragCurveMesh, dragCurveMaterial;
 var mouse_pos=new Pos(0,0,0);
 function update(){
 
@@ -17,19 +18,36 @@ function initInput(){
 
 
 	var curve = new THREE.CatmullRomCurve3( [
-		new THREE.Vector3( 20, 0, -20 ),
-		new THREE.Vector3( 10, 10, -10 ),
+		new THREE.Vector3( 0, 0, 0 ),
+		new THREE.Vector3( 0, 0, 0 ),
 		new THREE.Vector3( 0, 0, 0 )
 	] );
 	var geometry = new THREE.Geometry();
 	geometry.vertices = curve.getPoints( 50 );
-	var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
-	//Create the final Object3d to add to the scene
-	dragCurve = new THREE.Line( geometry, material );
-	dragCurve.dynamic = true;
-	dragCurve.visible = false;
-	dragCurve.selectable = false;
-	scene.add( dragCurve );
+	dragCurve = new THREE.MeshLine();
+	dragCurve.setGeometry( geometry );
+	var resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
+	console.log(player_color[player_id]);
+	dragCurveMaterial = new THREE.MeshLineMaterial( {
+			color: new THREE.Color( "rgb(255, 2, 2)" ),
+			opacity: 1,
+			resolution: resolution,
+			sizeAttenuation: 1,
+			lineWidth: 1,
+			near: 1,
+			far: 100000,
+			depthTest: true,
+			blending: THREE.AdditiveBlending,
+			transparent: false,
+			side: THREE.DoubleSide
+		});
+
+	dragCurveMesh = new THREE.Mesh( dragCurve.geometry, dragCurveMaterial );
+	dragCurveMesh.dynamic = true;
+	dragCurveMesh.visible = true;
+	dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+	dragCurveMesh.selectable = false;
+	scene.add( dragCurveMesh );
 }
 
 
@@ -60,10 +78,14 @@ function onDocumentMouseMove( event ) {
 		var geometry = new THREE.Geometry();
 		geometry.vertices = curve.getPoints( 50 );
 		//Create the final Object3d to add to the scene
-		dragCurve.geometry = geometry;
-		dragCurve.visible = true;
+		dragCurve.setGeometry( geometry );
+		dragCurveMesh = new THREE.Mesh( dragCurve.geometry, dragCurveMaterial );
+		dragCurveMesh.dynamic = true;
+		dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+		dragCurveMesh.selectable = false;
 	}
 }
+
 var input=[];
 function handleKeyDown(event) {
   //alert(event.key);
@@ -94,12 +116,14 @@ function handleKeys() {
 		if(camera.position.z == 0){
 			camera.position.z = 1;
 		}
+		dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
 	}
 	if (currentlyPressedKeys["w"] == true) {// Down cursor key
 		if(camera.position.z > -200 )camera.position.z -= 1;
 		if(camera.position.z == 0){
 			camera.position.z = -1;
 		}
+		dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
 	}
 	if (get_input("0")) {// Down cursor key
 		if(selected===-1){
@@ -141,6 +165,9 @@ function handleMouseDown(){
 	if(cur_intersected.owner === player_id){
 		dragSource = cur_intersected;
 	}
+	else{
+		//dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
+	}
 	//if(dragSource!==undefined){
 		//seleted_id=dragSource.unitID;
 	//}
@@ -148,6 +175,8 @@ function handleMouseDown(){
 
 function handleMouseUp(){
 	//console.log("up");
+	//dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+
 	dragTarget = cur_intersected;
 	if(dragSource!==undefined&&dragTarget!==undefined
 	&&dragSource!==null&&dragTarget!==null
@@ -173,7 +202,19 @@ function handleMouseUp(){
 
 	dragSource = null;
 	dragTarget = null;
-	dragCurve.visible = false;
+	var curve = new THREE.CatmullRomCurve3( [
+		new THREE.Vector3( 0,0,0 ),
+		new THREE.Vector3( 0,0,0 ),
+		new THREE.Vector3( 0,0,0 )
+	] );
+	var geometry = new THREE.Geometry();
+	geometry.vertices = curve.getPoints( 50 );
+	//Create the final Object3d to add to the scene
+	dragCurve.setGeometry( geometry );
+	dragCurveMesh = new THREE.Mesh( dragCurve.geometry, dragCurveMaterial );
+	dragCurveMesh.dynamic = true;
+	dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+	dragCurveMesh.selectable = false;
 }
 
 function handleClick(){

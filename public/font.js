@@ -59,6 +59,8 @@ function createTextGeo(input){
 function createTextMesh(input, id) {
 	//console.log("this pos=");
 	//console.log("font : "+font);
+	//console.log("id : "+id);
+	//console.log(player_color[id]);
 	var idColor = player_color[id];
 
 	var material = new THREE.MultiMaterial( [
