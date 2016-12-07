@@ -15,11 +15,11 @@ function init(socket, data) {
 
 
 	game_data.socket=socket;
-	game_data.roomName= data["roomName"];
+	game_data.roomName=data.name; //data["roomName"];
 	var test="init ";
 	//console.log(data);
 	//console.log(socket);
-	player_id = data[socket.id];
+	player_id = data.player_id;//data[socket.id];
 	/*player_color[1] = new THREE.Color( "rgb(255, 2, 2)" );
 	player_color[2] = new THREE.Color( "rgb(2, 2, 255)" );
 	player_color[3] = new THREE.Color( "rgb(2, 255, 255)" );*/

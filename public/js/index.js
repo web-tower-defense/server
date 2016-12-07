@@ -139,8 +139,9 @@ socket.on('gameInit', function(data){
     //console.log("Room client socket Id: " + socketId );
     socketIDs[socketId] = player_id++;
   });
-  socketIDs["roomName"] = data.name;
-  init(socket,socketIDs);
+  //socketIDs["roomName"] = data.name;
+  data.player_id=socketIDs[socket.id];
+  init(socket,data);
   document.body.getElementsByTagName('div')[0].style.margin = '0px 0px';
 })
 roomSystem.init();
