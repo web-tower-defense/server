@@ -39,14 +39,14 @@ function load_building_model(building,data){
 			model_loaded++;
 			if(model_loaded===data.models.length){
 				for(var i = 0; i < data.buildings.length; i++){
-					create_building(data.buildings[i],i);
+					create_building(data.buildings[i],i,data);
 				}
 			}
 		}, onProgress, onError );
 	});
 }
 
-function create_building(building,id){
+function create_building(building,id,data){
 	console.log("create_building:"+building.name);
 	var instance = all_models[building.name].clone();
 	var pos=new Pos(building.position[0],0,-building.position[1]);
@@ -72,15 +72,23 @@ function create_building(building,id){
 	if(building.hasOwnProperty('sent_unit_cycle')){
 		new_building.sent_unit_cycle = building.sent_unit_cycle;
 	}
-	var capacity_text = createTextMesh(new_building.curUnit.toString(), new_building.owner);
+	var capacity_text = createTextMesh(
+		new_building.curUnit.toString(),
+		new_building.owner);
+
 	capacity_text.position.set(pos.x,pos.y+5,pos.z);
 	capacity_text.selectable = false;
 	capacity_text.dynamic = true;
 	scene.add( capacity_text );
 	new_building.textMesh = capacity_text;
 	game_data.buildings.push(new_building);
+
 	//console.log(new_building);
 	outlinePass.selectedObjects.push(new_building.mesh);
+	if(data.buildings.length===game_data.buildings.length){
+		console.log("loading finished");
+		game_start=true;
+	}
 	//console.log(outlinePass.selectedObjects);
 }
 

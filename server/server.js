@@ -56,14 +56,14 @@ io.on('connection', function(socket){
 		game_data.room_command[name]=0;
 	}
 	socket.on('game_command', function(data){
-		//if(data.commands.length!==0)console.log('game_command room:'+
-		//data.roomName+",length:"+data.commands.length);
+		//console.log('game_command room:'+
+		//data.roomName+",loop_times:"+data.loop_times+",unit_length:"+data.unit_length);
 		//console.log('game_command room:'+
 		//data.roomName+",loop_times:"+data.loop_times);
 
-		if(game_data.room_command[data.roomName]===undefined){
-			game_data.room_command[data.roomName]=0;
-		}
+		//if(game_data.room_command[data.roomName]===undefined){
+			//game_data.room_command[data.roomName]=0;
+		//}
 		if(game_data.room_command[data.roomName]===0){
 			game_data.room_command[data.roomName]=data.commands;
 		}else{

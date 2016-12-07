@@ -20,6 +20,7 @@ function handle_commands(){
 function sent_commands(){
 
 	var data=new Command_data(game_data.roomName,game_data.commands,loop_times);
+	data.unit_length=game_data.units.length;
 	game_data.socket.emit('game_command',data);
 	game_data.commands=[];
 }
@@ -48,6 +49,10 @@ function handle_web_commands(){
 	return true;
 }
 function game_update(){
+	if(!game_start){
+		console.log("game loading");
+		return;
+	}
 	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){
@@ -69,7 +74,7 @@ function game_update(){
 	if(!pause_game){
 		loop_times++;
 		for(var i = 0; i < game_data.buildings.length; i++){
-			//console.log(game_data.buildings[i].name);
+
 			//console.log(game_data.buildings[i].owner);
 				game_data.buildings[i].sent_unit();
 				game_data.buildings[i].update();
@@ -77,6 +82,7 @@ function game_update(){
 			//console.log("building "+game_data.buildings[i].unitID+" unit : "+game_data.buildings[i].curUnit);
 		}
 		for(var i = 0; i < game_data.units.length; i++){
+
 			game_data.units[i].update();
 			if(game_data.units[i].die==true){
 				game_data.units[i].remove();
@@ -96,6 +102,7 @@ function game_update(){
 	//console.log("campos="+camera.position.x+","+camera.position.y+","+camera.position.z);
 	//console.log("update");
 }
+var game_start=false;
 function game_init(){
 	game_data.units=[];
 	game_data.buildings=[];

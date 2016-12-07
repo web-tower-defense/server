@@ -12,6 +12,8 @@ function aiGameInit() {
 
 }
 function init(socket, data) {
+
+
 	game_data.socket=socket;
 	game_data.roomName= data["roomName"];
 	var test="init ";
@@ -36,7 +38,7 @@ function init(socket, data) {
 	initScene();
 	initInput();
 	loadUnit();
-	loadMap("map02.json")
+	loadMap("map02.json");
 
 	animate();
 	main_loop();
