@@ -1,4 +1,4 @@
-var player_color=[0xf0f0f0, 0xff0000, 0x0000ff]
+var player_color=[0xf0f0f0,0x0000ff,  0xff0000]
 var text = "three.js",
 	height = 1,
 	size = 2,
@@ -61,6 +61,7 @@ function createTextMesh(input, id) {
 	//console.log("font : "+font);
 	//console.log("id : "+id);
 	//console.log(player_color[id]);
+
 	var idColor = player_color[id];
 
 	var material = new THREE.MultiMaterial( [

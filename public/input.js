@@ -168,9 +168,7 @@ function handleMouseDown(){
 	else{
 		//dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
 	}
-	//if(dragSource!==undefined){
-		//seleted_id=dragSource.unitID;
-	//}
+
 }
 
 function handleMouseUp(){
@@ -182,8 +180,11 @@ function handleMouseUp(){
 	&&dragSource!==null&&dragTarget!==null
 	&&dragSource.unitID!==undefined&&dragTarget.unitID!==undefined){
 		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
-		game_data.commands.push(new Command(dragSource.unitID,
-			dragTarget.unitID));
+		if(game_data.buildings[dragSource.unitID].owner === player_id){
+			game_data.commands.push(new Command(dragSource.unitID,
+				dragTarget.unitID));
+		}
+
 	}
 	if(dragTarget === dragSource){
 		clickObject(dragSource);

@@ -10,14 +10,23 @@ function Building(){
 	this.target=-1;
 	this.sent_unit_timer=0;
 	this.recruit_timer=0;
-	this.unit_vel=0.4;
-	this.sent_unit_cycle=5;
-	this.grow_cycle=15;
+	this.unit_vel=0.2;
+	this.sent_unit_cycle=8;
+	this.grow_cycle=20;
 	this.pos=new Pos(0,0,0);
 	this.path=[];
 	this.prev_str="";
 }
 Building.prototype.update = function(){
+	this.mesh.rotation.y+=0.03;
+	//this.pos.x+=0.005;
+
+	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
+	this.textMesh.position.set(
+		this.pos.x,
+		this.pos.y+5,
+		this.pos.z
+	);
 	this.recruit_timer++;
 	if(this.recruit_timer>this.grow_cycle){
 		this.recruit_timer=0;
@@ -37,9 +46,11 @@ Building.prototype.draw = function(){
 	if(cur_str!==this.prev_str){
 		scene.remove(this.textMesh);
 		this.textMesh.geometry.dispose();
+
 		//this.textMesh.material.dispose();
 		this.prev_str=cur_str;
 		this.textMesh =  createTextMesh(this.prev_str,this.owner);
+		//this.textMesh.rotation.x=-1.5;
 		this.textMesh.selectable = false;
 		this.textMesh.dynamic = true;
 		//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
@@ -68,7 +79,10 @@ Building.prototype.captured=function(new_owner){
 
 	this.owner=new_owner;
 	this.mesh.owner = new_owner;
-	this.target = -1;
+	this.target=-1;
+}
+Building.prototype.set_target=function(id){
+	this.target=id;
 }
 Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
