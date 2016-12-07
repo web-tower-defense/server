@@ -50,7 +50,7 @@
         {
             "name": "venus",
             "owner": 0,
-            "curUnit": 200,
+            "curUnit": 80,
             "maxUnit": 400,
             "unit_vel": 0.4,
             "grow_cycle":9,
@@ -91,7 +91,8 @@
             "grow_cycle":40,
             "orbiting":1,
             "orbit_radius":15,
-            "orbit_cycle":800,
+            "orbit_cycle":1800,
+            "orbit_angle":180,
             "position": [45,-10]
         },{
             "name": "moon",
@@ -101,7 +102,7 @@
             "grow_cycle":40,
             "orbiting":2,
             "orbit_radius":15,
-            "orbit_cycle":800,
+            "orbit_cycle":1800,
             "position": [-45,-10]
         },{
             "name": "mercury",
@@ -128,21 +129,29 @@
         },{
             "name": "moon",
             "owner": 0,
-            "curUnit": 10,
+            "curUnit": 20,
             "maxUnit": 50,
             "grow_cycle":40,
+            "orbiting":0,
+            "orbit_cycle":2500,
+            "orbit_radius":25,
+            "orbit_angle":240,
             "position": [20,-10]
         },{
             "name": "moon",
             "owner": 0,
-            "curUnit": 10,
+            "curUnit": 20,
             "maxUnit": 50,
             "grow_cycle":40,
+            "orbiting":0,
+            "orbit_cycle":2500,
+            "orbit_radius":25,
+            "orbit_angle":60,
             "position": [-20,-10]
         },{
             "name": "mars",
             "owner": 0,
-            "curUnit": 50,
+            "curUnit": 40,
             "maxUnit": 150,
             "grow_cycle":22,
             "orbiting":0,
@@ -153,7 +162,7 @@
         },{
             "name": "mars",
             "owner": 0,
-            "curUnit": 50,
+            "curUnit": 40,
             "maxUnit": 150,
             "grow_cycle":22,
             "orbiting":0,
@@ -164,38 +173,46 @@
         },{
             "name": "mars",
             "owner": 0,
-            "curUnit": 50,
+            "curUnit": 40,
             "maxUnit": 150,
             "grow_cycle":22,
             "orbiting":0,
-            "orbit_cycle":5500,
-            "orbit_radius":55,
+            "orbit_cycle":3500,
+            "orbit_radius":35,
             "orbit_angle":110,
             "position": [65,20]
         },{
             "name": "mars",
             "owner": 0,
-            "curUnit": 50,
+            "curUnit": 40,
             "maxUnit": 150,
             "grow_cycle":22,
             "orbiting":0,
-            "orbit_cycle":5500,
-            "orbit_radius":55,
+            "orbit_cycle":3500,
+            "orbit_radius":35,
             "orbit_angle":290,
             "position": [-65,20]
         },{
             "name": "pluto",
             "owner": 0,
-            "curUnit": 6,
+            "curUnit": 15,
             "maxUnit": 30,
             "grow_cycle":50,
+            "orbiting":0,
+            "orbit_cycle":3500,
+            "orbit_radius":35,
+            "orbit_angle":10,
             "position": [15,-30]
         },{
             "name": "pluto",
             "owner": 0,
-            "curUnit": 6,
+            "curUnit": 15,
             "maxUnit": 30,
             "grow_cycle":50,
+            "orbiting":0,
+            "orbit_cycle":3500,
+            "orbit_radius":35,
+            "orbit_angle":190,
             "position": [-15,-30]
         }
     ]
