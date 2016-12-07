@@ -52,18 +52,18 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.mesh.dynamic = true;
 	scene.add(this.mesh);
 	this.target=_target;
-	this.pos=new Pos(x,y,z);
+	this.pos=new THREE.Vector3(x,y,z);
 	this.a=0;
 	this.b=0;
 	this.vel=vel;
-	this.target_pos=game_data.buildings[this.target].pos;
+	//this.target_pos=game_data.buildings[this.target].pos;
 }
 
 Unit.prototype.check_collision = function(){
 		for(var i = 0; i < game_data.units.length; i++){
 				var unit=game_data.units[i];
 				if(unit.owner!==this.owner){//&&unit.a==this.a&&unit.b==this.b
-					if(this.pos.sub(unit.pos).len()<0.5){
+					if((this.pos.clone().sub(unit.pos)).length()<0.5){
 						this.die=true;
 						game_data.units[i].die=true;
 					}
@@ -71,8 +71,9 @@ Unit.prototype.check_collision = function(){
 		}
 }
 Unit.prototype.update = function(){
-	var del=this.target_pos.sub(this.pos);
-	if(del.len()<1.2*this.vel){
+	var target_pos=game_data.buildings[this.target].pos.clone();
+	var del=target_pos.sub(this.pos);
+	if(del.length()<1.2*this.vel+1.0){
 		this.die=true;
 		//console.log("unit die");
 		if(game_data.buildings[this.target].owner===this.owner){
@@ -89,7 +90,7 @@ Unit.prototype.update = function(){
 	}else{
 		//console.log("unit dis="+del.len());
 	}
-	this.pos=this.pos.add((del.unit_vec()).mult(this.vel));
+	this.pos=this.pos.add((del.normalize ()).multiplyScalar (this.vel));
 	this.check_collision();
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());

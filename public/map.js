@@ -49,19 +49,19 @@ function load_building_model(building,data){
 function create_building(building,id,data){
 	console.log("create_building:"+building.name);
 	var instance = all_models[building.name].clone();
-	var pos=new Pos(building.position[0],0,-building.position[1]);
+	var pos=new THREE.Vector3(building.position[0],0,-building.position[1]);
 	instance.position.set(pos.x,pos.y,pos.z);
-	instance.unitID = id;
-	instance.owner = building.owner;
 	scene.add( instance );
 
 	var new_building = new Building();
+	new_building.unitID =id;
 	new_building.mesh = instance;
-	new_building.pos=pos;
-	new_building.unitID = instance.unitID;
+	new_building.mesh.unitID = new_building.unitID;
+	new_building.mesh.owner = building.owner;
+	new_building.pos = pos;
 	new_building.curUnit = building.curUnit;
 	new_building.maxUnit = building.maxUnit;
-	new_building.owner= building.owner;
+	new_building.owner = building.owner;
 	game_data.playerbuildings_count[building.owner] ++;
 	if(building.hasOwnProperty('unit_vel')){
 		new_building.unit_vel = building.unit_vel;
@@ -71,6 +71,18 @@ function create_building(building,id,data){
 	}
 	if(building.hasOwnProperty('sent_unit_cycle')){
 		new_building.sent_unit_cycle = building.sent_unit_cycle;
+	}
+	if(building.hasOwnProperty('orbiting')){
+		new_building.orbiting = building.orbiting;
+	}
+	if(building.hasOwnProperty('orbit_radius')){
+		new_building.orbit_radius = building.orbit_radius;
+	}
+	if(building.hasOwnProperty('orbit_cycle')){
+		new_building.orbit_cycle = building.orbit_cycle;
+	}
+	if(building.hasOwnProperty('orbit_angle')){
+		new_building.orbit_angle = building.orbit_angle;
 	}
 	var capacity_text = createTextMesh(
 		new_building.curUnit.toString(),
@@ -86,7 +98,7 @@ function create_building(building,id,data){
 	//console.log(new_building);
 	outlinePass.selectedObjects.push(new_building.mesh);
 	if(data.buildings.length===game_data.buildings.length){
-		console.log("loading finished");
+		console.log("loading finishe");
 		game_start=true;
 	}
 	//console.log(outlinePass.selectedObjects);

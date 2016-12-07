@@ -161,7 +161,7 @@ function clickObject(obj){
 //var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
-	console.log(cur_intersected);
+	//console.log(cur_intersected);
 	if(cur_intersected.owner === player_id){
 		dragSource = cur_intersected;
 	}
