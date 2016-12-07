@@ -72,7 +72,7 @@ function create_building(building,id){
 	if(building.hasOwnProperty('sent_unit_cycle')){
 		new_building.sent_unit_cycle = building.sent_unit_cycle;
 	}
-	var capacity_text = createTextMesh(new_building.curUnit.toString(), new_building.unitID);
+	var capacity_text = createTextMesh(new_building.curUnit.toString(), new_building.owner);
 	capacity_text.position.set(pos.x,pos.y+5,pos.z);
 	capacity_text.selectable = false;
 	capacity_text.dynamic = true;
@@ -81,7 +81,7 @@ function create_building(building,id){
 	game_data.buildings.push(new_building);
 	//console.log(new_building);
 	outlinePass.selectedObjects.push(new_building.mesh);
-	console.log(outlinePass.selectedObjects);
+	//console.log(outlinePass.selectedObjects);
 }
 
 function loadMap(file){
