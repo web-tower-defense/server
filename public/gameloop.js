@@ -39,7 +39,7 @@ function handle_web_commands(){
 		return false;
 	}
 	for(var i = 0; i < game_data.web_commands.length; i++){
-		game_data.buildings[game_data.web_commands[i].selected].target=game_data.web_commands[i].target;
+		game_data.buildings[game_data.web_commands[i].selected].set_target(game_data.web_commands[i].target);
 		console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
 	}
 	game_data.web_commands=[];

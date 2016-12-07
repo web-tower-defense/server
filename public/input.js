@@ -136,10 +136,13 @@ function clickObject(obj){
 //var seleted_id=-1;
 function handleMouseDown(){
 	//console.log("down");
-	dragSource = cur_intersected;
-	//if(dragSource!==undefined){
+
+	if(cur_intersected!==undefined&&cur_intersected!==null&&cur_intersected.unitID!==undefined){
+		if(game_data.buildings[cur_intersected.unitID].owner === player_id){
+			dragSource = cur_intersected;
+		}
 		//seleted_id=dragSource.unitID;
-	//}
+	}
 }
 
 function handleMouseUp(){
@@ -149,8 +152,11 @@ function handleMouseUp(){
 	&&dragSource!==null&&dragTarget!==null
 	&&dragSource.unitID!==undefined&&dragTarget.unitID!==undefined){
 		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
-		game_data.commands.push(new Command(dragSource.unitID,
-			dragTarget.unitID));
+		if(game_data.buildings[dragSource.unitID].owner === player_id){
+			game_data.commands.push(new Command(dragSource.unitID,
+				dragTarget.unitID));
+		}
+
 	}
 	if(dragTarget === dragSource){
 		clickObject(dragSource);
