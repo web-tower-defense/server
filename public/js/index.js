@@ -11,14 +11,48 @@ var roomSystem = {
     this.createNewRoomInput = document.getElementById('create-new-room-input');
     this.createNewRoomBtn = document.getElementById('create-new-room-btn');
     this.roomsDiv = document.getElementById('rooms-div');
+    this.chooseMapBtn = document.getElementById('choose-map-btn');
+    this.mapsDropDownDiv = document.getElementById('maps-dropdown');
   },
   bindEvents: function() {
+    var mapImage = $('#map-img')[0];
+    $('#maps-dropdown>a').each(function(idx){
+      $(this).click(function(){
+        mapName = $(this).text()+'.jpg';
+        $('#maps-dropdown').css({
+          display:'none'
+        })
+      })
+      $(this)[0].onmouseover = function(){
+        mapImage.style.display = 'block';
+        let src = "maps/"+$(this).text() + '.jpg'
+        $('#map-img').css({
+          'right':($(this).position().left+130) +'px',
+          'top':($(this).position().top+45) +'px'
+        })
+        $('#map-img').attr('src', src)
+        // $('#map-img').css({
+        //   'left':'80px',
+        //   'top':'300px'
+        // })
+      }
+      $(this)[0].onmouseout = function(){
+        mapImage.style.display = 'none';
+      }
+    })
     this.createNewRoomBtn.onclick = this.createNewRoomEvent.bind(this);
     this.createNewRoomInput.onkeypress = function(event) {
       if (event.keyCode === 13 || event.which === 13) {
         roomSystem.createNewRoomEvent();
       }
     }
+    this.chooseMapBtn.onclick = (function(){
+      if(this.mapsDropDownDiv.style.display==='flex'){
+        this.mapsDropDownDiv.style.display='none';
+      }else{
+        this.mapsDropDownDiv.style.display='flex';
+      }
+    }).bind(this);
     //this.roomsDiv.firstChild.onclick = new aiGameInit;
     for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
       var room = this.roomsDiv.children[i];
@@ -28,7 +62,7 @@ var roomSystem = {
     }
   },
   //below are onclick events
-  joinRoomEvent: function(roomName) {
+  joinRoomEvent: function(roomName, playerName) {
     socket.emit('joinRoomEvent',roomName);
     this.showWaitingDivAndHideMainDiv(true);
     this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
@@ -42,7 +76,8 @@ var roomSystem = {
     } else if (roomName.length > 18) {
       this.showMessageDiv('Name must shorter than 18!')
     } else {
-      socket.emit('clientCreateNewRoomEvent', roomName);
+      let maxPlayer = parseInt(mapName.split('(')[1][0])
+      socket.emit('clientCreateNewRoomEvent', roomName, mapName, playerName, maxPlayer);
       this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
     }
   },
@@ -94,6 +129,11 @@ var roomSystem = {
   showMessageDiv: function(message) {
     this.messageDiv.style.display = 'flex';
     this.messageDiv.textContent = message;
+    setTimeout(function() {
+      $('#message-div').css({
+        display:'none'
+      })
+    }, 1000);
   },
   hideMessageDiv: function() {
     this.messageDiv.style.display = 'none';
@@ -112,12 +152,16 @@ var roomSystem = {
 
 }
 
-
+var mapName = "";
+var playerName = "";
 socket.on('respondClientCreateNewRoomEvent', function(data) {
   if (data.isHost) {
     if (data.nameRepeat) {
       roomSystem.showMessageDiv('this name is already used');
     } else {
+      playerName = $('#player-name-input').val();
+      if(playerName==="")playerName='player1';
+      console.log('playerName:'+playerName+"\nmap:"+mapName);
       roomSystem.showWaitingDivAndHideMainDiv();
     }
   }
@@ -143,5 +187,16 @@ socket.on('gameInit', function(data){
   data.player_id=socketIDs[socket.id];
   init(socket,data);
   document.body.getElementsByTagName('div')[0].style.margin = '0px 0px';
+})
+socket.on('resetMapImg', function(files){
+  $('#maps-dropdown').empty();
+  files.forEach(function(file){
+    $('#maps-dropdown').append('<a>'+file.replace(/\..+$/, '')+'</a>');
+  })
+  mapName = files[0];
+  roomSystem.bindEvents();
+})
+socket.on('newJoiner', function(playerNames){
+
 })
 roomSystem.init();

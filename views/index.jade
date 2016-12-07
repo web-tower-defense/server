@@ -4,13 +4,21 @@ block content
   #header-div
     h1 星球大戰 - Space War 3D
   #main-div
+    input#player-name-input(type="text", placeholder="enter your name here")
     #message-div Please enter a name!
+    img#map-img(src="maps/polar.jpg", alt="alt")
     #create-new-room-div
       input#create-new-room-input(type="text", placeholder="Create new room here")
+      button#choose-map-btn
+        i(class='fa fa-map')
+      #maps-dropdown
+        a(href="#") 極光(３人)
+        a(href="#") 火星(3人)
+        a(href="#") 太陽(4人)
       button#create-new-room-btn
         i(class="fa fa-plus")
     #rooms-div
-
+      //- 
       //- .room-div
       //-   span muan's room
       //-   button.join-room-btn
