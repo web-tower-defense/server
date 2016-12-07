@@ -33,6 +33,7 @@ function initScene(){
 	} );
 	for ( var i = 0; i < 100; i++ ) {
 		particle = new THREE.Sprite( material );
+		particle.selectable = false;
 		initParticle( particle );
 		scene.add( particle );
 	}

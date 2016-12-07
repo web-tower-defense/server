@@ -59,8 +59,13 @@ function createTextGeo(input){
 function createTextMesh(input, id) {
 	//console.log("this pos=");
 	//console.log("font : "+font);
-	//console.log("id : "+id);
-	//console.log(player_color[id]);
+	if(player_id!==1){
+		if(id===player_id){
+			id=1;
+		}else if(id===1){
+			id=player_id;
+		}
+	}
 
 	var idColor = player_color[id];
 
