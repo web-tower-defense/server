@@ -78,6 +78,9 @@ function initScene(){
   effectFXAA.renderToScreen = true;
 	composer.addPass( effectFXAA );
 
+
+	//game_data.laserBeam  = new THREEx.LaserBeam();
+	//scene.add(game_data.laserBeam);
 }
 
 function generateSprite() {
