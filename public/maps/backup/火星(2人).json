@@ -67,7 +67,7 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":0,
+            "orbit_angle":180,
             "position": [70,0]
         },{
             "name": "venus",
@@ -80,21 +80,7 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":120,
-            "position": [-70,0]
-
-        },{
-            "name": "venus",
-            "owner": 3,
-            "curUnit": 10,
-            "maxUnit": 200,
-            "unit_vel": 0.25,
-            "grow_cycle":18,
-            "sent_unit_cycle":5,
-            "orbiting":0,
-            "orbit_cycle":8000,
-            "orbit_radius":70,
-            "orbit_angle":240,
+            "orbit_angle":0,
             "position": [-70,0]
 
         },{
@@ -106,7 +92,7 @@
             "orbiting":1,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":0,
+            "orbit_angle":180,
             "position": [45,-10]
         },{
             "name": "moon",
@@ -117,18 +103,6 @@
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":120,
-            "position": [-45,-10]
-        },{
-            "name": "moon",
-            "owner": 0,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":40,
-            "orbiting":3,
-            "orbit_radius":15,
-            "orbit_cycle":1800,
-            "orbit_angle":240,
             "position": [-45,-10]
         },{
             "name": "mercury",

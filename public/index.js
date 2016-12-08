@@ -1,4 +1,5 @@
 var socket = io();
+var mapName = "map02(2人).jpg";
 var roomSystem = {
   init: function() {
     this.cacheDom();
@@ -79,6 +80,7 @@ var roomSystem = {
     } else if (roomName.length > 18) {
       this.showMessageDiv('Name must shorter than 18!')
     } else {
+      console.log("map_name:"+mapName);
       let maxPlayer = parseInt(mapName.split('(')[1][0])
       socket.emit('clientCreateNewRoomEvent', roomName, mapName, playerName, maxPlayer);
       this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
@@ -154,8 +156,6 @@ var roomSystem = {
   },
 
 }
-
-var mapName = "";
 var playerName = "";
 socket.on('respondClientCreateNewRoomEvent', function(data) {
   if (data.isHost) {
@@ -194,9 +194,11 @@ socket.on('gameInit', function(data){
 socket.on('resetMapImg', function(files){
   $('#maps-dropdown').empty();
   files.forEach(function(file){
-    if(file.split('.')[1]==='jpg')
-    $('#maps-dropdown').append('<a>'+file.replace(/\..+$/, '')+'</a>');
-    mapName = file;
+    if(file.split('.')[1]==='jpg'){
+      $('#maps-dropdown').append('<a>'+file.replace(/\..+$/, '')+'</a>');
+      console.log("socket.on resetMapImg IMG:",file);
+      mapName = file;
+    }
   })
   roomSystem.bindEvents();
 })
