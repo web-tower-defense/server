@@ -15,6 +15,9 @@ var roomSystem = {
     this.mapsDropDownDiv = document.getElementById('maps-dropdown');
   },
   bindEvents: function() {
+    $('#player-name-input').bind('keydown keyup keypress', function() {
+      playerName = this.value||"";
+    });
     var mapImage = $('#map-img')[0];
     $('#maps-dropdown>a').each(function(idx){
       $(this).click(function(){
@@ -57,13 +60,13 @@ var roomSystem = {
     for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
       var room = this.roomsDiv.children[i];
       if(room.lastChild.className==='join-room-btn'){
-        room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent);
+        room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent, playerName);
       }
     }
   },
   //below are onclick events
   joinRoomEvent: function(roomName, playerName) {
-    socket.emit('joinRoomEvent',roomName);
+    socket.emit('joinRoomEvent',roomName, playerName);
     this.showWaitingDivAndHideMainDiv(true);
     this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
   },

@@ -27,7 +27,8 @@ io.on('connection', function(socket){
 	})
 	socket.emit('resetRooms',getRoomsData());
 
-	socket.on('joinRoomEvent',function(roomName){
+	socket.on('joinRoomEvent',function(roomName, playerName){
+		console.log("playerName is"+playerName);
 		var data = io.sockets.adapter.rooms[roomName];
 		data.name = roomName;
 		data.map_name=game_data.room_map_name[roomName];
@@ -39,7 +40,7 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on('clientCreateNewRoomEvent', function(roomName, mapName, playerName, maxPlayer) {
-		console.log(maxPlayer);
+
 		var data = {};
 		data.roomName = roomName;
 		data.isHost = true;
@@ -53,8 +54,7 @@ io.on('connection', function(socket){
 			waitingRooms[roomName].mapName = mapName;
 			waitingRooms[roomName].maxPlayer=maxPlayer;
 
-			console.log("map_name:"+map_name);
-			console.log("maxPlayer:"+maxPlayer);
+			console.log(waitingRooms[roomName]);
 			data.nameRepeat=false;
 			socket.join(roomName);
 			room_init(roomName,maxPlayer,map_name);
