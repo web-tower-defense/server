@@ -38,7 +38,8 @@ function init(socket, data) {
 	initScene();
 	initInput();
 	loadUnit();
-	var map_name="maps/map02.json";
+	var map_name="maps/"+data.map_name;
+	console.log("init map_name:"+map_name);
 	loadMap(map_name);
 
 	animate();

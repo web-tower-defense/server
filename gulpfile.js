@@ -32,7 +32,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task('default', [
-  'sass',
+  //'sass',
   'develop',
   'watch'
 ]);

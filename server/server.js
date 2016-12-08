@@ -2,10 +2,11 @@ var app = require('../app');
 var fs = require('fs');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var Game_data=function(){
+Game_data=function(){
 	this.room_command=[];
 	this.room_command_num=[];
 	this.room_max_player=[];
+	this.room_map_name=[];
 }
 var game_data=new Game_data();
 var waitingRooms = {};
@@ -29,6 +30,7 @@ io.on('connection', function(socket){
 	socket.on('joinRoomEvent',function(roomName){
 		var data = io.sockets.adapter.rooms[roomName];
 		data.name = roomName;
+		data.map_name=game_data.room_map_name[roomName];
 		socket.join(roomName);
 		//io.sockets.adapter.rooms[roomName]
 		console.log("join_room:"+roomName+",cur_player_num:"+game_data.room_max_player[roomName]);
@@ -44,15 +46,18 @@ io.on('connection', function(socket){
 		if(io.sockets.adapter.rooms.hasOwnProperty(roomName)){
 			data.nameRepeat=true;
 		}else{
+			var map_name=mapName.split('(')[0]+".json";
 			waitingRooms[roomName] = {};
 			waitingRooms[roomName].playerNames = [];
 			waitingRooms[roomName].playerNames[0] = playerName;
 			waitingRooms[roomName].mapName = mapName;
 			waitingRooms[roomName].maxPlayer=maxPlayer;
 
+			console.log("map_name:"+map_name);
+			console.log("maxPlayer:"+maxPlayer);
 			data.nameRepeat=false;
 			socket.join(roomName);
-			room_init(roomName);
+			room_init(roomName,maxPlayer,map_name);
 		}
 		socket.emit('respondClientCreateNewRoomEvent', data);
 		data.isHost = false;
@@ -69,10 +74,11 @@ io.on('connection', function(socket){
 	socket.on('gameInit', function(test){
 		console.log('socket successful passed:'+test);
 	})
-	function room_init(name){
+	function room_init(name,maxPlayer,map_name){
 
 		game_data.room_command[name]=0;
-		game_data.room_max_player[name]=2;
+		game_data.room_max_player[name]=maxPlayer;
+		game_data.room_map_name[name]=map_name;
 		console.log("room_init:"+name+",max_player:"+game_data.room_max_player[name]);
 	}
 	socket.on('game_command', function(data){

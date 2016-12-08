@@ -53,6 +53,9 @@ function Unit(x,y,z,_owner,_target,vel){
 	scene.add(this.mesh);
 	this.target=_target;
 	this.pos=new THREE.Vector3(x,y,z);
+	this.terminate=false;
+	this.terminate_timer=5;
+	this.dead_light=0;
 	this.a=0;
 	this.b=0;
 	this.vel=vel;
@@ -62,7 +65,7 @@ function Unit(x,y,z,_owner,_target,vel){
 Unit.prototype.check_collision = function(){
 		for(var i = 0; i < game_data.units.length; i++){
 				var unit=game_data.units[i];
-				if(unit.owner!==this.owner){//&&unit.a==this.a&&unit.b==this.b
+				if(unit.owner!==this.owner&&!unit.die){//&&unit.a==this.a&&unit.b==this.b
 					if((this.pos.clone().sub(unit.pos)).length()<0.5){
 						this.die=true;
 						game_data.units[i].die=true;
@@ -71,6 +74,22 @@ Unit.prototype.check_collision = function(){
 		}
 }
 Unit.prototype.update = function(){
+	if(this.die){
+		/*
+		if(this.dead_light===0){
+			this.dead_light = new THREE.PointLight( 0xff0000, 1, 100 );
+			this.dead_light.visible = true;
+			scene.add(this.dead_light);
+		}
+		*/
+		this.terminate_timer--;
+		//this.pos.y+=0.02;
+		//this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
+		if(this.terminate_timer<=0){
+			this.terminate=true;
+		}
+		return;
+	}
 	var target_pos=game_data.buildings[this.target].pos.clone();
 	var del=target_pos.sub(this.pos);
 	if(del.length()<1.2*this.vel+1.0){
@@ -90,8 +109,10 @@ Unit.prototype.update = function(){
 	}else{
 		//console.log("unit dis="+del.len());
 	}
+	if(!this.die){
+		this.check_collision();
+	}
 	this.pos=this.pos.add((del.normalize ()).multiplyScalar (this.vel));
-	this.check_collision();
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());
 }
@@ -101,6 +122,9 @@ Unit.prototype.remove = function(){
 	//this.mesh.geometry.dispose();
 	//this.mesh.dispose();
 	scene.remove(this.mesh);
+	//if(this.dead_light!==0){
+		//scene.remove(this.dead_light);
+	//}
 }
 
 clearScene = function (obj) {

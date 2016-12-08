@@ -84,7 +84,7 @@ function game_update(){
 		for(var i = 0; i < game_data.units.length; i++){
 
 			game_data.units[i].update();
-			if(game_data.units[i].die==true){
+			if(game_data.units[i].terminate==true){
 				game_data.units[i].remove();
 				game_data.units[i]=game_data.units[game_data.units.length-1];
 				game_data.units.pop();

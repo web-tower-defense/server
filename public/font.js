@@ -1,4 +1,4 @@
-var player_color=[0xf0f0f0,0xff0000,0x00ff00]
+var player_color=[0xf0f0f0,0xff0000,0x00ff00,0x00ffff]
 var text = "three.js",
 	height = 1,
 	size = 2,
