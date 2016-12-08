@@ -13,14 +13,29 @@ function Building(){
 	this.unit_vel=0.2;
 	this.sent_unit_cycle=8;
 	this.grow_cycle=20;
-	this.pos=new Pos(0,0,0);
+	this.pos=new THREE.Vector3(0,0,0);
 	this.path=[];
 	this.prev_str="";
+	this.orbit_angle=0;
+	this.orbiting=-1;
+	this.orbit_radius=15;
+	this.orbit_cycle=1200;
 }
 Building.prototype.update = function(){
 	this.mesh.rotation.y+=0.03;
 	//this.pos.x+=0.005;
+	if(this.orbiting!==-1){
+		//var target_pos=game_data.buildings[this.orbiting].pos.clone();
+		var del_vec=new THREE.Vector3(this.orbit_radius,0,0);//target_pos.sub(this.pos);
+		var axis = new THREE.Vector3(0,1,0);
+		var angle = 360/this.orbit_cycle;
+		this.orbit_angle+=angle;
+		if(this.orbit_angle>360)this.orbit_angle-=360;
 
+		del_vec.applyAxisAngle(axis,(Math.PI/180)*this.orbit_angle);
+		var pos_o=game_data.buildings[this.orbiting].pos.clone();
+		this.pos=pos_o.sub((del_vec.normalize()).multiplyScalar(this.orbit_radius));
+	}
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	this.textMesh.position.set(
 		this.pos.x,

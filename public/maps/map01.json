@@ -1,0 +1,48 @@
+{
+    "mapName": "map02",
+    "mapWidth": 100,
+    "mapHeight": 100,
+    "models":
+    [
+        {
+            "name": "venus",
+            "dirpath": "obj/planets/",
+            "path": "Planet2.obj",
+            "material":{
+                "path": "Planet2.mtl"
+            }
+        }
+    ],
+    "buildings":
+    [
+        {
+            "name": "venus",
+            "owner": 1,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "unit_vel": 0.6,
+            "grow_cycle":8,
+            "sent_unit_cycle":3,
+            "position": [25,50]
+
+        },{
+            "name": "venus",
+      			"owner": 0,
+            "curUnit": 30,
+            "maxUnit": 100,
+            "position": [45,50]
+        },{
+            "name": "venus",
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [65,50]
+        },{
+            "name": "venus",
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 100,
+            "position": [35,75]
+        }
+    ]
+ }

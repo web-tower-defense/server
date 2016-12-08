@@ -1,4 +1,4 @@
-var player_color=[0xf0f0f0,0x0000ff,  0xff0000]
+var player_color=[0xf0f0f0,0xff0000,0x00ff00]
 var text = "three.js",
 	height = 1,
 	size = 2,
@@ -59,16 +59,11 @@ function createTextGeo(input){
 function createTextMesh(input, id) {
 	//console.log("this pos=");
 	//console.log("font : "+font);
-	if(player_id!==1){
-		if(id===player_id){
-			id=1;
-		}else if(id===1){
-			id=player_id;
-		}
-	}
 
 	var idColor = player_color[id];
-
+	if(id===player_id){
+		idColor=0x0000ff;
+	}
 	var material = new THREE.MultiMaterial( [
 		new THREE.MeshPhongMaterial( { color: idColor, shading: THREE.FlatShading } ), // front
 		new THREE.MeshPhongMaterial( { color: idColor, shading: THREE.SmoothShading } ) // side
