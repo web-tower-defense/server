@@ -1,6 +1,7 @@
 var dragSource=null, dragTarget=null;
 var dragCurve, dragCurveMesh, dragCurveMaterial;
 var mouse_pos=new Pos(0,0,0);
+var mousewheelevt;
 function update(){
 
 }
@@ -14,7 +15,12 @@ function initInput(){
 	//
 	window.addEventListener( 'resize', onWindowResize, false );
 	container.addEventListener('dragstart', onDragStart, false);
-	$('.game').bind('mousewheel',handleWheel);
+
+	mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+	if (document.attachEvent) //if IE (and Opera depending on user setting)
+	    $('.game').bind("on"+mousewheelevt, handleWheel);
+	else if (document.addEventListener) //WC3 browsers
+			$('.game').bind(mousewheelevt, handleWheel);
 
 
 	var curve = new THREE.CatmullRomCurve3( [
@@ -223,16 +229,27 @@ function handleClick(){
 }
 
 var handleWheel = function (e){
-	if(e.originalEvent.wheelDelta /120 > 0) {
-        //console.log('scrolling up !');
-        if(camera.position.y < 500 )camera.position.y += e.originalEvent.wheelDelta/40;
-    }
-    else{
-        //console.log('scrolling down !');
-        if(camera.position.y > 1 )camera.position.y += e.originalEvent.wheelDelta/40;
-    }
+	if(mousewheelevt === "mousewheel"){
+		if(e.originalEvent.wheelDelta /120 > 0) {
+	        //console.log('scrolling up !');
+	        if(camera.position.y < 500 )camera.position.y += e.originalEvent.wheelDelta/40;
+	    }
+	    else{
+	        //console.log('scrolling down !');
+	        if(camera.position.y > 1 )camera.position.y += e.originalEvent.wheelDelta/40;
+	    }
+		}
+		if(mousewheelevt === "DOMMouseScroll"){
+			if(e.originalEvent.detail > 0) {
+		        //console.log('scrolling up !');
+		        if(camera.position.y < 500 )camera.position.y --;
+		    }
+		    else{
+		        //console.log('scrolling down !');
+		        if(camera.position.y > 1 )camera.position.y ++;
+		    }
+			}
 }
-
 function rayCast(){
 	raycaster.setFromCamera( mouse, camera );
 	//console.log("len : " + scene.children.length);
