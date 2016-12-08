@@ -191,6 +191,7 @@ socket.on('gameInit', function(data){
 socket.on('resetMapImg', function(files){
   $('#maps-dropdown').empty();
   files.forEach(function(file){
+    if(file.split('.')[1]==='jpg')
     $('#maps-dropdown').append('<a>'+file.replace(/\..+$/, '')+'</a>');
   })
   mapName = files[0];
