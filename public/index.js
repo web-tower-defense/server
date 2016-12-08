@@ -193,8 +193,8 @@ socket.on('resetMapImg', function(files){
   files.forEach(function(file){
     if(file.split('.')[1]==='jpg')
     $('#maps-dropdown').append('<a>'+file.replace(/\..+$/, '')+'</a>');
+    mapName = file;
   })
-  mapName = files[0];
   roomSystem.bindEvents();
 })
 socket.on('newJoiner', function(playerNames){
