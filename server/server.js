@@ -28,13 +28,12 @@ io.on('connection', function(socket){
 	socket.emit('resetRooms',getRoomsData());
 
 	socket.on('joinRoomEvent',function(roomName, playerName){
-		console.log("playerName is"+playerName);
 		var data = io.sockets.adapter.rooms[roomName];
 		data.name = roomName;
 		data.map_name=game_data.room_map_name[roomName];
 		socket.join(roomName);
+		game_data.socket_ids[roomName].push(socket.id);
 		//io.sockets.adapter.rooms[roomName]
-		console.log("join_room:"+roomName+",cur_player_num:"+game_data.room_max_player[roomName]);
 		if(io.sockets.adapter.rooms[roomName].length===game_data.room_max_player[roomName]){
 			io.to(roomName).emit('gameInit', data);
 		}
@@ -54,10 +53,9 @@ io.on('connection', function(socket){
 			waitingRooms[roomName].mapName = mapName;
 			waitingRooms[roomName].maxPlayer=maxPlayer;
 
-			console.log(waitingRooms[roomName]);
 			data.nameRepeat=false;
 			socket.join(roomName);
-			room_init(roomName,maxPlayer,map_name);
+			room_init(roomName,maxPlayer,map_name,socket.id);
 		}
 		socket.emit('respondClientCreateNewRoomEvent', data);
 		data.isHost = false;
@@ -70,22 +68,26 @@ io.on('connection', function(socket){
 	});
 	socket.on('disconnect', function(){
 		io.sockets.emit('resetRooms',getRoomsData());
+		for(var roomName in game_data.socket_ids){
+			if(game_data.socket_ids[roomName].indexOf(socket.id)!==-1){
+				io.to(roomName).emit('roommateDisconnect');
+			}
+		}
 	})
 	socket.on('gameInit', function(test){
-		console.log('socket successful passed:'+test);
+		//game init
 	})
-	function room_init(name,maxPlayer,map_name){
+	function room_init(name,maxPlayer,map_name,socketId){
 
 		game_data.room_command[name]=0;
 		game_data.room_max_player[name]=maxPlayer;
 		game_data.room_map_name[name]=map_name;
-		console.log("room_init:"+name+",max_player:"+game_data.room_max_player[name]);
+		game_data.socket_ids = {};
+		game_data.socket_ids[name] = [];
+		game_data.socket_ids[name].push(socketId);
+
 	}
 	socket.on('game_command', function(data){
-		//console.log('game_command room:'+
-		//data.roomName+",loop_times:"+data.loop_times+",unit_length:"+data.unit_length);
-		//console.log('game_command room:'+
-		//data.roomName+",loop_times:"+data.loop_times);
 
 		if(game_data.room_command[data.roomName]===undefined){
 			game_data.room_command[data.roomName]=0;
@@ -102,7 +104,6 @@ io.on('connection', function(socket){
 
 		if(game_data.room_command_num[data.roomName]===game_data.room_max_player[data.roomName]){
 			io.to(data.roomName).emit('game_command',game_data.room_command[data.roomName]);
-			//console.log('sent_game_commands:'+game_data.room_command[data.roomName].length);
 			game_data.room_command[data.roomName]=0;
 		}
 	})
