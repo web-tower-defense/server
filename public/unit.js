@@ -92,6 +92,9 @@ Unit.prototype.update = function(){
 	}
 	var target_pos=game_data.buildings[this.target].pos.clone();
 	var del=target_pos.sub(this.pos);
+	var del2=del.clone().normalize();
+	this.mesh.rotation.y=Math.atan2(del2.z,-del2.x);//+0.5*Math.PI;
+	//console.log("atan2="+Math.atan2(del.z,del.x));
 	if(del.length()<1.2*this.vel+1.0){
 		this.die=true;
 		//console.log("unit die");
@@ -112,7 +115,7 @@ Unit.prototype.update = function(){
 	if(!this.die){
 		this.check_collision();
 	}
-	this.pos=this.pos.add((del.normalize ()).multiplyScalar (this.vel));
+	this.pos=this.pos.add((del.normalize()).multiplyScalar(this.vel));
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());
 }
