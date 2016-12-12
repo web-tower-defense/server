@@ -87,8 +87,10 @@ Building.prototype.captured=function(new_owner){
 	if(game_data.playerbuildings_count[this.owner] === 0){
 		if(player_id === this.owner){
 			alert("YOU LOSE");
+      location.reload();
 		}else{
 			alert("YOU WIN");
+      location.reload();
 		}
 	}
 

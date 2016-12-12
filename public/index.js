@@ -173,7 +173,9 @@ socket.on('respondClientCreateNewRoomEvent', function(data) {
   }
 });
 socket.on('resetRooms',roomSystem.resetRooms);
-socket.on('roommateDisconnect',function(roomName){
+socket.on('roommateDisconnect',function(){
+  alert('roommate disconnect!');
+  location.reload();
 })
 socket.on('gameInit', function(data){
   while(document.body.firstChild){
