@@ -20,6 +20,7 @@ function Building(){
 	this.orbiting=-1;
 	this.orbit_radius=15;
 	this.orbit_cycle=1200;
+	this.sent_unit_num=0;
 }
 Building.prototype.update = function(){
 	this.mesh.rotation.y+=0.03;
@@ -96,13 +97,16 @@ Building.prototype.captured=function(new_owner){
 	this.target=-1;
 }
 Building.prototype.set_target=function(id){
+	this.sent_unit_num=this.curUnit/2;
 	this.target=id;
 }
 Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;
+	if(this.sent_unit_num<=0)this.target=-1;
 	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
 		//console.log("sent from:"+this.unitID+"to:"+this.target);
+		this.sent_unit_num--;
 		this.curUnit--;
 		this.sent_unit_timer=this.sent_unit_cycle;
 		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,this.unit_vel);
