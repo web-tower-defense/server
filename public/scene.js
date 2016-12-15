@@ -48,13 +48,13 @@ function initScene(){
 	stats = new Stats();
 	container.appendChild( stats.dom );
 
-	composer = new THREE.EffectComposer( renderer );
+	/*composer = new THREE.EffectComposer( renderer );
 
 	renderPass = new THREE.RenderPass( scene, camera );
 	composer.addPass( renderPass );
 	outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
 	outlinePass.edgeStrength = 2;
-	outlinePass.edgeGlow  = 0.5;
+	outlinePass.edgeGlow  = 0;
 	outlinePass.edgeThickness  = 1.0;
 	outlinePass.pulsePeriod  = 0;
 	outlinePass.visibleEdgeColor = {r:100, g:100, b:100};
@@ -74,10 +74,9 @@ function initScene(){
 		outlineTextureOnLoad
 	);
 
-	effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
-  effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
-  effectFXAA.renderToScreen = true;
-	composer.addPass( effectFXAA );
+	effectFXAA = new THREE.ShaderPass(THREE.CopyShader);
+	effectFXAA.renderToScreen = true;
+	composer.addPass(effectFXAA);*/
 
 
 	//game_data.laserBeam  = new THREEx.LaserBeam();

@@ -1,7 +1,7 @@
 var container, stats;
 var camera, scene, raycaster, renderer, controls;
 var selectionLight;
-var mouse = new THREE.Vector2(), cur_intersected, prev_intersected, intersected_point;
+var cur_intersected, prev_intersected, intersected_point;
 var player_id;
 var composer, effectFXAA, outlinePass, outlinePass;
 
