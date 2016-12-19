@@ -84,6 +84,9 @@ function create_building(building,id,data){
 	if(building.hasOwnProperty('orbit_angle')){
 		new_building.orbit_angle = building.orbit_angle;
 	}
+	if(building.hasOwnProperty('type')){
+		new_building.type = building.type;
+	}
 	var capacity_text = createTextMesh(
 		new_building.curUnit.toString(),
 		new_building.owner);

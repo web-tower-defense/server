@@ -43,7 +43,25 @@
             "material":{
                 "path": "moon.mtl"
             }
+        },
+        {
+            "name": "uranus",
+            "dirpath": "obj/planets/",
+            "path": "uranus.obj",
+            "material":{
+                "path": "uranus.mtl"
+            }
+        },
+        {
+            "name": "blackhole",
+            "dirpath": "obj/planets/",
+            "path": "blackhole.obj",
+            "material":{
+                "path": "blackhole.mtl"
+            }
         }
+
+
     ],
     "buildings":
     [
@@ -127,7 +145,7 @@
             "orbit_angle":200,
             "position": [-30,-35]
         },{
-            "name": "moon",
+            "name": "uranus",
             "owner": 0,
             "curUnit": 20,
             "maxUnit": 50,
@@ -138,7 +156,7 @@
             "orbit_angle":240,
             "position": [20,-10]
         },{
-            "name": "moon",
+            "name": "uranus",
             "owner": 0,
             "curUnit": 20,
             "maxUnit": 50,
@@ -214,6 +232,34 @@
             "orbit_radius":35,
             "orbit_angle":190,
             "position": [-15,-30]
+        },{
+            "name": "blackhole",
+            "owner": 0,
+            "curUnit": 1000,
+            "maxUnit": 2000,
+            "unit_vel": 0.25,
+            "grow_cycle":100,
+            "sent_unit_cycle":5,
+            "orbiting":0,
+            "orbit_cycle":2500,
+            "orbit_radius":45,
+            "orbit_angle":90,
+            "type":"black_hole",
+            "position": [70,0]
+        },{
+            "name": "blackhole",
+            "owner": 0,
+            "curUnit": 1000,
+            "maxUnit": 2000,
+            "unit_vel": 0.25,
+            "grow_cycle":100,
+            "sent_unit_cycle":5,
+            "orbiting":0,
+            "orbit_cycle":2500,
+            "orbit_radius":45,
+            "orbit_angle":270,
+            "type":"black_hole",
+            "position": [70,0]
         }
     ]
  }

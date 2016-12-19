@@ -21,6 +21,7 @@ function Building(){
 	this.orbit_radius=15;
 	this.orbit_cycle=1200;
 	this.sent_unit_num=0;
+	this.type="null";
 }
 Building.prototype.update = function(){
 	this.mesh.rotation.y+=0.03;
@@ -47,6 +48,30 @@ Building.prototype.update = function(){
 	if(this.recruit_timer>this.grow_cycle){
 		this.recruit_timer=0;
 		this.grow();
+	}
+	if(this.type=="black_hole"){
+		this.black_hole_update();
+
+	}
+}
+Building.prototype.black_hole_update = function(){
+	for(var i = 0; i < game_data.units.length; i++){
+			var unit=game_data.units[i];
+			if(!unit.die){//&&unit.a==this.a&&unit.b==this.b
+				var target_pos=this.pos.clone();
+				var del=target_pos.sub(unit.pos);
+				if(del.length()<50.0){
+					var del2=del.clone().normalize();
+					//console.log("gravity!!:"+(1.0/((del.length()+1.0)*(del.length()+1.0))));
+					unit.pos.add((del2).multiplyScalar(
+						100.0*(1.0/((del.length()+8.0)*(del.length()+8.0)))));
+					if(del.length()<1.0){
+						unit.die=true;
+						console.log("gravity!!die");
+					}
+					//unit.freeze=true;
+				}
+			}
 	}
 }
 Building.prototype.grow = function(){
@@ -76,6 +101,9 @@ Building.prototype.draw = function(){
 			this.pos.z
 		);
 		scene.add(this.textMesh);
+	}
+	if(this.type=="black_hole"){
+		this.textMesh.visible=false;
 	}
 	//this.textMesh.geometry = createTextGeo("P"+this.owner+":"+this.curUnit.toString()+"/"+this.maxUnit.toString());
 

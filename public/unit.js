@@ -59,6 +59,7 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.a=0;
 	this.b=0;
 	this.vel=vel;
+	this.freeze=false;
 	//this.target_pos=game_data.buildings[this.target].pos;
 }
 
@@ -74,6 +75,7 @@ Unit.prototype.check_collision = function(){
 		}
 }
 Unit.prototype.update = function(){
+
 	if(this.die){
 		/*
 		if(this.dead_light===0){
@@ -90,6 +92,7 @@ Unit.prototype.update = function(){
 		}
 		return;
 	}
+
 	var target_pos=game_data.buildings[this.target].pos.clone();
 	var del=target_pos.sub(this.pos);
 	var del2=del.clone().normalize();
@@ -115,7 +118,12 @@ Unit.prototype.update = function(){
 	if(!this.die){
 		this.check_collision();
 	}
-	this.pos=this.pos.add((del.normalize()).multiplyScalar(this.vel));
+	if(this.freeze){
+		this.freeze=false;
+	}else{
+		this.pos=this.pos.add((del2).multiplyScalar(this.vel));
+	}
+
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 	//console.log("Unit.prototype.update pos="+this.pos.x.toString()+","+this.pos.y.toString()+","+this.pos.z.toString());
 }
