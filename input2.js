@@ -1,7 +1,6 @@
 var dragSource=null, dragTarget=null;
 var dragCurve, dragCurveMesh, dragCurveMaterial;
-var selection_sphere, selectedPlanet=null, targetPlanet=null;
-var mouse = new THREE.Vector2(), prev_mouse = new THREE.Vector2();
+var selection_sphere;
 var mouse_pos=new Pos(0,0,0);
 var mousewheelevt;
 var zoom_in, zoom_out;
@@ -12,19 +11,11 @@ function update(){
 function zoomIn(){
 	if(camera.position.y > 1 )
 		camera.position.y --;
-
-	if(zoom_in.down === true){
-		setTimeout(zoomIn, 25);
-	}
 }
 
 function zoomOut(){
 	if(camera.position.y < 500 )
 		camera.position.y ++;
-
-	if(zoom_out.down === true){
-		setTimeout(zoomOut, 25);
-	}
 }
 
 function initInput(){
@@ -33,26 +24,14 @@ function initInput(){
 	var t = document.createTextNode("zoom in");
 	zoom_in.className = "zoom_in";
 	//zoom_in.appendChild(t);
-	zoom_in.onmousedown = function(){
-		zoom_in.down = true;
-		zoomIn();
-	};
-	zoom_in.onmouseup = function(){
-		zoom_in.down = false;
-	};
+	zoom_in.onclick = zoomIn;
 	document.body.appendChild(zoom_in);
 
 	zoom_out = document.createElement("BUTTON");
 	t = document.createTextNode("zoom out");
 	zoom_out.className = "zoom_out";
 	//zoom_out.appendChild(t);
-	zoom_out.onmousedown = function(){
-		zoom_out.down = true;
-		zoomOut();
-	};
-	zoom_out.onmouseup = function(){
-		zoom_out.down = false;
-	};
+	zoom_out.onclick = zoomOut;
 	document.body.appendChild(zoom_out);
 
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -140,20 +119,23 @@ function onDocumentMouseMove( event ) {
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-	//console.log(mouse);
-	//console.log(prev_mouse);
-
-	if(dragSource !== null){
-
-		if(prev_mouse !== null){
-			var deltaX = mouse.x - prev_mouse.x;
-			var deltaZ = mouse.y - prev_mouse.y;
-			//console.log("deltaX : "+deltaX+"  deltaY : "+deltaY);
-			camera.position.x -= deltaX*10;
-			camera.position.z += deltaZ*10;
-		}
-		prev_mouse.x = mouse.x;
-		prev_mouse.y = mouse.y;
+	if(dragSource != null){
+		//console.log(intersected_point);
+		var curve = new THREE.CatmullRomCurve3( [
+			new THREE.Vector3( dragSource.position.x, dragSource.position.y, dragSource.position.z ),
+			new THREE.Vector3( (dragSource.position.x + intersected_point.x)/2,
+								20,
+								(dragSource.position.z + intersected_point.z)/2 ),
+			new THREE.Vector3( intersected_point.x, intersected_point.y, intersected_point.z)
+		] );
+		var geometry = new THREE.Geometry();
+		geometry.vertices = curve.getPoints( 50 );
+		//Create the final Object3d to add to the scene
+		dragCurve.setGeometry( geometry );
+		dragCurveMesh = new THREE.Mesh( dragCurve.geometry, dragCurveMaterial );
+		dragCurveMesh.dynamic = true;
+		dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+		dragCurveMesh.selectable = false;
 	}
 }
 
@@ -227,48 +209,74 @@ function onDragStart(){
 }
 
 function clickObject(obj){
-	if(selectedPlanet === null && game_data.buildings[obj.unitID].owner === player_id){
-		//console.log(obj.model);
-		//console.log(all_models[obj.model]);
-		selection_sphere.visible = true;
-		selection_sphere.scale.set(all_models[obj.model].radius,
-																all_models[obj.model].radius,
-																all_models[obj.model].radius);
-		obj.add(selection_sphere);
-		selectedPlanet = obj;
-	}
-	else{
-		targetPlanet = obj;
-		if(game_data.buildings[selectedPlanet.unitID].owner === player_id){
-			game_data.commands.push(new Command(selectedPlanet.unitID,  targetPlanet.unitID));
-		}
-		selectedPlanet = null;
-		targetPlanet = null;
-		selection_sphere.visible = false;
-	}
+	//outlinePass.selectedObjects.push(obj);
+	console.log(obj.model);
+	console.log(all_models[obj.model]);
+	//selection_sphere.position.set(obj.position.x, obj.position.y, obj.position.z);
+	selection_sphere.visible = true;
+	selection_sphere.scale.set(all_models[obj.model].radius,
+															all_models[obj.model].radius,
+															all_models[obj.model].radius);
+	obj.add(selection_sphere);
 }
 //var seleted_id=-1;
 function handleMouseDown(){
-	dragSource = cur_intersected;
-	if(dragSource === null || dragSource===undefined){
-		dragSource = "none";
+	//console.log("down");
+	//console.log(cur_intersected);
+	if(cur_intersected.owner === player_id){
+		dragSource = cur_intersected;
 	}
-	prev_mouse = new THREE.Vector2();
-	prev_mouse.x = mouse.x;
-	prev_mouse.y = mouse.y;
+	else{
+		//dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
+	}
+
 }
 
 function handleMouseUp(){
+	//console.log("up");
+	//dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
 
 	dragTarget = cur_intersected;
+	if(dragSource!==undefined&&dragTarget!==undefined
+	&&dragSource!==null&&dragTarget!==null
+	&&dragSource.unitID!==undefined&&dragTarget.unitID!==undefined){
+		console.log("drag : "+dragSource.unitID+" to "+dragTarget.unitID);
+		if(game_data.buildings[dragSource.unitID].owner === player_id){
+			game_data.commands.push(new Command(dragSource.unitID,
+				dragTarget.unitID));
+		}
 
-	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
+	}
+	if(dragTarget === dragSource){
 		clickObject(dragSource);
+	}
+	else{
+		/*var curve = new THREE.CatmullRomCurve3( [
+			new THREE.Vector3( 20, 0, -20 ),
+			new THREE.Vector3( 10, 10, -10 ),
+			new THREE.Vector3( dragTarget.position.x, dragTarget.position.y, dragTarget.position.z)
+		] );
+		var geometry = new THREE.Geometry();
+		geometry.vertices = curve.getPoints( 50 );
+		//Create the final Object3d to add to the scene
+		dragCurve.geometry = geometry;*/
 	}
 
 	dragSource = null;
 	dragTarget = null;
-	prev_mouse = null;
+	var curve = new THREE.CatmullRomCurve3( [
+		new THREE.Vector3( 0,0,0 ),
+		new THREE.Vector3( 0,0,0 ),
+		new THREE.Vector3( 0,0,0 )
+	] );
+	var geometry = new THREE.Geometry();
+	geometry.vertices = curve.getPoints( 50 );
+	//Create the final Object3d to add to the scene
+	dragCurve.setGeometry( geometry );
+	dragCurveMesh = new THREE.Mesh( dragCurve.geometry, dragCurveMaterial );
+	dragCurveMesh.dynamic = true;
+	dragCurveMesh.traverse( function ( object ) { object.visible = true; } );
+	dragCurveMesh.selectable = false;
 }
 
 function handleClick(){
@@ -297,7 +305,6 @@ var handleWheel = function (e){
 		    }
 			}
 }
-
 function rayCast(){
 	raycaster.setFromCamera( mouse, camera );
 	//console.log("len : " + scene.children.length);

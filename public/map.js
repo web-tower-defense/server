@@ -23,16 +23,8 @@ function load_building_model(building,data){
 		objLoader.setPath( building.dirpath );
 		objLoader.load(building.path, function ( object ) {
 
-			object.traverse( function ( child ) {
-				if ( child instanceof THREE.Mesh ) {
-					child.geometry.center();
-					child.geometry.computeBoundingSphere();
-					child.material.side = THREE.DoubleSide;
-					child.receiveShadow = true;
-					child.castShadow = true;
-				}
-			} );
-
+			var bbox = new THREE.Box3().setFromObject(object);
+			object.radius = bbox.max.x - bbox.min.x;
 			object.name = "root";
 			//console.log(object);
 			all_models[building.name]=object;
@@ -51,6 +43,7 @@ function create_building(building,id,data){
 	var instance = all_models[building.name].clone();
 	var pos=new THREE.Vector3(building.position[0],0,-building.position[1]);
 	instance.position.set(pos.x,pos.y,pos.z);
+	instance.model = building.name;
 	scene.add( instance );
 
 	var new_building = new Building();
@@ -99,7 +92,7 @@ function create_building(building,id,data){
 	game_data.buildings.push(new_building);
 
 	//console.log(new_building);
-	outlinePass.selectedObjects.push(new_building.mesh);
+	//outlinePass.selectedObjects.push(new_building.mesh);
 	if(data.buildings.length===game_data.buildings.length){
 		console.log("loading finishe");
 		game_start=true;
@@ -147,6 +140,7 @@ function loadMap(file){
 
 		game_data.buildings_count = data.buildings.length;
 		game_data.playerbuildings_count = [0,0,0];
+
 	});
 
 }
