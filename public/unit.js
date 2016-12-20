@@ -60,6 +60,7 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.b=0;
 	this.vel=vel;
 	this.freeze=false;
+	this.damage=0;
 	//this.target_pos=game_data.buildings[this.target].pos;
 }
 

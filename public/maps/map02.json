@@ -59,6 +59,22 @@
             "material":{
                 "path": "blackhole.mtl"
             }
+        },
+        {
+            "name": "whitehole",
+            "dirpath": "obj/planets/",
+            "path": "whitehole.obj",
+            "material":{
+                "path": "whitehole.mtl"
+            }
+        },
+        {
+            "name": "station",
+            "dirpath": "obj/planets/",
+            "path": "station.obj",
+            "material":{
+                "path": "station.mtl"
+            }
         }
 
 
@@ -121,6 +137,30 @@
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
+            "position": [-45,-10]
+        },{
+            "name": "station",
+            "owner": 0,
+            "curUnit": 10,
+            "maxUnit": 50,
+            "grow_cycle":1000,
+            "orbiting":1,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":270,
+            "type":"station",
+            "position": [45,-10]
+        },{
+            "name": "station",
+            "owner": 0,
+            "curUnit": 10,
+            "maxUnit": 50,
+            "grow_cycle":1000,
+            "orbiting":2,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":90,
+            "type":"station",
             "position": [-45,-10]
         },{
             "name": "mercury",
@@ -237,11 +277,8 @@
             "owner": 0,
             "curUnit": 1000,
             "maxUnit": 2000,
-            "unit_vel": 0.25,
-            "grow_cycle":100,
-            "sent_unit_cycle":5,
             "orbiting":0,
-            "orbit_cycle":2500,
+            "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":90,
             "type":"black_hole",
@@ -251,14 +288,33 @@
             "owner": 0,
             "curUnit": 1000,
             "maxUnit": 2000,
-            "unit_vel": 0.25,
-            "grow_cycle":100,
-            "sent_unit_cycle":5,
             "orbiting":0,
-            "orbit_cycle":2500,
+            "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":270,
             "type":"black_hole",
+            "position": [70,0]
+        },{
+            "name": "whitehole",
+            "owner": 0,
+            "curUnit": 1000,
+            "maxUnit": 2000,
+            "orbiting":0,
+            "orbit_cycle":9500,
+            "orbit_radius":45,
+            "orbit_angle":0,
+            "type":"white_hole",
+            "position": [70,0]
+        },{
+            "name": "whitehole",
+            "owner": 0,
+            "curUnit": 1000,
+            "maxUnit": 2000,
+            "orbiting":0,
+            "orbit_cycle":9500,
+            "orbit_radius":45,
+            "orbit_angle":180,
+            "type":"white_hole",
             "position": [70,0]
         }
     ]
