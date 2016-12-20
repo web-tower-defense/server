@@ -84,7 +84,7 @@
         {
             "name": "venus",
             "owner": 0,
-            "curUnit": 80,
+            "curUnit": 40,
             "maxUnit": 400,
             "unit_vel": 0.4,
             "grow_cycle":9,
@@ -140,14 +140,38 @@
             "position": [-45,-10]
         },{
             "name": "station",
-            "owner": 0,
+            "owner": 1,
             "curUnit": 10,
             "maxUnit": 50,
             "grow_cycle":1000,
             "orbiting":1,
-            "orbit_radius":15,
-            "orbit_cycle":1800,
+            "orbit_radius":8,
+            "orbit_cycle":600,
             "orbit_angle":270,
+            "type":"station",
+            "position": [45,-10]
+        },{
+            "name": "station",
+            "owner": 2,
+            "curUnit": 10,
+            "maxUnit": 50,
+            "grow_cycle":1000,
+            "orbiting":2,
+            "orbit_radius":8,
+            "orbit_cycle":600,
+            "orbit_angle":90,
+            "type":"station",
+            "position": [-45,-10]
+        },{
+            "name": "station",
+            "owner": 0,
+            "curUnit": 10,
+            "maxUnit": 50,
+            "grow_cycle":1000,
+            "orbiting":0,
+            "orbit_radius":10,
+            "orbit_cycle":800,
+            "orbit_angle":0,
             "type":"station",
             "position": [45,-10]
         },{
@@ -156,12 +180,12 @@
             "curUnit": 10,
             "maxUnit": 50,
             "grow_cycle":1000,
-            "orbiting":2,
-            "orbit_radius":15,
-            "orbit_cycle":1800,
-            "orbit_angle":90,
+            "orbiting":0,
+            "orbit_radius":10,
+            "orbit_cycle":800,
+            "orbit_angle":180,
             "type":"station",
-            "position": [-45,-10]
+            "position": [45,-10]
         },{
             "name": "mercury",
       			"owner": 0,

@@ -23,6 +23,7 @@ function Building(){
 	this.sent_unit_num=0;
 	this.laser_beam=0;
 	this.type="null";
+	this.target_unit=0;
 }
 Building.prototype.update = function(){
 	this.mesh.rotation.y+=0.03;
@@ -75,27 +76,36 @@ Building.prototype.station_update = function(){
 	object3d.position.y	= this.pos.y;
 	object3d.position.z	= this.pos.z;
 	object3d.visible=false;
+	if(this.target_unit!==0&&this.target_unit.die){
+		this.target_unit=0;
+	}
+	var min_dis=999999;
+	if(this.target_unit==0)
 	for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die&&this.owner!=unit.owner){//&&unit.a==this.a&&unit.b==this.b
 				var target_pos=this.pos.clone();
 				var del=target_pos.sub(unit.pos);
-				if(del.length()<20.0){
-					var del2=del.clone().normalize();
-					//console.log("damage unit:"+i+","+unit.damage);
-					unit.damage+=1;
-					object3d.visible=true;
-					object3d.scale.x=del.length();
-					object3d.rotation.y=Math.atan2(del2.z,-del2.x);
-					if(unit.damage>20){
-						//console.log("kill unit");
-						unit.die=true;
-					}
-					break;
+				if(del.length()<20.0&&del.length()<min_dis){
+					min_dis=del.length();
+					this.target_unit=unit;
 				}
 			}
 	}
-
+	if(this.target_unit!==0){
+		var target_pos=this.pos.clone();
+		var del=target_pos.sub(this.target_unit.pos);
+		var del2=del.clone().normalize();
+		//console.log("damage unit:"+i+","+unit.damage);
+		this.target_unit.damage+=1;
+		object3d.visible=true;
+		object3d.scale.x=del.length();
+		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
+		if(this.target_unit.damage>10){
+			//console.log("kill unit");
+			this.target_unit.die=true;
+		}
+	}
 }
 Building.prototype.black_hole_update = function(){
 	for(var i = 0; i < game_data.units.length; i++){
