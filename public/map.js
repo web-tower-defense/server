@@ -89,6 +89,8 @@ function create_building(building,id,data){
 	capacity_text.dynamic = true;
 	scene.add( capacity_text );
 	new_building.textMesh = capacity_text;
+
+	new_building.init();
 	game_data.buildings.push(new_building);
 
 	//console.log(new_building);

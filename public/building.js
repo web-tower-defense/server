@@ -24,6 +24,67 @@ function Building(){
 	this.laser_beam=0;
 	this.type="null";
 	this.target_unit=0;
+
+	this.black_hole_mesh=0;
+	this.black_hole_mesh2=0;
+
+	this.white_hole_mesh=0;
+	this.white_hole_mesh2=0;
+}
+Building.prototype.init=function(){
+	if(this.type=="black_hole"){
+		this.init_black_hole();
+	}else if(this.type=="white_hole"){
+		this.init_white_hole();
+	}
+}
+Building.prototype.init_black_hole=function(){
+	var radius   = 12;
+	var segments = 64;
+	var material = new THREE.MeshPhongMaterial( {
+		opacity: 80.0,
+		color: 0xffffff,
+		transparent: true,
+		side: THREE.DoubleSide
+	});
+	var geometry = new THREE.CircleGeometry( radius, segments );
+	geometry.vertices.shift();
+
+	this.black_hole_mesh=new THREE.Line( geometry, material );
+	this.black_hole_mesh.rotation.x=Math.PI*0.5;
+
+	this.black_hole_mesh2=new THREE.Line( geometry, material );
+	this.black_hole_mesh2.rotation.x=Math.PI*0.5;
+
+	this.black_hole_mesh2.scale.x=0.9;
+	this.black_hole_mesh2.scale.y=0.9;
+
+	this.mesh.add(this.black_hole_mesh);
+	this.mesh.add(this.black_hole_mesh2);
+}
+Building.prototype.init_white_hole=function(){
+	var radius   = 12;
+	var segments = 64;
+	var material = new THREE.MeshPhongMaterial( {
+		opacity: 80.0,
+		color: 0xffffff,
+		transparent: true,
+		side: THREE.DoubleSide
+	});
+	var geometry = new THREE.CircleGeometry( radius, segments );
+	geometry.vertices.shift();
+
+	this.white_hole_mesh=new THREE.Line( geometry, material );
+	this.white_hole_mesh.rotation.x=Math.PI*0.5;
+
+	this.white_hole_mesh2=new THREE.Line( geometry, material );
+	this.white_hole_mesh2.rotation.x=Math.PI*0.5;
+
+	this.white_hole_mesh2.scale.x=0.9;
+	this.white_hole_mesh2.scale.y=0.9;
+
+	this.mesh.add(this.white_hole_mesh);
+	this.mesh.add(this.white_hole_mesh2);
 }
 Building.prototype.update = function(){
 	this.mesh.rotation.y+=0.03;
@@ -109,6 +170,14 @@ Building.prototype.station_update = function(){
 	}
 }
 Building.prototype.black_hole_update = function(){
+	this.black_hole_mesh2.scale.x-=0.03;
+	this.black_hole_mesh2.scale.y-=0.03;
+	if(this.black_hole_mesh2.scale.x<0.1){
+		this.black_hole_mesh2.scale.x=1.0;
+	}
+	if(this.black_hole_mesh2.scale.y<0.1){
+		this.black_hole_mesh2.scale.y=1.0;
+	}
 	for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die){//&&unit.a==this.a&&unit.b==this.b
@@ -129,6 +198,14 @@ Building.prototype.black_hole_update = function(){
 	}
 }
 Building.prototype.white_hole_update = function(){
+	this.white_hole_mesh2.scale.x+=0.03;
+	this.white_hole_mesh2.scale.y+=0.03;
+	if(this.white_hole_mesh2.scale.x>1.0){
+		this.white_hole_mesh2.scale.x=0.1;
+	}
+	if(this.white_hole_mesh2.scale.y>1.0){
+		this.white_hole_mesh2.scale.y=0.1;
+	}
 	for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die){//&&unit.a==this.a&&unit.b==this.b
