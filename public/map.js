@@ -80,6 +80,11 @@ function create_building(building,id,data){
 	if(building.hasOwnProperty('type')){
 		new_building.type = building.type;
 	}
+	if(building.hasOwnProperty('scale')){
+		new_building.mesh.scale.x=building.scale;
+		new_building.mesh.scale.y=building.scale;
+		new_building.mesh.scale.z=building.scale;
+	}
 	var capacity_text = createTextMesh(
 		new_building.curUnit.toString(),
 		new_building.owner);
