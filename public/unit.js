@@ -54,7 +54,7 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.target=_target;
 	this.pos=new THREE.Vector3(x,y,z);
 	this.terminate=false;
-	this.terminate_timer=5;
+	this.terminate_timer=3;
 	this.dead_light=0;
 	this.a=0;
 	this.b=0;

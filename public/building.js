@@ -65,45 +65,46 @@ Building.prototype.station_update = function(){
 		this.laser_beam=new THREEx.LaserBeam();
 		scene.add(this.laser_beam.object3d)
 		var laserCooked	= new THREEx.LaserCooked(this.laser_beam)
-	//object3d.scale.y=1.0;
-
-	//object3d.rotation.y += 3;
 	}
 	var object3d = this.laser_beam.object3d;
-	//
-	object3d.scale.x=10.0;
 	object3d.position.x	= this.pos.x;
 	object3d.position.y	= this.pos.y;
 	object3d.position.z	= this.pos.z;
-	object3d.visible=false;
+	//object3d.visible=false;
 	if(this.target_unit!==0&&this.target_unit.die){
 		this.target_unit=0;
 	}
 	var min_dis=999999;
-	if(this.target_unit==0)
-	for(var i = 0; i < game_data.units.length; i++){
+	if(this.target_unit==0){
+		for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die&&this.owner!=unit.owner){//&&unit.a==this.a&&unit.b==this.b
 				var target_pos=this.pos.clone();
 				var del=target_pos.sub(unit.pos);
-				if(del.length()<20.0&&del.length()<min_dis){
-					min_dis=del.length();
+				var len=del.length();
+				if(len<20.0&&len<min_dis){
+					min_dis=len;
 					this.target_unit=unit;
 				}
 			}
+		}
+		console.log("search target!!");
 	}
+	//object3d.visible=true;
+	object3d.scale.x=0.001;
 	if(this.target_unit!==0){
 		var target_pos=this.pos.clone();
 		var del=target_pos.sub(this.target_unit.pos);
 		var del2=del.clone().normalize();
-		//console.log("damage unit:"+i+","+unit.damage);
-		this.target_unit.damage+=1;
-		object3d.visible=true;
+
 		object3d.scale.x=del.length();
 		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
+		this.target_unit.damage+=1;
+		//object3d.visible=true;
 		if(this.target_unit.damage>10){
-			//console.log("kill unit");
+			console.log("kill unit");
 			this.target_unit.die=true;
+			this.target_unit=0;
 		}
 	}
 }
