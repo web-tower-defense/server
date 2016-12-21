@@ -48,6 +48,36 @@ function handle_web_commands(){
 	//console.log("handle_web_commands done:"+loop_times);
 	return true;
 }
+var ai_loop=0;
+function ai_update(){
+	for(var i=0;i<game_data.AI.length;i++){
+		var id=game_data.AI[i];
+		for(var j = 0; j < game_data.buildings.length; j++){
+			var building=game_data.buildings[j];
+			if(building.owner===id){
+				if(building.curUnit>10&&(building.target===-1||building.target===j)){
+					var target=-1;
+					var target_dis=9999;
+					for(var k = 0; k < game_data.buildings.length; k++){
+						var cur=game_data.buildings[k];
+						if(cur.owner!=id){
+							var target_pos=cur.pos.clone();
+							var dis=target_pos.sub(building.pos).length()+cur.curUnit;
+							if(dis<target_dis){
+								target=k;
+								target_dis=dis;
+							}
+						}
+					}
+					if(target!=-1){
+						game_data.commands.push(
+							new Command(j,target));
+					}
+				}
+			}
+		}
+	}
+}
 function game_update(){
 	if(!game_start){
 		console.log("game loading");
@@ -73,6 +103,11 @@ function game_update(){
 
 	if(!pause_game){
 		loop_times++;
+		if(player_id===1)ai_loop++;
+		if(ai_loop>10){
+			ai_loop=0;
+			ai_update()
+		}
 		for(var i = 0; i < game_data.buildings.length; i++){
 
 			//console.log(game_data.buildings[i].owner);

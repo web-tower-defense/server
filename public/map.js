@@ -112,6 +112,7 @@ function loadMap(file){
     	//console.log(data);
 		tmp_data=data;
 		game_data.unitLen=data.mapUnitLen;
+		game_data.AI=data.AI;
     var width = data.mapWidth;
     var height = data.mapHeight;
     var textureLoader = new THREE.TextureLoader();

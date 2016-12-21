@@ -2,7 +2,7 @@
     "mapName": "map02",
     "mapWidth": 100,
     "mapHeight": 100,
-    "AI":[],
+    "AI":[2],
     "models":
     [
         {

@@ -39,7 +39,7 @@ Building.prototype.init=function(){
 	}
 }
 Building.prototype.init_black_hole=function(){
-	var radius   = 12;
+	var radius   = 15;
 	var segments = 64;
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
