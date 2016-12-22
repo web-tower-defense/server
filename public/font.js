@@ -55,15 +55,18 @@ function createTextGeo(input){
 
 	return textGeo;
 }
-
-function createTextMesh(input, id) {
-	//console.log("this pos=");
-	//console.log("font : "+font);
-
+function get_player_color(id){
 	var idColor = player_color[id];
 	if(id===player_id){
 		idColor=0x0000ff;
 	}
+	return idColor;
+}
+function createTextMesh(input, id) {
+	//console.log("this pos=");
+	//console.log("font : "+font);
+
+	var idColor = get_player_color(id);
 	var material = new THREE.MultiMaterial( [
 		new THREE.MeshPhongMaterial( { color: idColor, shading: THREE.FlatShading } ), // front
 		new THREE.MeshPhongMaterial( { color: idColor, shading: THREE.SmoothShading } ) // side

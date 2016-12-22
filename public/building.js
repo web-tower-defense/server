@@ -24,6 +24,7 @@ function Building(){
 	this.laser_beam=0;
 	this.type="null";
 	this.target_unit=0;
+	this.weapon_cool_down=0;
 
 	this.black_hole_mesh=0;
 	this.black_hole_mesh2=0;
@@ -38,50 +39,37 @@ Building.prototype.init=function(){
 		this.init_white_hole();
 	}
 }
-Building.prototype.init_black_hole=function(){
-	var radius   = 15;
-	var segments = 64;
+function circle_geo(radius,segments){
+	var geometry=new THREE.CircleGeometry( radius, segments );
+	geometry.vertices.shift();
+	return geometry;
+}
+function circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
-		color: 0xffffff,
+		color: color,
+		emissive: color,
 		transparent: true,
 		side: THREE.DoubleSide
 	});
-	var geometry = new THREE.CircleGeometry( radius, segments );
-	geometry.vertices.shift();
 
-	this.black_hole_mesh=new THREE.Line( geometry, material );
-	this.black_hole_mesh.rotation.x=Math.PI*0.5;
-
-	this.black_hole_mesh2=new THREE.Line( geometry, material );
-	this.black_hole_mesh2.rotation.x=Math.PI*0.5;
-
-	this.black_hole_mesh2.scale.x=0.9;
-	this.black_hole_mesh2.scale.y=0.9;
+	var mesh=new THREE.Line(circle_geometry, material );
+	mesh.rotation.x=Math.PI*0.5;
+	mesh.scale.x=radius;
+	mesh.scale.y=radius;
+	return mesh;
+}
+var circle_geometry=new circle_geo(1,64);
+Building.prototype.init_black_hole=function(){
+	this.black_hole_mesh=circle_mesh(15,0xffffff);
+	this.black_hole_mesh2=circle_mesh(15,0xffffff);
 
 	this.mesh.add(this.black_hole_mesh);
 	this.mesh.add(this.black_hole_mesh2);
 }
 Building.prototype.init_white_hole=function(){
-	var radius   = 12;
-	var segments = 64;
-	var material = new THREE.MeshPhongMaterial( {
-		opacity: 80.0,
-		color: 0xffffff,
-		transparent: true,
-		side: THREE.DoubleSide
-	});
-	var geometry = new THREE.CircleGeometry( radius, segments );
-	geometry.vertices.shift();
-
-	this.white_hole_mesh=new THREE.Line( geometry, material );
-	this.white_hole_mesh.rotation.x=Math.PI*0.5;
-
-	this.white_hole_mesh2=new THREE.Line( geometry, material );
-	this.white_hole_mesh2.rotation.x=Math.PI*0.5;
-
-	this.white_hole_mesh2.scale.x=0.9;
-	this.white_hole_mesh2.scale.y=0.9;
+	this.white_hole_mesh=circle_mesh(15,0xffffff);
+	this.white_hole_mesh2=circle_mesh(15,0xffffff);
 
 	this.mesh.add(this.white_hole_mesh);
 	this.mesh.add(this.white_hole_mesh2);
@@ -122,7 +110,7 @@ Building.prototype.update = function(){
 }
 Building.prototype.station_update = function(){
 	if(this.laser_beam===0){
-		console.log("create laser");
+		//console.log("create laser");
 		this.laser_beam=new THREEx.LaserBeam();
 		scene.add(this.laser_beam.object3d)
 		var laserCooked	= new THREEx.LaserCooked(this.laser_beam)
@@ -136,7 +124,8 @@ Building.prototype.station_update = function(){
 		this.target_unit=0;
 	}
 	var min_dis=999999;
-	if(this.target_unit==0){
+	if(this.weapon_cool_down>0)this.weapon_cool_down--;
+	if(this.weapon_cool_down===0&&this.target_unit==0){
 		for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die&&this.owner!=unit.owner){//&&unit.a==this.a&&unit.b==this.b
@@ -149,7 +138,7 @@ Building.prototype.station_update = function(){
 				}
 			}
 		}
-		console.log("search target!!");
+		//console.log("search target!!");
 	}
 	//object3d.visible=true;
 	object3d.scale.x=0.001;
@@ -162,21 +151,24 @@ Building.prototype.station_update = function(){
 		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
 		this.target_unit.damage+=1;
 		//object3d.visible=true;
-		if(this.target_unit.damage>10){
-			console.log("kill unit");
+
+		if(this.target_unit.damage>3){
+			//console.log("kill unit");
+			this.target_unit.killed=true;
 			this.target_unit.die=true;
 			this.target_unit=0;
+			this.weapon_cool_down=7;
 		}
 	}
 }
 Building.prototype.black_hole_update = function(){
-	this.black_hole_mesh2.scale.x-=0.03;
-	this.black_hole_mesh2.scale.y-=0.03;
+	this.black_hole_mesh2.scale.x-=0.3;
+	this.black_hole_mesh2.scale.y-=0.3;
 	if(this.black_hole_mesh2.scale.x<0.1){
-		this.black_hole_mesh2.scale.x=1.0;
+		this.black_hole_mesh2.scale.x=15.0;
 	}
 	if(this.black_hole_mesh2.scale.y<0.1){
-		this.black_hole_mesh2.scale.y=1.0;
+		this.black_hole_mesh2.scale.y=15.0;
 	}
 	for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
@@ -190,7 +182,7 @@ Building.prototype.black_hole_update = function(){
 						100.0*(1.0/((del.length()+10.0)*(del.length()+10.0)))));
 					if(del.length()<1.0){
 						unit.die=true;
-						console.log("gravity!!die");
+						//console.log("gravity!!die");
 					}
 					//unit.freeze=true;
 				}
@@ -198,12 +190,12 @@ Building.prototype.black_hole_update = function(){
 	}
 }
 Building.prototype.white_hole_update = function(){
-	this.white_hole_mesh2.scale.x+=0.03;
-	this.white_hole_mesh2.scale.y+=0.03;
-	if(this.white_hole_mesh2.scale.x>1.0){
+	this.white_hole_mesh2.scale.x+=0.3;
+	this.white_hole_mesh2.scale.y+=0.3;
+	if(this.white_hole_mesh2.scale.x>15.0){
 		this.white_hole_mesh2.scale.x=0.1;
 	}
-	if(this.white_hole_mesh2.scale.y>1.0){
+	if(this.white_hole_mesh2.scale.y>15.0){
 		this.white_hole_mesh2.scale.y=0.1;
 	}
 	for(var i = 0; i < game_data.units.length; i++){

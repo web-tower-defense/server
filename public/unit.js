@@ -47,6 +47,11 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.die=false;
 	this.owner = _owner;
 	this.mesh = unit_mesh.clone();//createTextMesh("o",this.owner);
+
+	var idColor = get_player_color(this.owner);
+	var mesh = circle_mesh(5,idColor);
+	this.mesh.add(mesh);
+
 	//console.log("ss");
 	this.mesh.selectable = false;
 	this.mesh.dynamic = true;
@@ -54,13 +59,14 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.target=_target;
 	this.pos=new THREE.Vector3(x,y,z);
 	this.terminate=false;
-	this.terminate_timer=3;
+	this.terminate_timer=5;
 	this.dead_light=0;
 	this.a=0;
 	this.b=0;
 	this.vel=vel;
 	this.freeze=false;
 	this.damage=0;
+	this.killed=false;
 	//this.target_pos=game_data.buildings[this.target].pos;
 }
 
@@ -85,12 +91,17 @@ Unit.prototype.update = function(){
 			scene.add(this.dead_light);
 		}
 		*/
+		if(this.killed){
+			this.mesh.rotation.y+=1;
+			//this.pos.y+=2;
+		}
 		this.terminate_timer--;
 		//this.pos.y+=0.02;
 		//this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 		if(this.terminate_timer<=0){
 			this.terminate=true;
 		}
+		this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
 		return;
 	}
 
