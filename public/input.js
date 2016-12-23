@@ -197,29 +197,9 @@ function handleKeys() {
 		dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
 	}
 	if (get_input("0")) {// Down cursor key
-		if(selected===-1){
-			selected=0;
-		}else{
-			game_data.commands.push(new Command(selected,0));
-			selected=-1;
-		}
+
 	}
-	if (get_input("1")) {// Down cursor key
-		if(selected===-1){
-			selected=1;
-		}else{
-			game_data.commands.push(new Command(selected,1));
-			selected=-1;
-		}
-	}
-	if (get_input("2")) {// Down cursor key
-		if(selected===-1){
-			selected=2;
-		}else{
-			game_data.commands.push(new Command(selected,2));
-			selected=-1;
-		}
-	}
+
 }
 
 function onDragStart(){
@@ -263,7 +243,22 @@ function handleMouseUp(){
 	dragTarget = cur_intersected;
 
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
+		if(dragSource.hasOwnProperty("unitID")){
+			//console.log("clickObject:"+dragSource.unitID);
+		}
 		clickObject(dragSource);
+	}else{
+		if(dragSource.hasOwnProperty("unitID")){
+			//console.log("dragSource:"+dragSource.unitID);
+		}else{
+			//console.log("dragSource:"+dragSource.name);
+		}
+		if(dragTarget.hasOwnProperty("unitID")){
+			//console.log(",dragTarget:"+dragTarget.unitID);
+		}else{
+			//console.log(",dragTarget:"+dragTarget.name);
+		}
+
 	}
 
 	dragSource = null;
@@ -307,11 +302,19 @@ function rayCast(){
 	if ( intersects.length > 0 ) {
 
 		for(var i=0; i<intersects.length; i++){
-			if("selectable" in intersects[ 0 ].object){
-				if(intersects[ 0 ].object.selectable === false){
+			var cur = intersects[i];
+			var root=cur.object;
+			while(root!=undefined&&root.parent != scene){
+				root = root.parent;
+			}
+
+			if("selectable" in root){
+				if(root.selectable === false){
+					//console.log("rayCast() not selectable");
 					continue;
 				}
 				else{
+					//console.log("rayCast() selectable");
 					intersected_id = i;
 					break;
 				}

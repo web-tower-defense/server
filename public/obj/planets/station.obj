@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'GasPlanets.blend'
 # www.blender.org
-mtllib uranus.mtl
+mtllib station.mtl
 o Uranus.001_Sphere.006
 v -0.038329 -1.271846 0.119710
 v -0.076289 -1.253444 0.238267

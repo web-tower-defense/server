@@ -25,7 +25,7 @@ function sent_commands(){
 	game_data.commands=[];
 }
 socket.on('game_command', function(data) {
-	if(data.length!==0)console.log('get game_command:'+data.length);
+	//if(data.length!==0)console.log('get game_command:'+data.length);
 
   if(!data_receive){
 		game_data.web_commands=data;
@@ -41,7 +41,7 @@ function handle_web_commands(){
 	}
 	for(var i = 0; i < game_data.web_commands.length; i++){
 		game_data.buildings[game_data.web_commands[i].selected].set_target(game_data.web_commands[i].target);
-		console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
+		//console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
 	}
 	game_data.web_commands=[];
 	data_receive=false;

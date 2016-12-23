@@ -33,6 +33,9 @@ function Building(){
 	this.white_hole_mesh2=0;
 }
 Building.prototype.init=function(){
+	// idColor = get_player_color(this.owner);
+	//var mesh = circle_mesh(10,idColor);
+	//this.mesh.add(mesh);
 	if(this.type=="black_hole"){
 		this.init_black_hole();
 	}else if(this.type=="white_hole"){
@@ -61,6 +64,7 @@ function circle_mesh(radius,color){
 }
 var circle_geometry=new circle_geo(1,64);
 Building.prototype.init_black_hole=function(){
+	this.mesh.selectable=false;
 	this.black_hole_mesh=circle_mesh(15,0xffffff);
 	this.black_hole_mesh2=circle_mesh(15,0xffffff);
 
@@ -68,6 +72,7 @@ Building.prototype.init_black_hole=function(){
 	this.mesh.add(this.black_hole_mesh2);
 }
 Building.prototype.init_white_hole=function(){
+	this.mesh.selectable=false;
 	this.white_hole_mesh=circle_mesh(15,0xffffff);
 	this.white_hole_mesh2=circle_mesh(15,0xffffff);
 
@@ -112,13 +117,18 @@ Building.prototype.station_update = function(){
 	if(this.laser_beam===0){
 		//console.log("create laser");
 		this.laser_beam=new THREEx.LaserBeam();
-		scene.add(this.laser_beam.object3d)
-		var laserCooked	= new THREEx.LaserCooked(this.laser_beam)
+		//this.laser_beam.selectable=false;
+		this.laser_beam.object3d.selectable=false;
+		var laserCooked	= new THREEx.LaserCooked(this.laser_beam);
+		//this.laser_beam.name="laser";
+		scene.add(this.laser_beam.object3d);
+
+		laserCooked.selectable=false;
 	}
 	var object3d = this.laser_beam.object3d;
-	object3d.position.x	= this.pos.x;
-	object3d.position.y	= this.pos.y;
-	object3d.position.z	= this.pos.z;
+
+	//object3d.name="laserdd";
+	object3d.position.set(this.pos.x,this.pos.y,this.pos.z) ;
 	//object3d.visible=false;
 	if(this.target_unit!==0&&this.target_unit.die){
 		this.target_unit=0;
@@ -141,13 +151,14 @@ Building.prototype.station_update = function(){
 		//console.log("search target!!");
 	}
 	//object3d.visible=true;
-	object3d.scale.x=0.001;
+	object3d.scale.set(0.001,0.001,0.001);
 	if(this.target_unit!==0){
 		var target_pos=this.pos.clone();
 		var del=target_pos.sub(this.target_unit.pos);
 		var del2=del.clone().normalize();
 
-		object3d.scale.x=del.length();
+		//object3d.scale.x=del.length();
+		object3d.scale.set(del.length(),1,1);
 		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
 		this.target_unit.damage+=1;
 		//object3d.visible=true;

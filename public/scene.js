@@ -78,15 +78,12 @@ function initScene(){
 	effectFXAA.renderToScreen = true;
 	composer.addPass(effectFXAA);*/
 
-
-	//game_data.laserBeam  = new THREEx.LaserBeam();
-	//scene.add(game_data.laserBeam);
 }
 
 function generateSprite() {
 		var canvas = document.createElement( 'canvas' );
-		canvas.width = 16;
-		canvas.height = 16;
+		canvas.width = 160;
+		canvas.height = 160;
 		var context = canvas.getContext( '2d' );
 		var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
 		gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
