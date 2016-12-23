@@ -39,6 +39,36 @@ function load_building_model(building,data){
 }
 
 function create_building(building,id,data){
+	if(building.hasOwnProperty('template')){
+		//console.log("load template");
+		var temp=data.building_template[building.template];
+		//console.log("name:"+temp.name);
+		if(!building.hasOwnProperty('name')&&temp.hasOwnProperty('name')){
+			building.name=temp.name;
+		}
+		if(!building.hasOwnProperty('curUnit')&&temp.hasOwnProperty('curUnit')){
+			building.curUnit=temp.curUnit;
+		}
+		if(!building.hasOwnProperty('maxUnit')&&temp.hasOwnProperty('maxUnit')){
+			building.maxUnit=temp.maxUnit;
+		}
+		if(!building.hasOwnProperty('unit_vel')&&temp.hasOwnProperty('unit_vel')){
+				building.unit_vel=temp.unit_vel;
+		}
+		if(!building.hasOwnProperty('grow_cycle')&&temp.hasOwnProperty('grow_cycle')){
+				building.grow_cycle=temp.grow_cycle;
+		}
+		if(!building.hasOwnProperty('sent_unit_cycle')&&temp.hasOwnProperty('sent_unit_cycle')){
+				building.sent_unit_cycle=temp.sent_unit_cycle;
+		}
+		if(!building.hasOwnProperty('scale')&&temp.hasOwnProperty('scale')){
+				building.scale=temp.scale;
+		}
+		if(!building.hasOwnProperty('type')&&temp.hasOwnProperty('type')){
+				//console.log("template_type:"+temp.type);
+				building.type=temp.type;
+		}
+	}
 	console.log("create_building:"+building.name);
 	var instance = all_models[building.name].clone();
 	var pos=new THREE.Vector3(building.position[0],0,-building.position[1]);
@@ -47,6 +77,9 @@ function create_building(building,id,data){
 	scene.add( instance );
 
 	var new_building = new Building();
+
+
+
 	new_building.unitID =id;
 	new_building.mesh = instance;
 	new_building.mesh.unitID = new_building.unitID;

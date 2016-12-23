@@ -80,38 +80,90 @@
 
 
     ],
+    "building_template":{
+      "venus" : {
+        "name": "venus",
+        "curUnit": 10,
+        "maxUnit": 200,
+        "unit_vel": 0.25,
+        "grow_cycle":18,
+        "sent_unit_cycle":5,
+        "scale":1
+      },
+      "moon" : {
+        "name": "moon",
+        "curUnit": 10,
+        "maxUnit": 50,
+        "grow_cycle":40,
+        "scale":2
+      },
+      "station" : {
+        "name": "station",
+        "type":"station",
+        "curUnit": 10,
+        "maxUnit": 50,
+        "grow_cycle":10000,
+        "scale":1.5
+      },
+      "mercury" : {
+        "name": "mercury",
+        "curUnit": 30,
+        "maxUnit": 100,
+        "grow_cycle":25,
+        "scale":1.5
+      },
+      "uranus" : {
+        "name": "uranus",
+        "curUnit": 20,
+        "maxUnit": 50,
+        "grow_cycle":40,
+        "scale":1.5
+      },
+      "mars" : {
+        "name": "mars",
+        "curUnit": 40,
+        "maxUnit": 150,
+        "grow_cycle":22,
+        "scale":1.5
+      },
+      "pluto" : {
+        "name": "pluto",
+        "curUnit": 15,
+        "maxUnit": 30,
+        "grow_cycle":50,
+        "scale":2.5
+      },
+      "blackhole" : {
+        "name": "blackhole",
+        "curUnit": 1000,
+        "maxUnit": 2000,
+        "type":"black_hole"
+      },
+      "whitehole" : {
+        "name": "whitehole",
+        "type":"white_hole",
+        "curUnit": 1000,
+        "maxUnit": 2000
+      }
+    },
     "buildings":
     [
         {
-            "name": "venus",
+            "template": "venus",
             "owner": 0,
             "curUnit": 40,
-            "maxUnit": 400,
-            "unit_vel": 0.4,
-            "grow_cycle":9,
-            "sent_unit_cycle":8,
             "position": [0,0]
         },{
-            "name": "venus",
+            "template": "venus",
             "owner": 1,
-            "curUnit": 10,
-            "maxUnit": 200,
-            "unit_vel": 0.25,
-            "grow_cycle":18,
-            "sent_unit_cycle":5,
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
             "orbit_angle":180,
             "position": [70,0]
         },{
-            "name": "venus",
+            "template": "venus",
             "owner": 2,
-            "curUnit": 10,
-            "maxUnit": 200,
-            "unit_vel": 0.25,
-            "grow_cycle":18,
-            "sent_unit_cycle":5,
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
@@ -119,227 +171,166 @@
             "position": [-70,0]
 
         },{
-            "name": "moon",
+            "template": "moon",
             "owner": 0,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":40,
             "orbiting":1,
             "orbit_radius":15,
             "orbit_cycle":1800,
             "orbit_angle":180,
             "position": [45,-10]
         },{
-            "name": "moon",
+            "template": "moon",
             "owner": 0,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":40,
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
+            "scale":2,
             "position": [-45,-10]
         },{
-            "name": "station",
+            "template": "station",
+
             "owner": 1,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":1000,
             "orbiting":1,
             "orbit_radius":8,
             "orbit_cycle":600,
             "orbit_angle":270,
-            "type":"station",
             "position": [45,-10]
         },{
-            "name": "station",
+            "template": "station",
             "owner": 2,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":1000,
             "orbiting":2,
             "orbit_radius":8,
             "orbit_cycle":600,
             "orbit_angle":90,
-            "type":"station",
             "position": [-45,-10]
         },{
-            "name": "station",
+            "template": "station",
             "owner": 0,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":1000,
             "orbiting":0,
             "orbit_radius":10,
             "orbit_cycle":800,
             "orbit_angle":0,
-            "type":"station",
             "position": [45,-10]
         },{
-            "name": "station",
+            "template": "station",
             "owner": 0,
-            "curUnit": 10,
-            "maxUnit": 50,
-            "grow_cycle":1000,
             "orbiting":0,
             "orbit_radius":10,
             "orbit_cycle":800,
             "orbit_angle":180,
-            "type":"station",
             "position": [45,-10]
         },{
-            "name": "mercury",
+            "template": "mercury",
       			"owner": 0,
-            "curUnit": 30,
-            "maxUnit": 100,
-            "grow_cycle":25,
             "orbiting":0,
             "orbit_cycle":5000,
             "orbit_radius":50,
             "orbit_angle":20,
             "position": [30,-35]
         },{
-            "name": "mercury",
+            "template": "mercury",
       			"owner": 0,
-            "curUnit": 30,
-            "maxUnit": 100,
-            "grow_cycle":25,
             "orbiting":0,
             "orbit_cycle":5000,
             "orbit_radius":50,
             "orbit_angle":200,
             "position": [-30,-35]
         },{
-            "name": "uranus",
+            "template": "uranus",
             "owner": 0,
-            "curUnit": 20,
-            "maxUnit": 50,
-            "grow_cycle":40,
             "orbiting":0,
             "orbit_cycle":2500,
             "orbit_radius":25,
             "orbit_angle":240,
             "position": [20,-10]
         },{
-            "name": "uranus",
+            "template": "uranus",
             "owner": 0,
-            "curUnit": 20,
-            "maxUnit": 50,
-            "grow_cycle":40,
             "orbiting":0,
             "orbit_cycle":2500,
             "orbit_radius":25,
             "orbit_angle":60,
             "position": [-20,-10]
         },{
-            "name": "mars",
+            "template": "mars",
             "owner": 0,
-            "curUnit": 40,
-            "maxUnit": 150,
-            "grow_cycle":22,
             "orbiting":0,
             "orbit_cycle":6000,
             "orbit_radius":60,
             "orbit_angle":60,
             "position": [45,-40]
         },{
-            "name": "mars",
+            "template": "mars",
             "owner": 0,
-            "curUnit": 40,
-            "maxUnit": 150,
-            "grow_cycle":22,
             "orbiting":0,
             "orbit_cycle":6000,
             "orbit_radius":60,
             "orbit_angle":220,
             "position": [-45,-40]
         },{
-            "name": "mars",
+            "template": "mars",
             "owner": 0,
-            "curUnit": 40,
-            "maxUnit": 150,
-            "grow_cycle":22,
             "orbiting":0,
             "orbit_cycle":3500,
             "orbit_radius":35,
             "orbit_angle":110,
             "position": [65,20]
         },{
-            "name": "mars",
+            "template": "mars",
             "owner": 0,
-            "curUnit": 40,
-            "maxUnit": 150,
-            "grow_cycle":22,
             "orbiting":0,
             "orbit_cycle":3500,
             "orbit_radius":35,
             "orbit_angle":290,
             "position": [-65,20]
         },{
-            "name": "pluto",
+            "template": "pluto",
             "owner": 0,
-            "curUnit": 15,
-            "maxUnit": 30,
-            "grow_cycle":50,
             "orbiting":0,
             "orbit_cycle":3500,
             "orbit_radius":35,
             "orbit_angle":10,
             "position": [15,-30]
         },{
-            "name": "pluto",
+            "template": "pluto",
             "owner": 0,
-            "curUnit": 15,
-            "maxUnit": 30,
-            "grow_cycle":50,
             "orbiting":0,
             "orbit_cycle":3500,
             "orbit_radius":35,
             "orbit_angle":190,
             "position": [-15,-30]
         },{
-            "name": "blackhole",
+            "template": "blackhole",
             "owner": 0,
-            "curUnit": 1000,
-            "maxUnit": 2000,
             "orbiting":0,
             "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":90,
-            "type":"black_hole",
             "position": [70,0]
         },{
-            "name": "blackhole",
+            "template": "blackhole",
             "owner": 0,
-            "curUnit": 1000,
-            "maxUnit": 2000,
             "orbiting":0,
             "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":270,
-            "type":"black_hole",
             "position": [70,0]
         },{
-            "name": "whitehole",
+            "template": "whitehole",
             "owner": 0,
-            "curUnit": 1000,
-            "maxUnit": 2000,
             "orbiting":0,
             "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":0,
-            "type":"white_hole",
+
             "position": [70,0]
         },{
-            "name": "whitehole",
+            "template": "whitehole",
             "owner": 0,
-            "curUnit": 1000,
-            "maxUnit": 2000,
             "orbiting":0,
             "orbit_cycle":9500,
             "orbit_radius":45,
             "orbit_angle":180,
-            "type":"white_hole",
             "position": [70,0]
         }
     ]

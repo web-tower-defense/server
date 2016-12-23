@@ -1,8 +1,8 @@
 {
-    "mapName": "map02",
+    "mapName": "map01",
     "mapWidth": 100,
     "mapHeight": 100,
-    "AI":[2],
+    "AI":[2,3],
     "models":
     [
         {
@@ -159,7 +159,7 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":180,
+            "orbit_angle":0,
             "position": [70,0]
         },{
             "template": "venus",
@@ -167,16 +167,24 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":0,
+            "orbit_angle":120,
             "position": [-70,0]
 
+        },{
+            "template": "venus",
+            "owner": 3,
+            "orbiting":0,
+            "orbit_cycle":8000,
+            "orbit_radius":70,
+            "orbit_angle":240,
+            "position": [-70,0]
         },{
             "template": "moon",
             "owner": 0,
             "orbiting":1,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":180,
+            "orbit_angle":0,
             "position": [45,-10]
         },{
             "template": "moon",
@@ -184,6 +192,16 @@
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
+            "orbit_angle":120,
+            "scale":2,
+            "position": [-45,-10]
+        },{
+            "template": "moon",
+            "owner": 0,
+            "orbiting":3,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":240,
             "scale":2,
             "position": [-45,-10]
         },{
@@ -193,7 +211,7 @@
             "orbiting":1,
             "orbit_radius":8,
             "orbit_cycle":600,
-            "orbit_angle":270,
+            "orbit_angle":240,
             "position": [45,-10]
         },{
             "template": "station",
@@ -201,7 +219,15 @@
             "orbiting":2,
             "orbit_radius":8,
             "orbit_cycle":600,
-            "orbit_angle":90,
+            "orbit_angle":120,
+            "position": [-45,-10]
+        },{
+            "template": "station",
+            "owner": 3,
+            "orbiting":3,
+            "orbit_radius":8,
+            "orbit_cycle":600,
+            "orbit_angle":0,
             "position": [-45,-10]
         },{
             "template": "station",

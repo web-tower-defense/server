@@ -82,8 +82,8 @@ function initScene(){
 
 function generateSprite() {
 		var canvas = document.createElement( 'canvas' );
-		canvas.width = 160;
-		canvas.height = 160;
+		canvas.width = 16;
+		canvas.height = 16;
 		var context = canvas.getContext( '2d' );
 		var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
 		gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
