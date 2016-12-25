@@ -56,6 +56,9 @@ function initInput(){
 	document.body.appendChild(zoom_out);
 
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'touchmove', touchMove, false );
+	document.addEventListener( 'touchstart', handleTouchStart, false );
+	document.addEventListener( 'touchend', handleTouchEnd, false );
 	document.onkeydown = handleKeyDown;
 	document.onkeyup = handleKeyUp;
 	container.onmousedown = handleMouseDown;
@@ -157,6 +160,35 @@ function onDocumentMouseMove( event ) {
 	}
 }
 
+function touchMove( event ) {
+	event.preventDefault();
+	if(!event.touches.length)
+		return;
+
+	mouse.x = ( event.touches[0].pageX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.touches[0].pageY / window.innerHeight ) * 2 + 1;
+
+	//console.log("touchmove");
+	//console.log(mouse);
+	console.log(prev_mouse);
+
+	if(dragSource !== null){
+
+		if(prev_mouse !== null){
+			var deltaX = mouse.x - prev_mouse.x;
+			var deltaZ = mouse.y - prev_mouse.y;
+			//console.log("deltaX : "+deltaX+"  deltaY : "+deltaZ);
+			camera.position.x -= deltaX*25;
+			camera.position.z += deltaZ*25;
+		}
+		else{
+			prev_mouse = new THREE.Vector2();
+		}
+		prev_mouse.x = mouse.x;
+		prev_mouse.y = mouse.y;
+	}
+}
+
 var input=[];
 function handleKeyDown(event) {
   //alert(event.key);
@@ -197,9 +229,29 @@ function handleKeys() {
 		dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
 	}
 	if (get_input("0")) {// Down cursor key
-
+		if(selected===-1){
+			selected=0;
+		}else{
+			game_data.commands.push(new Command(selected,0));
+			selected=-1;
+		}
 	}
-
+	if (get_input("1")) {// Down cursor key
+		if(selected===-1){
+			selected=1;
+		}else{
+			game_data.commands.push(new Command(selected,1));
+			selected=-1;
+		}
+	}
+	if (get_input("2")) {// Down cursor key
+		if(selected===-1){
+			selected=2;
+		}else{
+			game_data.commands.push(new Command(selected,2));
+			selected=-1;
+		}
+	}
 }
 
 function onDragStart(){
@@ -229,6 +281,7 @@ function clickObject(obj){
 }
 //var seleted_id=-1;
 function handleMouseDown(){
+	console.log("mouse down");
 	dragSource = cur_intersected;
 	if(dragSource === null || dragSource===undefined){
 		dragSource = "none";
@@ -239,31 +292,33 @@ function handleMouseDown(){
 }
 
 function handleMouseUp(){
-
+	console.log("mouse up");
 	dragTarget = cur_intersected;
 
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
-		if(dragSource.hasOwnProperty("unitID")){
-			//console.log("clickObject:"+dragSource.unitID);
-		}
 		clickObject(dragSource);
-	}else{
-		if(dragSource.hasOwnProperty("unitID")){
-			//console.log("dragSource:"+dragSource.unitID);
-		}else{
-			//console.log("dragSource:"+dragSource.name);
-		}
-		if(dragTarget.hasOwnProperty("unitID")){
-			//console.log(",dragTarget:"+dragTarget.unitID);
-		}else{
-			//console.log(",dragTarget:"+dragTarget.name);
-		}
-
 	}
+	dragSource = null;
+	dragTarget = null;
+	prev_mouse = null;
+}
+
+function handleTouchStart(){
+	console.log("touch start");
+	dragSource = cur_intersected;
+	if(dragSource === null || dragSource===undefined){
+		dragSource = "none";
+	}
+	console.log(prev_mouse);
+}
+
+function handleTouchEnd(){
+	console.log("touch end");
 
 	dragSource = null;
 	dragTarget = null;
 	prev_mouse = null;
+	console.log(prev_mouse);
 }
 
 function handleClick(){
@@ -302,19 +357,11 @@ function rayCast(){
 	if ( intersects.length > 0 ) {
 
 		for(var i=0; i<intersects.length; i++){
-			var cur = intersects[i];
-			var root=cur.object;
-			while(root!=undefined&&root.parent != scene){
-				root = root.parent;
-			}
-
-			if("selectable" in root){
-				if(root.selectable === false){
-					//console.log("rayCast() not selectable");
+			if("selectable" in intersects[ 0 ].object){
+				if(intersects[ 0 ].object.selectable === false){
 					continue;
 				}
 				else{
-					//console.log("rayCast() selectable");
 					intersected_id = i;
 					break;
 				}

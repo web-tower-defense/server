@@ -1,5 +1,5 @@
 body {
-  background-image: url("/textures/Background-3.jpg");
+  background: url("/textures/Background-3.jpg") no-repeat fixed;
   background-size: cover;
   background-color: #fafafa;
   display: flex;
@@ -16,6 +16,17 @@ body {
   position: relative; }
   #main-div * {
     font-size: 18px; }
+  #nav-bar-div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: inherit;
+    text-align:center;
+  }
+  #nav-bar-div > button{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
 
 #waiting-div {
   display: none;
