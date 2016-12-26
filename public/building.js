@@ -62,6 +62,21 @@ function circle_mesh(radius,color){
 	mesh.scale.y=radius;
 	return mesh;
 }
+function filled_circle_mesh(radius,color){
+	var material = new THREE.MeshPhongMaterial( {
+		opacity: 80.0,
+		color: color,
+		emissive: color,
+		transparent: true,
+		side: THREE.DoubleSide
+	});
+
+	var mesh=new THREE.Line(circle_geometry, material );
+	mesh.rotation.x=Math.PI*0.5;
+	mesh.scale.x=radius;
+	mesh.scale.y=radius;
+	return mesh;
+}
 var circle_geometry=new circle_geo(1,64);
 Building.prototype.init_black_hole=function(){
 	this.mesh.selectable=false;

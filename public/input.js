@@ -1,6 +1,7 @@
 var dragSource=null, dragTarget=null;
 var dragCurve, dragCurveMesh, dragCurveMaterial;
 var selection_sphere, selectedPlanet=null, targetPlanet=null;
+var selec_mesh,click_mesh;
 var mouse = new THREE.Vector2(), prev_mouse = new THREE.Vector2();
 var mouse_pos=new Pos(0,0,0);
 var mousewheelevt;
@@ -125,6 +126,11 @@ function initInput(){
 
 		}, onProgress, onError );
 	});
+
+	selec_mesh=circle_mesh(4,0x00ffff);
+	click_mesh=filled_circle_mesh(4,0xff00ff);
+	scene.add(selec_mesh);
+	scene.add(click_mesh);
 }
 
 
@@ -228,52 +234,37 @@ function handleKeys() {
 		}
 		dragCurveMesh.traverse( function ( object ) { object.visible = false; } );
 	}
-	if (get_input("0")) {// Down cursor key
-		if(selected===-1){
-			selected=0;
-		}else{
-			game_data.commands.push(new Command(selected,0));
-			selected=-1;
-		}
-	}
-	if (get_input("1")) {// Down cursor key
-		if(selected===-1){
-			selected=1;
-		}else{
-			game_data.commands.push(new Command(selected,1));
-			selected=-1;
-		}
-	}
-	if (get_input("2")) {// Down cursor key
-		if(selected===-1){
-			selected=2;
-		}else{
-			game_data.commands.push(new Command(selected,2));
-			selected=-1;
-		}
-	}
 }
 
 function onDragStart(){
 	console.log("drag");
 }
-
+var click_timer=0;
 function clickObject(obj){
+	selected_timer=0;
 	if(selectedPlanet === null && game_data.buildings[obj.unitID].owner === player_id){
 		//console.log(obj.model);
 		//console.log(all_models[obj.model]);
+		//var elementToChange = document.getElementsByTagName("body")[0];
+		//http://wiki-devel.sugarlabs.org/images/e/e2/Arrow.cur saber.cur
+
 		selection_sphere.visible = true;
 		selection_sphere.scale.set(all_models[obj.model].radius,
 																all_models[obj.model].radius,
 																all_models[obj.model].radius);
 		obj.add(selection_sphere);
 		selectedPlanet = obj;
-	}
-	else{
+	}else if(selectedPlanet!==null){
 		targetPlanet = obj;
 		if(game_data.buildings[selectedPlanet.unitID].owner === player_id){
 			game_data.commands.push(new Command(selectedPlanet.unitID,  targetPlanet.unitID));
 		}
+		click_timer=10;
+		click_mesh.position.set(cur_intersected.position.x,
+			cur_intersected.position.y,cur_intersected.position.z);
+		click_mesh.visible=true;
+
+
 		selectedPlanet = null;
 		targetPlanet = null;
 		selection_sphere.visible = false;
@@ -347,8 +338,16 @@ var handleWheel = function (e){
 		    }
 			}
 }
-
+var selected_timer=0;
 function rayCast(){
+
+	if(click_timer>0){
+		click_timer--;
+	}else{
+		//console.log("hide");
+		click_mesh.visible=false;
+	}
+
 	raycaster.setFromCamera( mouse, camera );
 	//console.log("len : " + scene.children.length);
 	var intersected_id = -1;
@@ -377,13 +376,41 @@ function rayCast(){
 		}
 		if(intersected_id === -1)return;
 
-		cur_intersected = intersects[ intersected_id ].object;
-		intersected_point = intersects[ intersected_id ].point;
 
-		while(cur_intersected.parent != scene){
+		var tmp_intersected = intersects[intersected_id].object;
+		while(tmp_intersected.parent != scene){
 			//console.log("name : " + cur_intersected.name);
-			cur_intersected = cur_intersected.parent;
+			tmp_intersected = tmp_intersected.parent;
 		}
+
+		if(selected_timer>0){
+			//selec_mesh.position.set(cur_intersected.position.x,
+				//cur_intersected.position.y,cur_intersected.position.z);
+			selected_timer--;
+		}else{
+			cur_intersected = tmp_intersected;
+			intersected_point = intersects[intersected_id].point;
+		}
+
+		if(cur_intersected.hasOwnProperty("unitID")&&
+				(selectedPlanet !== null ||
+					game_data.buildings[cur_intersected.unitID].owner === player_id)){
+
+			selec_mesh.position.set(cur_intersected.position.x,
+				cur_intersected.position.y,cur_intersected.position.z);
+			selec_mesh.visible=true;
+			document.getElementsByTagName("body")[0].style.cursor =
+			 "url('./cursor/curblue.cur'), auto";
+			if(cur_intersected===tmp_intersected){
+				selected_timer=15;
+			}
+		}else{
+			selec_mesh.visible=false;
+			document.getElementsByTagName("body")[0].style.cursor =
+			 "url('./cursor/cur1089.cur'), auto";
+		}
+
+
 		//console.log("name : " + cur_intersected.name);
 		if ( prev_intersected != cur_intersected ) {
 			if ( prev_intersected ) {
