@@ -36,24 +36,24 @@ function Building(){
 	this.white_hole_mesh2=0;
 
 
-	//this.sent_unit_line=0;
+	this.sent_unit_line=0;
 }
 Building.prototype.init=function(){
 	// idColor = get_player_color(this.owner);
 	//var mesh = circle_mesh(10,idColor);
 	//this.mesh.add(mesh);
-	/*
+	///*
 	var lineMaterial = new THREE.MeshBasicMaterial({
 		color: 0xffffff
 	});
 	var geometry = new THREE.Geometry();
-	geometry.vertices[0]=this.pos;
-	geometry.vertices[1]=this.pos;
+	geometry.vertices[0]=new THREE.Vector3(0, 0, 0);
+	geometry.vertices[1]=new THREE.Vector3(1, 0, 0);
 	//geometry.vertices[1]=new THREE.Vector3(0, 0, 0);
 	this.sent_unit_line=new THREE.Line(geometry,lineMaterial);
 	this.sent_unit_line.geometry.dynamic = true;
-		scene.add(this.sent_unit_line);
-	*/
+	scene.add(this.sent_unit_line);
+	//*/
 
 	if(this.type=="black_hole"){
 		this.init_black_hole();
@@ -121,7 +121,20 @@ Building.prototype.init_white_hole=function(){
 	this.mesh.add(this.white_hole_mesh2);
 }
 Building.prototype.update = function(){
+	if(this.target!==-1){
+		var pos=game_data.buildings[this.unitID].pos.clone();
+		var pos2=game_data.buildings[this.target].pos.clone();
+		this.sent_unit_line.position.set(pos.x,pos.y,pos.z);
+		var del=pos.sub(pos2);
+		var len=del.length();
 
+		this.sent_unit_line.scale.x=len;
+		this.sent_unit_line.rotation.y=Math.atan2(del.z,-del.x);
+		this.sent_unit_line.material.color.setHex(get_player_color(this.owner));
+		this.sent_unit_line.visible=true;
+	}else{
+		this.sent_unit_line.visible=false;
+	}
 	this.mesh.rotation.y+=0.03;
 	//this.pos.x+=0.005;
 	if(this.orbiting!==-1){

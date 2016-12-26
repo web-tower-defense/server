@@ -138,7 +138,7 @@ function initInput(){
 
 	{
 	var lineMaterial = new THREE.MeshBasicMaterial({
-		color: 0xffffff
+		color: 0xff00ff
 	});
 	var geometry = new THREE.Geometry();
   geometry.vertices[0]=new THREE.Vector3(0, 0, 0);
@@ -287,16 +287,7 @@ function clickObject(obj){
 		click_mesh.position.set(cur_intersected.position.x,
 			cur_intersected.position.y,cur_intersected.position.z);
 		click_mesh.visible=true;
-		/*
-		var pos=game_data.buildings[selectedPlanet.unitID].pos;
-		sent_unit_line.geometry.vertices[0].set(pos.x,pos.y,pos.z);
-		console.log("line p1:"+pos.x+","+pos.y+","+pos.z);
-		pos=game_data.buildings[targetPlanet.unitID].pos;
-		console.log("line p2:"+pos.x+","+pos.y+","+pos.z);
-		sent_unit_line.geometry.vertices[1].set(pos.x,pos.y,pos.z);
-		sent_unit_line.geometry.verticesNeedUpdate = true;
-		this.sent_unit_line.visible=true;
-		*/
+
 		var pos=game_data.buildings[selectedPlanet.unitID].pos.clone();
 		var pos2=game_data.buildings[targetPlanet.unitID].pos.clone();
 		sent_unit_line.position.set(pos.x,pos.y,pos.z);
