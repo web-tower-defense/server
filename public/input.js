@@ -1,7 +1,7 @@
 var dragSource=null, dragTarget=null;
 var dragCurve, dragCurveMesh, dragCurveMaterial;
 var selection_sphere, selectedPlanet=null, targetPlanet=null;
-var selec_mesh,click_mesh;
+var selec_mesh,click_mesh,sent_unit_line;
 var mouse = new THREE.Vector2(), prev_mouse = new THREE.Vector2();
 var mouse_pos=new Pos(0,0,0);
 var mousewheelevt;
@@ -131,8 +131,23 @@ function initInput(){
 	selec_mesh.selectable=false;
 	click_mesh=filled_circle_mesh(4.5,0xff00ff);
 	click_mesh.selectable=false;
+
+
 	scene.add(selec_mesh);
 	scene.add(click_mesh);
+
+	{
+	var lineMaterial = new THREE.MeshBasicMaterial({
+		color: 0xffffff
+	});
+	var geometry = new THREE.Geometry();
+  geometry.vertices[0]=new THREE.Vector3(0, 0, 0);
+	geometry.vertices[1]=new THREE.Vector3(1, 0, 0);
+	//geometry.vertices[1]=new THREE.Vector3(0, 0, 0);
+	sent_unit_line=new THREE.Line(geometry,lineMaterial);
+	sent_unit_line.geometry.dynamic = true;
+	scene.add(sent_unit_line);
+	}
 }
 
 
@@ -265,18 +280,39 @@ function clickObject(obj){
 		click_mesh.visible=true;
 	}else if(selectedPlanet!==null){
 		targetPlanet = obj;
-		if(game_data.buildings[selectedPlanet.unitID].owner === player_id){
-			game_data.commands.push(new Command(selectedPlanet.unitID,  targetPlanet.unitID));
-		}
-		click_timer=10;
+
+		game_data.commands.push(new Command(selectedPlanet.unitID,  targetPlanet.unitID));
+
+
 		click_mesh.position.set(cur_intersected.position.x,
 			cur_intersected.position.y,cur_intersected.position.z);
 		click_mesh.visible=true;
+		/*
+		var pos=game_data.buildings[selectedPlanet.unitID].pos;
+		sent_unit_line.geometry.vertices[0].set(pos.x,pos.y,pos.z);
+		console.log("line p1:"+pos.x+","+pos.y+","+pos.z);
+		pos=game_data.buildings[targetPlanet.unitID].pos;
+		console.log("line p2:"+pos.x+","+pos.y+","+pos.z);
+		sent_unit_line.geometry.vertices[1].set(pos.x,pos.y,pos.z);
+		sent_unit_line.geometry.verticesNeedUpdate = true;
+		this.sent_unit_line.visible=true;
+		*/
+		var pos=game_data.buildings[selectedPlanet.unitID].pos.clone();
+		var pos2=game_data.buildings[targetPlanet.unitID].pos.clone();
+		sent_unit_line.position.set(pos.x,pos.y,pos.z);
+		var del=pos.sub(pos2);
+		var len=del.length();
+
+		sent_unit_line.scale.x=len;
+		sent_unit_line.rotation.y=Math.atan2(del.z,-del.x);
+		this.sent_unit_line.visible=true;
+		click_timer=15;
 
 
 		selectedPlanet = null;
 		targetPlanet = null;
 		selection_sphere.visible = false;
+
 	}
 }
 //var seleted_id=-1;
@@ -368,6 +404,7 @@ function rayCast(){
 		return;
 	}else{
 		//console.log("hide");
+		sent_unit_line.visible=false;
 		click_mesh.visible=false;
 	}
 
@@ -425,10 +462,10 @@ function rayCast(){
 			document.getElementsByTagName("body")[0].style.cursor =
 			 "url('./cursor/curselec.cur'), auto";
 			if(cur_intersected===tmp_intersected){
-				selected_timer=20;
-				console.log("selected");
+				selected_timer=15;
+				//console.log("selected");
 			}else{
-				console.log("not selected");
+				//console.log("not selected");
 			}
 		}else{
 			selec_mesh.visible=false;

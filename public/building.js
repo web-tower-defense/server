@@ -10,8 +10,9 @@ function Building(){
 	this.target=-1;
 	this.sent_unit_timer=0;
 	this.recruit_timer=0;
+	this.unit_die_timer=0;
 	this.unit_vel=0.2;
-	this.sent_unit_cycle=8;
+	this.sent_unit_cycle=15;
 	this.grow_cycle=20;
 	this.pos=new THREE.Vector3(0,0,0);
 	this.path=[];
@@ -33,11 +34,27 @@ function Building(){
 
 	this.white_hole_mesh=0;
 	this.white_hole_mesh2=0;
+
+
+	//this.sent_unit_line=0;
 }
 Building.prototype.init=function(){
 	// idColor = get_player_color(this.owner);
 	//var mesh = circle_mesh(10,idColor);
 	//this.mesh.add(mesh);
+	/*
+	var lineMaterial = new THREE.MeshBasicMaterial({
+		color: 0xffffff
+	});
+	var geometry = new THREE.Geometry();
+	geometry.vertices[0]=this.pos;
+	geometry.vertices[1]=this.pos;
+	//geometry.vertices[1]=new THREE.Vector3(0, 0, 0);
+	this.sent_unit_line=new THREE.Line(geometry,lineMaterial);
+	this.sent_unit_line.geometry.dynamic = true;
+		scene.add(this.sent_unit_line);
+	*/
+
 	if(this.type=="black_hole"){
 		this.init_black_hole();
 	}else if(this.type=="white_hole"){
@@ -104,6 +121,7 @@ Building.prototype.init_white_hole=function(){
 	this.mesh.add(this.white_hole_mesh2);
 }
 Building.prototype.update = function(){
+
 	this.mesh.rotation.y+=0.03;
 	//this.pos.x+=0.005;
 	if(this.orbiting!==-1){
@@ -128,6 +146,11 @@ Building.prototype.update = function(){
 	if(this.recruit_timer>this.grow_cycle){
 		this.recruit_timer=0;
 		this.grow();
+	}
+	this.unit_die_timer++;
+	if(this.unit_die_timer>30){
+		this.unit_die_timer=0;
+		this.unit_die();
 	}
 	if(this.type=="black_hole"){
 		this.black_hole_update();
@@ -255,13 +278,20 @@ Building.prototype.white_hole_update = function(){
 }
 Building.prototype.grow = function(){
 	if(this.curUnit < this.maxUnit&&this.owner>0){
-		this.curUnit++;
+		this.curUnit+=1;
+		//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
+		//this.textMesh.geometry = createTextGeo(this.curUnit.toString()+"/"+this.maxUnit.toString());
+	}
+}
+Building.prototype.unit_die = function(){
+	if(this.curUnit > this.maxUnit&&this.owner>0){
+		this.curUnit--;
 		//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
 		//this.textMesh.geometry = createTextGeo(this.curUnit.toString()+"/"+this.maxUnit.toString());
 	}
 }
 Building.prototype.draw = function(){
-	var cur_str=this.curUnit.toString();
+	var cur_str=this.curUnit.toString()+"/"+this.maxUnit.toString();
 
 	if(cur_str!==this.prev_str){
 		scene.remove(this.textMesh);
@@ -306,6 +336,9 @@ Building.prototype.captured=function(new_owner){
 	this.target=-1;
 }
 Building.prototype.set_target=function(id){
+	if(id===this.unitID){
+		id=-1;
+	}
 	this.sent_unit_num=this.curUnit/2;
 	this.target=id;
 }
@@ -313,7 +346,7 @@ Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;
 	if(this.sent_unit_num<=0)this.target=-1;
-	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1&&this.target!==this.unitID){//
+	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1){//
 		//console.log("sent from:"+this.unitID+"to:"+this.target);
 		this.sent_unit_num--;
 		this.curUnit--;
