@@ -86,7 +86,7 @@
         "curUnit": 10,
         "maxUnit": 100,
         "unit_vel": 0.25,
-        "grow_cycle":20,
+        "grow_cycle":40,
         "sent_unit_cycle":5,
         "scale":1
       },
@@ -94,7 +94,7 @@
         "name": "moon",
         "curUnit": 10,
         "maxUnit": 20,
-        "grow_cycle":60,
+        "grow_cycle":120,
         "scale":2
       },
       "station" : {
@@ -103,35 +103,35 @@
         "unit_vel": 0.4,
         "curUnit": 10,
         "maxUnit": 50,
-        "grow_cycle":10000,
+        "grow_cycle":100000,
         "scale":1.5
       },
       "mercury" : {
         "name": "mercury",
         "curUnit": 30,
         "maxUnit": 60,
-        "grow_cycle":40,
+        "grow_cycle":80,
         "scale":1.5
       },
       "uranus" : {
         "name": "uranus",
         "curUnit": 20,
         "maxUnit": 40,
-        "grow_cycle":40,
+        "grow_cycle":90,
         "scale":1.5
       },
       "mars" : {
         "name": "mars",
         "curUnit": 40,
         "maxUnit": 80,
-        "grow_cycle":40,
+        "grow_cycle":70,
         "scale":1.5
       },
       "pluto" : {
         "name": "pluto",
         "curUnit": 15,
         "maxUnit": 30,
-        "grow_cycle":60,
+        "grow_cycle":120,
         "scale":3
       },
       "blackhole" : {

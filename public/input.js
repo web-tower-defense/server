@@ -425,7 +425,7 @@ function rayCast(){
 			document.getElementsByTagName("body")[0].style.cursor =
 			 "url('./cursor/curselec.cur'), auto";
 			if(cur_intersected===tmp_intersected){
-				selected_timer=15;
+				selected_timer=20;
 				console.log("selected");
 			}else{
 				console.log("not selected");
