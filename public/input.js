@@ -128,7 +128,9 @@ function initInput(){
 	});
 
 	selec_mesh=circle_mesh(4,0x00ffff);
-	click_mesh=filled_circle_mesh(4,0xff00ff);
+	selec_mesh.selectable=false;
+	click_mesh=filled_circle_mesh(4.5,0xff00ff);
+	click_mesh.selectable=false;
 	scene.add(selec_mesh);
 	scene.add(click_mesh);
 }
@@ -241,6 +243,7 @@ function onDragStart(){
 }
 var click_timer=0;
 function clickObject(obj){
+	if(click_timer>0)return;
 	selected_timer=0;
 	if(selectedPlanet === null && game_data.buildings[obj.unitID].owner === player_id){
 		//console.log(obj.model);
@@ -287,18 +290,25 @@ function handleMouseDown(){
 	prev_mouse.x = mouse.x;
 	prev_mouse.y = mouse.y;
 }
-
+var deselected_ready=false;
 function handleMouseUp(){
 	//console.log("mouse up");
+
 	dragTarget = cur_intersected;
 
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
+		deselected_ready=false;
 		clickObject(dragSource);
 	}
 	if(selectedPlanet&&!dragTarget.hasOwnProperty("unitID")){
-		console.log("deselected");
-		selectedPlanet=null;
-		selection_sphere.visible = false;
+		if(deselected_ready===false){
+			deselected_ready=true;
+		}else{
+			console.log("deselected");
+			selectedPlanet=null;
+			selection_sphere.visible = false;
+		}
+
 	}
 	dragSource = null;
 	dragTarget = null;
@@ -416,6 +426,9 @@ function rayCast(){
 			 "url('./cursor/curselec.cur'), auto";
 			if(cur_intersected===tmp_intersected){
 				selected_timer=15;
+				console.log("selected");
+			}else{
+				console.log("not selected");
 			}
 		}else{
 			selec_mesh.visible=false;

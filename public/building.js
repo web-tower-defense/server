@@ -26,6 +26,8 @@ function Building(){
 	this.target_unit=0;
 	this.weapon_cool_down=0;
 
+	this.ex_mesh=0;
+
 	this.black_hole_mesh=0;
 	this.black_hole_mesh2=0;
 
@@ -40,6 +42,8 @@ Building.prototype.init=function(){
 		this.init_black_hole();
 	}else if(this.type=="white_hole"){
 		this.init_white_hole();
+	}else if(this.type=="station"){
+		this.init_station();
 	}
 }
 function circle_geo(radius,segments){
@@ -86,6 +90,11 @@ Building.prototype.init_black_hole=function(){
 	this.mesh.add(this.black_hole_mesh);
 	this.mesh.add(this.black_hole_mesh2);
 }
+Building.prototype.init_station=function(){
+	this.ex_mesh=circle_mesh(15,0xff0000);
+	this.ex_mesh.selectable=false;
+	scene.add(this.ex_mesh);
+}
 Building.prototype.init_white_hole=function(){
 	this.mesh.selectable=false;
 	this.white_hole_mesh=circle_mesh(15,0xffffff);
@@ -129,6 +138,7 @@ Building.prototype.update = function(){
 	}
 }
 Building.prototype.station_update = function(){
+	this.ex_mesh.position.set(this.pos.x,this.pos.y,this.pos.z) ;
 	if(this.laser_beam===0){
 		//console.log("create laser");
 		this.laser_beam=new THREEx.LaserBeam();
@@ -157,7 +167,7 @@ Building.prototype.station_update = function(){
 				var target_pos=this.pos.clone();
 				var del=target_pos.sub(unit.pos);
 				var len=del.length();
-				if(len<20.0&&len<min_dis){
+				if(len<15.0&&len<min_dis){
 					min_dis=len;
 					this.target_unit=unit;
 				}
