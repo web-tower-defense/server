@@ -93,7 +93,7 @@
       "moon" : {
         "name": "moon",
         "curUnit": 10,
-        "maxUnit": 20,
+        "maxUnit": 40,
         "grow_cycle":120,
         "scale":2
       },
