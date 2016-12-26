@@ -254,6 +254,12 @@ function clickObject(obj){
 																all_models[obj.model].radius);
 		obj.add(selection_sphere);
 		selectedPlanet = obj;
+
+
+		click_timer=10;
+		click_mesh.position.set(cur_intersected.position.x,
+			cur_intersected.position.y,cur_intersected.position.z);
+		click_mesh.visible=true;
 	}else if(selectedPlanet!==null){
 		targetPlanet = obj;
 		if(game_data.buildings[selectedPlanet.unitID].owner === player_id){
@@ -272,7 +278,7 @@ function clickObject(obj){
 }
 //var seleted_id=-1;
 function handleMouseDown(){
-	console.log("mouse down");
+	//console.log("mouse down");
 	dragSource = cur_intersected;
 	if(dragSource === null || dragSource===undefined){
 		dragSource = "none";
@@ -283,11 +289,16 @@ function handleMouseDown(){
 }
 
 function handleMouseUp(){
-	console.log("mouse up");
+	//console.log("mouse up");
 	dragTarget = cur_intersected;
 
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
 		clickObject(dragSource);
+	}
+	if(selectedPlanet&&!dragTarget.hasOwnProperty("unitID")){
+		console.log("deselected");
+		selectedPlanet=null;
+		selection_sphere.visible = false;
 	}
 	dragSource = null;
 	dragTarget = null;
@@ -343,6 +354,8 @@ function rayCast(){
 
 	if(click_timer>0){
 		click_timer--;
+		selec_mesh.visible=false;
+		return;
 	}else{
 		//console.log("hide");
 		click_mesh.visible=false;
@@ -400,7 +413,7 @@ function rayCast(){
 				cur_intersected.position.y,cur_intersected.position.z);
 			selec_mesh.visible=true;
 			document.getElementsByTagName("body")[0].style.cursor =
-			 "url('./cursor/curblue.cur'), auto";
+			 "url('./cursor/curselec.cur'), auto";
 			if(cur_intersected===tmp_intersected){
 				selected_timer=15;
 			}

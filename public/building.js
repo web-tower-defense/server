@@ -183,7 +183,7 @@ Building.prototype.station_update = function(){
 			this.target_unit.killed=true;
 			this.target_unit.die=true;
 			this.target_unit=0;
-			this.weapon_cool_down=7;
+			this.weapon_cool_down=12;
 		}
 	}
 }
@@ -201,7 +201,7 @@ Building.prototype.black_hole_update = function(){
 			if(!unit.die){//&&unit.a==this.a&&unit.b==this.b
 				var target_pos=this.pos.clone();
 				var del=target_pos.sub(unit.pos);
-				if(del.length()<50.0){
+				if(del.length()<15.0){
 					var del2=del.clone().normalize();
 					//console.log("gravity!!:"+(1.0/((del.length()+1.0)*(del.length()+1.0))));
 					unit.pos.add((del2).multiplyScalar(
@@ -229,7 +229,7 @@ Building.prototype.white_hole_update = function(){
 			if(!unit.die){//&&unit.a==this.a&&unit.b==this.b
 				var target_pos=this.pos.clone();
 				var del=target_pos.sub(unit.pos);
-				if(del.length()<50.0){
+				if(del.length()<15.0){
 					var del2=del.clone().normalize();
 					//console.log("gravity!!:"+(1.0/((del.length()+1.0)*(del.length()+1.0))));
 					unit.pos.add((del2).multiplyScalar(
