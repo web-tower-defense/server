@@ -357,8 +357,12 @@ function rayCast(){
 	if ( intersects.length > 0 ) {
 
 		for(var i=0; i<intersects.length; i++){
-			if("selectable" in intersects[ 0 ].object){
-				if(intersects[ 0 ].object.selectable === false){
+			var cur=intersects[i].object;
+			while(cur.parent != scene){
+				cur = cur.parent;
+			}
+			if("selectable" in cur){
+				if(cur.selectable === false){
 					continue;
 				}
 				else{
