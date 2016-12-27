@@ -16,6 +16,8 @@ function init(socket, data) {
 
 	game_data.socket=socket;
 	game_data.roomName=data.name; //data["roomName"];
+	game_data.max_player=data.max_player;
+	console.log("max_player:"+game_data.max_player);
 	var test="init ";
 	//console.log(data);
 	//console.log(socket);
@@ -55,6 +57,14 @@ function animate() {
 function render() {
 	//camera.position.x += ( mouse.x - camera.position.x ) * .05;
 	//camera.position.y += ( - mouse.y - camera.position.y ) * .05;
+
+	//camera.position.x = 0;
+	//camera.position.y = 80;
+	//camera.position.z = 0.8*camera.position.y;
+		//look angle
+	//look.z=-0.8*camera.position.y;
+  //look.y=-camera.position.y;
+
 	var lookAtPos = new THREE.Vector3();
 	lookAtPos.addVectors(camera.position, look);
 	camera.lookAt(lookAtPos);//( scene.position );

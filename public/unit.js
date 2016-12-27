@@ -119,6 +119,7 @@ Unit.prototype.update = function(){
 		}else{
 			if(game_data.buildings[this.target].curUnit==0){
 				game_data.buildings[this.target].captured(this.owner);
+				game_data.buildings[this.target].curUnit++;
 				//game_data.buildings[this.target].owner=this.owner;
 			}else{
 				game_data.buildings[this.target].curUnit--;

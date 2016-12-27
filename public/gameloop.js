@@ -18,7 +18,12 @@ function handle_commands(){
 }
 */
 function sent_commands(){
-
+	if(game_data.max_player===1&&!data_receive){
+		game_data.web_commands=game_data.commands;
+		data_receive=true;
+		game_data.commands=[];
+		return;
+	}
 	var data=new Command_data(game_data.roomName,game_data.commands,loop_times);
 	data.unit_length=game_data.units.length;
 	game_data.socket.emit('game_command',data);
@@ -26,7 +31,6 @@ function sent_commands(){
 }
 socket.on('game_command', function(data) {
 	//if(data.length!==0)console.log('get game_command:'+data.length);
-
   if(!data_receive){
 		game_data.web_commands=data;
 		data_receive=true;
@@ -39,6 +43,7 @@ function handle_web_commands(){
 		console.log("no data receive yet");
 		return false;
 	}
+	//console.log("handle_web:"+game_data.web_commands.length);
 	for(var i = 0; i < game_data.web_commands.length; i++){
 		game_data.buildings[game_data.web_commands[i].selected].set_target(game_data.web_commands[i].target);
 		//console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
@@ -62,13 +67,17 @@ function ai_update(){
 						var cur=game_data.buildings[k];
 						if(cur.owner!=id){
 							var target_pos=cur.pos.clone();
-							var dis=target_pos.sub(building.pos).length()+cur.curUnit;
+							var dis=target_pos.sub(building.pos).length();
+
+							if(cur.owner!==0){
+								dis+=0.5*cur.curUnit;
+							}else{
+								dis+=cur.curUnit;
+							}
 							if(cur.type==="station"){
 								dis+=40;
 							}
-							if(cur.owner!==0){
-								dis*=0.5;
-							}
+
 							if(dis<target_dis){
 								target=k;
 								target_dis=dis;
@@ -89,7 +98,7 @@ function game_update(){
 		console.log("game loading");
 		return;
 	}
-	//camera.position.z = 0.8*camera.position.y;	
+	//camera.position.z = 0.8*camera.position.y;
 	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){

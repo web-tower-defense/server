@@ -31,6 +31,7 @@ io.on('connection', function(socket){
 		var data = io.sockets.adapter.rooms[roomName];
 		data.name = roomName;
 		data.map_name=game_data.room_map_name[roomName];
+		data.max_player=game_data.room_max_player[roomName];
 		io.to(roomName).emit('gameInit', data);
 	}
 	socket.on('joinRoomEvent',function(roomName, playerName){
@@ -111,7 +112,8 @@ io.on('connection', function(socket){
 			game_data.room_command_num[data.roomName]++;
 		}
 
-		if(game_data.room_command_num[data.roomName]===game_data.room_max_player[data.roomName]){
+		if(game_data.room_command_num[data.roomName]===
+				game_data.room_max_player[data.roomName]){
 			io.to(data.roomName).emit('game_command',game_data.room_command[data.roomName]);
 			game_data.room_command[data.roomName]=0;
 		}

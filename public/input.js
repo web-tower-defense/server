@@ -299,7 +299,7 @@ function clickObject(obj){
 		sent_unit_line.scale.x=len;
 		sent_unit_line.rotation.y=Math.atan2(del.z,-del.x);
 		this.sent_unit_line.visible=true;
-		click_timer=15;
+		click_timer=10;
 
 
 		selectedPlanet = null;
@@ -319,25 +319,18 @@ function handleMouseDown(){
 	prev_mouse.x = mouse.x;
 	prev_mouse.y = mouse.y;
 }
-var deselected_ready=false;
 function handleMouseUp(){
 	//console.log("mouse up");
 
 	dragTarget = cur_intersected;
 
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
-		deselected_ready=false;
 		clickObject(dragSource);
 	}
 	if(selectedPlanet&&!dragTarget.hasOwnProperty("unitID")){
-		if(deselected_ready===false){
-			deselected_ready=true;
-		}else{
-			console.log("deselected");
-			selectedPlanet=null;
-			selection_sphere.visible = false;
-		}
-
+		console.log("deselected");
+		selectedPlanet=null;
+		selection_sphere.visible = false;
 	}
 	dragSource = null;
 	dragTarget = null;
@@ -368,26 +361,40 @@ function handleClick(){
 
 var handleWheel = function (e){
 	if(mousewheelevt === "mousewheel"){
-		if(e.originalEvent.wheelDelta /120 > 0) {
+		var del=e.originalEvent.wheelDelta/40;
+		if(del> 0) {
 	        //console.log('scrolling up !');
-	      if(camera.position.y < 500 )camera.position.y += e.originalEvent.wheelDelta/40;
+	      if(camera.position.y < 500 ){
+					camera.position.y += del;
+					camera.position.z += 0.8*del;
+				}
 	  }else{
 	        //console.log('scrolling down !');
-	      if(camera.position.y > 1 )camera.position.y += e.originalEvent.wheelDelta/40;
+	      if(camera.position.y > 1 ){
+					camera.position.y += del;
+					camera.position.z += 0.8*del;
+
+				}
 	  }
 
 	}
 		if(mousewheelevt === "DOMMouseScroll"){
 			if(e.originalEvent.detail > 0) {
 		        //console.log('scrolling up !');
-		        if(camera.position.y >1 )camera.position.y --;
+		        if(camera.position.y >1 ){
+							camera.position.y --;
+							camera.position.z-=0.8;
+						}
 		    }
 		    else{
 		        //console.log('scrolling down !');
-		        if(camera.position.y < 500 )camera.position.y ++;
+		        if(camera.position.y < 500 ){
+							camera.position.y ++;
+							camera.position.z+=0.8;
+						}
 		    }
 			}
-		
+
 }
 var selected_timer=0;
 function rayCast(){
