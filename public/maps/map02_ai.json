@@ -87,7 +87,7 @@
         "maxUnit": 70,
         "unit_vel": 0.25,
         "grow_cycle":40,
-        "sent_unit_cycle":10,
+        "sent_unit_cycle":15,
         "scale":1
       },
       "moon" : {

@@ -1,4 +1,4 @@
-var player_color=[0xf0f0f0,0xff0000,0x00ff00,0x00ffff]
+var player_color=[0xf0f0f0,0xff000,0x00ff00,0x00ffff]
 var text = "three.js",
 	height = 1,
 	size = 2,
@@ -58,7 +58,7 @@ function createTextGeo(input){
 function get_player_color(id){
 	var idColor = player_color[id];
 	if(id===player_id){
-		idColor=0x0000ff;
+		idColor=0x1060ff;
 	}
 	return idColor;
 }

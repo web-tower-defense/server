@@ -12,7 +12,7 @@ function Building(){
 	this.recruit_timer=0;
 	this.unit_die_timer=0;
 	this.unit_vel=0.2;
-	this.sent_unit_cycle=15;
+	this.sent_unit_cycle=20;
 	this.grow_cycle=20;
 	this.pos=new THREE.Vector3(0,0,0);
 	this.path=[];
@@ -45,7 +45,7 @@ Building.prototype.init=function(){
 	//this.mesh.add(mesh);
 	///*
 	var lineMaterial = new THREE.MeshBasicMaterial({
-		color: 0xffffff
+		color: get_player_color(this.owner)
 	});
 	var geometry = new THREE.Geometry();
 	geometry.vertices[0]=new THREE.Vector3(0, 0, 0);
@@ -112,6 +112,8 @@ function filled_circle_mesh(radius,color){
 }
 
 Building.prototype.init_black_hole=function(){
+	this.owner_mesh.visible=false;
+
 	this.mesh.selectable=false;
 	this.black_hole_mesh=circle_mesh(15,0xffffff);
 	this.black_hole_mesh2=circle_mesh(15,0xffffff);
@@ -125,6 +127,7 @@ Building.prototype.init_station=function(){
 	scene.add(this.ex_mesh);
 }
 Building.prototype.init_white_hole=function(){
+	this.owner_mesh.visible=false;
 	this.mesh.selectable=false;
 	this.white_hole_mesh=circle_mesh(15,0xffffff);
 	this.white_hole_mesh2=circle_mesh(15,0xffffff);
@@ -161,11 +164,7 @@ Building.prototype.update = function(){
 		this.pos=pos_o.sub((del_vec.normalize()).multiplyScalar(this.orbit_radius));
 	}
 	this.mesh.position.set(this.pos.x,this.pos.y,this.pos.z);
-	this.textMesh.position.set(
-		this.pos.x,
-		this.pos.y+5,
-		this.pos.z
-	);
+
 	this.recruit_timer++;
 	if(this.recruit_timer>this.grow_cycle){
 		this.recruit_timer=0;
@@ -187,19 +186,14 @@ Building.prototype.update = function(){
 Building.prototype.station_update = function(){
 	this.ex_mesh.position.set(this.pos.x,this.pos.y,this.pos.z) ;
 	if(this.laser_beam===0){
-		//console.log("create laser");
 		this.laser_beam=new THREEx.LaserBeam();
-		//this.laser_beam.selectable=false;
 		this.laser_beam.object3d.selectable=false;
 		var laserCooked	= new THREEx.LaserCooked(this.laser_beam);
-		//this.laser_beam.name="laser";
 		scene.add(this.laser_beam.object3d);
-
 		laserCooked.selectable=false;
 	}
 	var object3d = this.laser_beam.object3d;
 
-	//object3d.name="laserdd";
 	object3d.position.set(this.pos.x,this.pos.y,this.pos.z) ;
 	//object3d.visible=false;
 	if(this.target_unit!==0&&this.target_unit.die){
@@ -240,7 +234,10 @@ Building.prototype.station_update = function(){
 			this.target_unit.killed=true;
 			this.target_unit.die=true;
 			this.target_unit=0;
-			this.weapon_cool_down=12;
+			var del=this.curUnit;
+			if(del>50)del=50;
+			del*=0.2;
+			this.weapon_cool_down=22-del;
 		}
 	}
 }
@@ -323,18 +320,23 @@ Building.prototype.draw = function(){
 
 		//this.textMesh.material.dispose();
 		this.prev_str=cur_str;
-		this.textMesh =  createTextMesh(this.prev_str,this.owner);
+		this.textMesh=createTextMesh(this.prev_str,this.owner);
 		//this.textMesh.rotation.x=-1.5;
 		this.textMesh.selectable = false;
 		this.textMesh.dynamic = true;
 		//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
 		this.textMesh.position.set(
-			this.pos.x,
-			this.pos.y+5,
+			this.pos.x-1.0,
+			this.pos.y+3.5,
 			this.pos.z
 		);
 		scene.add(this.textMesh);
 	}
+	this.textMesh.position.set(
+		this.pos.x-1.0,
+		this.pos.y+3.5,
+		this.pos.z
+	);
 	if(this.type=="black_hole"||this.type=="white_hole"){
 		this.textMesh.visible=false;
 	}
