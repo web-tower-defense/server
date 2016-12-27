@@ -116,8 +116,10 @@ function game_update(){
 		sent_commands();
 	}
 	command_timer++;
-
-	if(!pause_game){
+	if(pause_game&&game_data.max_player===1){
+		console.log("single player pause_game");
+	}
+	if(!pause_game||game_data.max_player===1){
 		loop_times++;
 		if(player_id===1)ai_loop++;
 		if(ai_loop>10){
