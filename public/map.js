@@ -71,7 +71,13 @@ function create_building(building,id,data){
 	}
 	console.log("create_building:"+building.name);
 	var instance = all_models[building.name].clone();
-	var pos=new THREE.Vector3(building.position[0],0,-building.position[1]);
+
+	var pos;
+	if(building.hasOwnProperty('position')){
+		pos=new THREE.Vector3(building.position[0],0,-building.position[1]);
+	}else{
+		pos=new THREE.Vector3(0,0,0);
+	}
 	instance.position.set(pos.x,pos.y,pos.z);
 	instance.model = building.name;
 	scene.add( instance );

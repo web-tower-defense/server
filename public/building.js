@@ -201,7 +201,7 @@ Building.prototype.station_update = function(){
 	}
 	var min_dis=999999;
 	if(this.weapon_cool_down>0)this.weapon_cool_down--;
-	if(this.weapon_cool_down===0&&this.target_unit==0){
+	if(this.weapon_cool_down<=0&&this.target_unit==0){
 		for(var i = 0; i < game_data.units.length; i++){
 			var unit=game_data.units[i];
 			if(!unit.die&&this.owner!=unit.owner){//&&unit.a==this.a&&unit.b==this.b
@@ -238,6 +238,7 @@ Building.prototype.station_update = function(){
 			if(del>50)del=50;
 			del*=0.2;
 			this.weapon_cool_down=22-del;
+			//console.log("cool_down:"+this.weapon_cool_down);
 		}
 	}
 }
