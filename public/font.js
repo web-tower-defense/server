@@ -116,7 +116,7 @@ function createTextMesh(input, id) {
 	textMesh1.position.z = 0;
 	// textMesh1.rotation.x = Math.PI ;
 	// textMesh1.rotation.y = Math.PI ;
-
+	textMesh1.rotation.x-=0.5;
 	return textMesh1;
 	//scene.add( textMesh1 );
 }

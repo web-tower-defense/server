@@ -35,6 +35,7 @@ function Building(){
 	this.white_hole_mesh=0;
 	this.white_hole_mesh2=0;
 
+	this.owner_mesh=0;
 
 	this.sent_unit_line=0;
 }
@@ -49,11 +50,16 @@ Building.prototype.init=function(){
 	var geometry = new THREE.Geometry();
 	geometry.vertices[0]=new THREE.Vector3(0, 0, 0);
 	geometry.vertices[1]=new THREE.Vector3(1, 0, 0);
-	//geometry.vertices[1]=new THREE.Vector3(0, 0, 0);
 	this.sent_unit_line=new THREE.Line(geometry,lineMaterial);
 	this.sent_unit_line.geometry.dynamic = true;
 	scene.add(this.sent_unit_line);
-	//*/
+
+	this.owner_mesh=filled_circle_mesh(3.8,get_player_color(this.owner));
+	this.owner_mesh.material.transparent=true;
+	this.owner_mesh.material.opacity=0.2;
+	this.owner_mesh.scale.set(3.8/this.mesh.scale.x,
+		3.8/this.mesh.scale.y,3.8/this.mesh.scale.z)
+	this.mesh.add(this.owner_mesh);
 
 	if(this.type=="black_hole"){
 		this.init_black_hole();
@@ -68,6 +74,7 @@ function circle_geo(radius,segments){
 	geometry.vertices.shift();
 	return geometry;
 }
+var circle_geometry=new circle_geo(1,64);
 function circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
@@ -83,6 +90,11 @@ function circle_mesh(radius,color){
 	mesh.scale.y=radius;
 	return mesh;
 }
+function filled_circle_geo(radius,segments){
+	var geometry=new THREE.CircleGeometry( radius, segments );
+	return geometry;
+}
+var filled_circle_geometry=new filled_circle_geo(1,64);
 function filled_circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
@@ -92,13 +104,13 @@ function filled_circle_mesh(radius,color){
 		side: THREE.DoubleSide
 	});
 
-	var mesh=new THREE.Line(circle_geometry, material );
+	var mesh=new THREE.Mesh(filled_circle_geometry, material );
 	mesh.rotation.x=Math.PI*0.5;
 	mesh.scale.x=radius;
 	mesh.scale.y=radius;
 	return mesh;
 }
-var circle_geometry=new circle_geo(1,64);
+
 Building.prototype.init_black_hole=function(){
 	this.mesh.selectable=false;
 	this.black_hole_mesh=circle_mesh(15,0xffffff);
@@ -130,7 +142,6 @@ Building.prototype.update = function(){
 
 		this.sent_unit_line.scale.x=len;
 		this.sent_unit_line.rotation.y=Math.atan2(del.z,-del.x);
-		this.sent_unit_line.material.color.setHex(get_player_color(this.owner));
 		this.sent_unit_line.visible=true;
 	}else{
 		this.sent_unit_line.visible=false;
@@ -347,6 +358,10 @@ Building.prototype.captured=function(new_owner){
 	this.owner=new_owner;
 	this.mesh.owner = new_owner;
 	this.target=-1;
+
+	this.sent_unit_line.material.color.setHex(get_player_color(this.owner));
+	this.owner_mesh.material.color.setHex(get_player_color(this.owner));
+	this.owner_mesh.material.emissive.setHex(get_player_color(this.owner));
 }
 Building.prototype.set_target=function(id){
 	if(id===this.unitID){

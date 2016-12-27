@@ -63,6 +63,12 @@ function ai_update(){
 						if(cur.owner!=id){
 							var target_pos=cur.pos.clone();
 							var dis=target_pos.sub(building.pos).length()+cur.curUnit;
+							if(cur.type==="station"){
+								dis+=40;
+							}
+							if(cur.owner!==0){
+								dis*=0.5;
+							}
 							if(dis<target_dis){
 								target=k;
 								target_dis=dis;
@@ -83,6 +89,7 @@ function game_update(){
 		console.log("game loading");
 		return;
 	}
+	//camera.position.z = 0.8*camera.position.y;	
 	if(command_timer>8){
 		if(!handle_web_commands()){
 			if(!pause_game){

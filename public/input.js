@@ -129,7 +129,9 @@ function initInput(){
 
 	selec_mesh=circle_mesh(4,0x00ffff);
 	selec_mesh.selectable=false;
-	click_mesh=filled_circle_mesh(4.5,0xff00ff);
+	selec_mesh.material.transparent=true;
+
+	click_mesh=circle_mesh(4.3,0xff00ff);//filled_circle_mesh(4.5,0xff00ff);
 	click_mesh.selectable=false;
 
 
@@ -368,13 +370,13 @@ var handleWheel = function (e){
 	if(mousewheelevt === "mousewheel"){
 		if(e.originalEvent.wheelDelta /120 > 0) {
 	        //console.log('scrolling up !');
-	        if(camera.position.y < 500 )camera.position.y += e.originalEvent.wheelDelta/40;
-	    }
-	    else{
+	      if(camera.position.y < 500 )camera.position.y += e.originalEvent.wheelDelta/40;
+	  }else{
 	        //console.log('scrolling down !');
-	        if(camera.position.y > 1 )camera.position.y += e.originalEvent.wheelDelta/40;
-	    }
-		}
+	      if(camera.position.y > 1 )camera.position.y += e.originalEvent.wheelDelta/40;
+	  }
+
+	}
 		if(mousewheelevt === "DOMMouseScroll"){
 			if(e.originalEvent.detail > 0) {
 		        //console.log('scrolling up !');
@@ -385,6 +387,7 @@ var handleWheel = function (e){
 		        if(camera.position.y < 500 )camera.position.y ++;
 		    }
 			}
+		
 }
 var selected_timer=0;
 function rayCast(){
@@ -437,6 +440,7 @@ function rayCast(){
 		if(selected_timer>0){
 			//selec_mesh.position.set(cur_intersected.position.x,
 				//cur_intersected.position.y,cur_intersected.position.z);
+		  selec_mesh.material.opacity=0.18*selected_timer+0.3;
 			selected_timer--;
 		}else{
 			cur_intersected = tmp_intersected;
@@ -453,7 +457,7 @@ function rayCast(){
 			document.getElementsByTagName("body")[0].style.cursor =
 			 "url('./cursor/curselec.cur'), auto";
 			if(cur_intersected===tmp_intersected){
-				selected_timer=15;
+				selected_timer=5;
 				//console.log("selected");
 			}else{
 				//console.log("not selected");
