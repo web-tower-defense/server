@@ -22,10 +22,14 @@ function Building(){
 	this.orbit_radius=15;
 	this.orbit_cycle=1200;
 	this.sent_unit_num=0;
-	this.laser_beam=0;
+	this.unit_cost=1;
+	this.unit_type="normal";
 	this.type="null";
-	this.target_unit=0;
-	this.weapon_cool_down=0;
+
+	//this.laser_beam=0;
+	//this.target_unit=0;
+	//this.weapon_cool_down=0;
+	this.weapon=0;
 
 	this.ex_mesh=0;
 
@@ -122,9 +126,7 @@ Building.prototype.init_black_hole=function(){
 	this.mesh.add(this.black_hole_mesh2);
 }
 Building.prototype.init_station=function(){
-	this.ex_mesh=circle_mesh(15,0xff0000);
-	this.ex_mesh.selectable=false;
-	scene.add(this.ex_mesh);
+	this.weapon=new LaserWeapon();
 }
 Building.prototype.init_white_hole=function(){
 	this.owner_mesh.visible=false;
@@ -183,64 +185,11 @@ Building.prototype.update = function(){
 		this.station_update();
 	}
 }
+
 Building.prototype.station_update = function(){
-	this.ex_mesh.position.set(this.pos.x,this.pos.y,this.pos.z) ;
-	if(this.laser_beam===0){
-		this.laser_beam=new THREEx.LaserBeam();
-		this.laser_beam.object3d.selectable=false;
-		var laserCooked	= new THREEx.LaserCooked(this.laser_beam);
-		scene.add(this.laser_beam.object3d);
-		laserCooked.selectable=false;
-	}
-	var object3d = this.laser_beam.object3d;
-
-	object3d.position.set(this.pos.x,this.pos.y,this.pos.z) ;
-	//object3d.visible=false;
-	if(this.target_unit!==0&&this.target_unit.die){
-		this.target_unit=0;
-	}
-	var min_dis=999999;
-	if(this.weapon_cool_down>0)this.weapon_cool_down--;
-	if(this.weapon_cool_down<=0&&this.target_unit==0){
-		for(var i = 0; i < game_data.units.length; i++){
-			var unit=game_data.units[i];
-			if(!unit.die&&this.owner!=unit.owner){//&&unit.a==this.a&&unit.b==this.b
-				var target_pos=this.pos.clone();
-				var del=target_pos.sub(unit.pos);
-				var len=del.length();
-				if(len<15.0&&len<min_dis){
-					min_dis=len;
-					this.target_unit=unit;
-				}
-			}
-		}
-		//console.log("search target!!");
-	}
-	//object3d.visible=true;
-	object3d.scale.set(0.001,0.001,0.001);
-	if(this.target_unit!==0){
-		var target_pos=this.pos.clone();
-		var del=target_pos.sub(this.target_unit.pos);
-		var del2=del.clone().normalize();
-
-		//object3d.scale.x=del.length();
-		object3d.scale.set(del.length(),1,1);
-		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
-		this.target_unit.damage+=1;
-		//object3d.visible=true;
-
-		if(this.target_unit.damage>3){
-			//console.log("kill unit");
-			this.target_unit.killed=true;
-			this.target_unit.die=true;
-			this.target_unit=0;
-			var del=this.curUnit;
-			if(del>50)del=50;
-			del*=0.2;
-			this.weapon_cool_down=22-del;
-			//console.log("cool_down:"+this.weapon_cool_down);
-		}
-	}
+	var del=this.curUnit;
+	if(del>50)del=50;
+	this.weapon.update(this.pos,this.owner,15,(22-0.2*del));
 }
 Building.prototype.black_hole_update = function(){
 	this.black_hole_mesh2.scale.x-=0.3;
@@ -377,12 +326,13 @@ Building.prototype.sent_unit = function(){
 	//console.log("try sent_unit");
 	if(this.sent_unit_timer>0)this.sent_unit_timer--;
 	if(this.sent_unit_num<=0)this.target=-1;
-	if(this.sent_unit_timer==0&&this.curUnit>0&&this.target!==-1){//
+	if(this.sent_unit_timer==0&&this.curUnit>=this.unit_cost&&this.target!==-1){//
 		//console.log("sent from:"+this.unitID+"to:"+this.target);
-		this.sent_unit_num--;
-		this.curUnit--;
+		this.sent_unit_num-=this.unit_cost;
+		this.curUnit-=this.unit_cost;
 		this.sent_unit_timer=this.sent_unit_cycle;
-		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,this.target,this.unit_vel);
+		var unit=new Unit(this.pos.x,this.pos.y,this.pos.z,this.owner,
+			this.target,this.unit_vel,this.unit_type);
 		if(this.target>this.unitID){
 			unit.a=this.target;
 			unit.b=this.unitID;

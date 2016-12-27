@@ -76,6 +76,14 @@
             "material":{
                 "path": "station.mtl"
             }
+        },
+        {
+            "name": "hexa",
+            "dirpath": "obj/planets/",
+            "path": "hexa.obj",
+            "material":{
+                "path": "hexa.mtl"
+            }
         }
 
 
@@ -96,6 +104,17 @@
         "maxUnit": 40,
         "grow_cycle":120,
         "scale":2
+      },
+      "hexa" : {
+        "name": "hexa",
+        "curUnit": 10,
+        "maxUnit": 20,
+        "grow_cycle":120,
+        "scale":1,
+        "unit_vel": 0.4,
+        "unit_cost": 10,
+        "sent_unit_cycle":360,
+        "unit_type":"laser_unit"
       },
       "station" : {
         "name": "station",
@@ -333,6 +352,20 @@
             "orbit_radius":45,
             "orbit_angle":180,
             "position": [70,0]
+        },{
+            "template": "hexa",
+            "owner": 0,
+            "orbiting":1,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":0
+        },{
+            "template": "hexa",
+            "owner": 0,
+            "orbiting":2,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":180
         }
     ]
  }

@@ -269,9 +269,11 @@ function clickObject(obj){
 		//http://wiki-devel.sugarlabs.org/images/e/e2/Arrow.cur saber.cur
 
 		selection_sphere.visible = true;
-		selection_sphere.scale.set(all_models[obj.model].radius,
-																all_models[obj.model].radius,
-																all_models[obj.model].radius);
+		selection_sphere.scale.set(5/obj.scale.x,5/obj.scale.y,5/obj.scale.z);
+		//selection_sphere.scale.set(all_models[obj.model].radius,
+															//	all_models[obj.model].radius,
+															//	all_models[obj.model].radius);
+
 		obj.add(selection_sphere);
 		selectedPlanet = obj;
 
@@ -398,7 +400,11 @@ var handleWheel = function (e){
 }
 var selected_timer=0;
 function rayCast(){
-
+	if(selectedPlanet!==null&&selectedPlanet.owner!=player_id){
+		selectedPlanet = null;
+		targetPlanet = null;
+		selection_sphere.visible = false;
+	}
 	if(click_timer>0){
 		click_timer--;
 		selec_mesh.visible=false;
@@ -461,8 +467,16 @@ function rayCast(){
 			selec_mesh.position.set(cur_intersected.position.x,
 				cur_intersected.position.y,cur_intersected.position.z);
 			selec_mesh.visible=true;
-			document.getElementsByTagName("body")[0].style.cursor =
-			 "url('./cursor/curselec.cur'), auto";
+			if(selectedPlanet !== null){
+				document.getElementsByTagName("body")[0].style.cursor =
+				 "url('./cursor/sword.cur'), auto";
+			}else{
+				document.getElementsByTagName("body")[0].style.cursor =
+				 "url('./cursor/curselec.cur'), auto";
+			}
+
+
+
 			if(cur_intersected===tmp_intersected){
 				selected_timer=5;
 				//console.log("selected");
@@ -472,7 +486,7 @@ function rayCast(){
 		}else{
 			selec_mesh.visible=false;
 			document.getElementsByTagName("body")[0].style.cursor =
-			 "url('./cursor/cur1089.cur'), auto";
+			 "url('./cursor/curred.cur'), auto";
 		}
 
 

@@ -68,6 +68,13 @@ function create_building(building,id,data){
 				//console.log("template_type:"+temp.type);
 				building.type=temp.type;
 		}
+		if(!building.hasOwnProperty('unit_type')&&temp.hasOwnProperty('unit_type')){
+				building.unit_type=temp.unit_type;
+				//console.log("template_unit_type:"+building.unit_type);
+		}
+		if(!building.hasOwnProperty('unit_cost')&&temp.hasOwnProperty('unit_cost')){
+				building.unit_cost=temp.unit_cost;
+		}
 	}
 	console.log("create_building:"+building.name);
 	var instance = all_models[building.name].clone();
@@ -118,6 +125,13 @@ function create_building(building,id,data){
 	}
 	if(building.hasOwnProperty('type')){
 		new_building.type = building.type;
+	}
+	if(building.hasOwnProperty('unit_type')){
+		new_building.unit_type = building.unit_type;
+		//console.log("unit_type:"+new_building.unit_type);
+	}
+	if(building.hasOwnProperty('unit_cost')){
+		new_building.unit_cost = building.unit_cost;
 	}
 	if(building.hasOwnProperty('scale')){
 		new_building.mesh.scale.x=building.scale;

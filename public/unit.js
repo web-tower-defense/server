@@ -43,7 +43,7 @@ function loadUnit(){
 	});
 }
 
-function Unit(x,y,z,_owner,_target,vel){
+function Unit(x,y,z,_owner,_target,vel,type){
 	this.die=false;
 	this.owner = _owner;
 	this.mesh = unit_mesh.clone();//createTextMesh("o",this.owner);
@@ -65,32 +65,48 @@ function Unit(x,y,z,_owner,_target,vel){
 	this.b=0;
 	this.vel=vel;
 	this.freeze=false;
-	this.damage=0;
+	this.hp=3;
 	this.killed=false;
+	this.type=type;
+	this.timer=0;
+	this.orbiting=false;
+	//
+	this.weapon=0;
+	//console.log("unit_type="+this.type);
+	if(this.type==="laser_unit"){
+		this.weapon=new LaserWeapon();
+		this.hp=60;
+	}
+
 	//this.target_pos=game_data.buildings[this.target].pos;
 }
-
+Unit.prototype.damage = function(amount){
+	this.hp-=amount;
+	if(this.hp<=0){
+		this.die=true;
+		this.killed=true;
+	}
+}
 Unit.prototype.check_collision = function(){
 		for(var i = 0; i < game_data.units.length; i++){
 				var unit=game_data.units[i];
 				if(unit.owner!==this.owner&&!unit.die){//&&unit.a==this.a&&unit.b==this.b
 					if((this.pos.clone().sub(unit.pos)).length()<0.5){
-						this.die=true;
-						game_data.units[i].die=true;
+						//this.die=true;
+						//game_data.units[i].die=true;
+						this.damage(3);
+						game_data.units[i].damage(3);
 					}
 				}
 		}
 }
 Unit.prototype.update = function(){
-
+	this.timer++;
+	if(this.timer>960&&this.type==="laser_unit"){
+		this.die=true;
+	}
+	if(this.weapon!==0)this.weapon.update(this.pos,this.owner,10,30);
 	if(this.die){
-		/*
-		if(this.dead_light===0){
-			this.dead_light = new THREE.PointLight( 0xff0000, 1, 100 );
-			this.dead_light.visible = true;
-			scene.add(this.dead_light);
-		}
-		*/
 		if(this.killed){
 			this.mesh.rotation.y+=1;
 			//this.pos.y+=2;
@@ -107,7 +123,17 @@ Unit.prototype.update = function(){
 
 	var target_pos=game_data.buildings[this.target].pos.clone();
 	var del=target_pos.sub(this.pos);
+	if(del.length()<6&&this.type==="laser_unit"){
+		this.orbiting=true;
+	}else if(del.length()>10&&this.orbiting){
+		this.orbiting=false;
+	}
+	if(this.orbiting){
+		del.cross(new THREE.Vector3(0,1,0));
+	}
 	var del2=del.clone().normalize();
+
+
 	this.mesh.rotation.y=Math.atan2(del2.z,-del2.x);//+0.5*Math.PI;
 	//console.log("atan2="+Math.atan2(del.z,del.x));
 	if(del.length()<1.2*this.vel+1.0){
@@ -145,6 +171,7 @@ Unit.prototype.remove = function(){
 	//clearScene(this.mesh);
 	//this.mesh.geometry.dispose();
 	//this.mesh.dispose();
+	if(this.weapon!==0)this.weapon.remove();
 	scene.remove(this.mesh);
 	//if(this.dead_light!==0){
 		//scene.remove(this.dead_light);

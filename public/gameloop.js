@@ -162,6 +162,7 @@ function game_init(){
 	game_data.commands=[];
 	game_data.web_commands=[];
 	game_data.players=[];
+	init_laser_pool();
 }
 function main_loop() {
 	console.log("mainloop start");
