@@ -92,6 +92,10 @@ LaserWeapon.prototype.update = function(pos,owner,attack_range,cool_down){
 		object3d.scale.set(del.length(),4,4);
 		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
 		this.target_unit.damage(1);
+    if(this.attack_timer===0){
+      var audio = new Audio('./audio/effect/laser.mp3');
+      audio.play();
+    }
     this.attack_timer++;
     /*
 		if(this.target_unit.hp<=0){

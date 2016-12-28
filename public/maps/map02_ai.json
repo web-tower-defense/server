@@ -127,7 +127,7 @@
       },
       "mercury" : {
         "name": "mercury",
-        "curUnit": 30,
+        "curUnit": 25,
         "maxUnit": 50,
         "grow_cycle":80,
         "scale":1.5
@@ -141,7 +141,7 @@
       },
       "mars" : {
         "name": "mars",
-        "curUnit": 40,
+        "curUnit": 30,
         "maxUnit": 60,
         "grow_cycle":70,
         "scale":1.5

@@ -167,5 +167,11 @@ function game_init(){
 function main_loop() {
 	console.log("mainloop start");
 	game_init();
+	var audio = new Audio('./audio/music/test.mp3');
+	audio.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+	audio.play();
 	var timer = setInterval(game_update,40);
 }
