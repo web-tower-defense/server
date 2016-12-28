@@ -58,6 +58,7 @@ Building.prototype.init=function(){
 	this.sent_unit_line.geometry.dynamic = true;
 	scene.add(this.sent_unit_line);
 
+	
 	this.owner_mesh=filled_circle_mesh(3.8,get_player_color(this.owner));
 	this.owner_mesh.material.transparent=true;
 	this.owner_mesh.material.opacity=0.2;

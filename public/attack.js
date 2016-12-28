@@ -45,7 +45,7 @@ function get_laser(){
   return laser;
 }
 function init_laser_pool(){
-  for(var i=0;i<6;i++){
+  for(var i=0;i<10;i++){
     laser=create_laser();
     laser_pool.push(laser);
   }
