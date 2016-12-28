@@ -56,6 +56,7 @@ Building.prototype.init=function(){
 	geometry.vertices[1]=new THREE.Vector3(1, 0, 0);
 	this.sent_unit_line=new THREE.Line(geometry,lineMaterial);
 	this.sent_unit_line.geometry.dynamic = true;
+	this.sent_unit_line.selectable=false;
 	scene.add(this.sent_unit_line);
 
 

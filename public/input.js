@@ -11,8 +11,11 @@ function update(){
 }
 
 function zoomIn(){
-	if(camera.position.y > 1 )
+	if(camera.position.y > 1 ){
 		camera.position.y --;
+		camera.position.z -=0.8;
+	}
+
 
 	if(zoom_in.down === true){
 		setTimeout(zoomIn, 25);
@@ -20,8 +23,11 @@ function zoomIn(){
 }
 
 function zoomOut(){
-	if(camera.position.y < 500 )
+	if(camera.position.y < 500 ){
 		camera.position.y ++;
+		camera.position.z +=0.8;
+	}
+
 
 	if(zoom_out.down === true){
 		setTimeout(zoomOut, 25);
