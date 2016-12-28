@@ -49,7 +49,7 @@ function Unit(x,y,z,_owner,_target,vel,type){
 	this.mesh = unit_mesh.clone();//createTextMesh("o",this.owner);
 
 	var idColor = get_player_color(this.owner);
-	var mesh = circle_mesh(5,idColor);
+	var mesh = low_circle_mesh(5,idColor);
 	this.mesh.add(mesh);
 
 	//console.log("ss");

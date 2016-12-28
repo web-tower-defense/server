@@ -79,6 +79,7 @@ function circle_geo(radius,segments){
 	return geometry;
 }
 var circle_geometry=new circle_geo(1,64);
+var low_circle_geometry=new circle_geo(1,16);
 function circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
@@ -94,11 +95,26 @@ function circle_mesh(radius,color){
 	mesh.scale.y=radius;
 	return mesh;
 }
+function low_circle_mesh(radius,color){
+	var material = new THREE.MeshPhongMaterial( {
+		opacity: 80.0,
+		color: color,
+		emissive: color,
+		transparent: true,
+		side: THREE.DoubleSide
+	});
+
+	var mesh=new THREE.Line(low_circle_geometry, material );
+	mesh.rotation.x=Math.PI*0.5;
+	mesh.scale.x=radius;
+	mesh.scale.y=radius;
+	return mesh;
+}
 function filled_circle_geo(radius,segments){
 	var geometry=new THREE.CircleGeometry( radius, segments );
 	return geometry;
 }
-var filled_circle_geometry=new filled_circle_geo(1,64);
+var filled_circle_geometry=new filled_circle_geo(1,24);
 function filled_circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
