@@ -105,7 +105,7 @@ Unit.prototype.update = function(){
 	if(this.timer>960&&this.type==="laser_unit"){
 		this.die=true;
 	}
-	if(this.weapon!==0)this.weapon.update(this.pos,this.owner,10,30);
+	if(this.weapon!==0)this.weapon.update(this.pos,this.owner,12,30);
 	if(this.die){
 		if(this.killed){
 			this.mesh.rotation.y+=1;

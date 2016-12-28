@@ -44,7 +44,7 @@ function get_laser(){
   return laser;
 }
 function init_laser_pool(){
-  for(var i=0;i<20;i++){
+  for(var i=0;i<12;i++){
     laser=create_laser();
     laser_pool.push(laser);
   }
@@ -88,7 +88,7 @@ LaserWeapon.prototype.update = function(pos,owner,attack_range,cool_down){
 		var del=target_pos.sub(this.target_unit.pos);
 		var del2=del.clone().normalize();
 
-		object3d.scale.set(del.length(),1,1);
+		object3d.scale.set(del.length(),4,4);
 		object3d.rotation.y=Math.atan2(del2.z,-del2.x);
 		this.target_unit.damage(1);
     this.attack_timer++;
