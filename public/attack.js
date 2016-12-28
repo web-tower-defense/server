@@ -24,6 +24,7 @@ function create_laser(){
   laserCooked.selectable=false;
   laser_beam.avaliable=true;
   laser_beam.object3d.visible=false;
+  laser_beam.visible=false;
   return laser_beam;
 }
 function get_laser(){
@@ -44,7 +45,7 @@ function get_laser(){
   return laser;
 }
 function init_laser_pool(){
-  for(var i=0;i<12;i++){
+  for(var i=0;i<6;i++){
     laser=create_laser();
     laser_pool.push(laser);
   }
