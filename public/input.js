@@ -127,13 +127,17 @@ function initInput(){
 		}, onProgress, onError );
 	});
 
-	selec_mesh=circle_mesh(4,0x00ffff);
+	selec_mesh=filled_circle_mesh(4,0x00ffff);
 	selec_mesh.selectable=false;
 	selec_mesh.material.transparent=true;
+	//selec_mesh.material.transparent=true;
+	selec_mesh.material.opacity=0.3;
 
-	click_mesh=circle_mesh(4.3,0xff00ff);//filled_circle_mesh(4.5,0xff00ff);
+	click_mesh=filled_circle_mesh(4,0xff00ff);//filled_circle_mesh(4.5,0xff00ff);
 	click_mesh.selectable=false;
-
+	click_mesh.material.transparent=true;
+	//selec_mesh.material.transparent=true;
+	click_mesh.material.opacity=0.3;
 
 	scene.add(selec_mesh);
 	scene.add(click_mesh);
@@ -280,7 +284,7 @@ function clickObject(obj){
 
 		click_timer=10;
 		click_mesh.position.set(cur_intersected.position.x,
-			cur_intersected.position.y,cur_intersected.position.z);
+			cur_intersected.position.y+0.5,cur_intersected.position.z);
 		click_mesh.visible=true;
 	}else if(selectedPlanet!==null){
 		targetPlanet = obj;
@@ -289,7 +293,7 @@ function clickObject(obj){
 
 
 		click_mesh.position.set(cur_intersected.position.x,
-			cur_intersected.position.y,cur_intersected.position.z);
+			cur_intersected.position.y+0.5,cur_intersected.position.z);
 		click_mesh.visible=true;
 
 		var pos=game_data.buildings[selectedPlanet.unitID].pos.clone();
@@ -453,7 +457,7 @@ function rayCast(){
 		if(selected_timer>0){
 			//selec_mesh.position.set(cur_intersected.position.x,
 				//cur_intersected.position.y,cur_intersected.position.z);
-		  selec_mesh.material.opacity=0.18*selected_timer+0.3;
+		  selec_mesh.material.opacity=0.03*selected_timer+0.3;
 			selected_timer--;
 		}else{
 			cur_intersected = tmp_intersected;
@@ -465,7 +469,7 @@ function rayCast(){
 					game_data.buildings[cur_intersected.unitID].owner === player_id)){
 
 			selec_mesh.position.set(cur_intersected.position.x,
-				cur_intersected.position.y,cur_intersected.position.z);
+				cur_intersected.position.y+0.5,cur_intersected.position.z);
 			selec_mesh.visible=true;
 			if(selectedPlanet !== null){
 				document.getElementsByTagName("body")[0].style.cursor =
@@ -478,7 +482,7 @@ function rayCast(){
 
 
 			if(cur_intersected===tmp_intersected){
-				selected_timer=5;
+				selected_timer=2;
 				//console.log("selected");
 			}else{
 				//console.log("not selected");

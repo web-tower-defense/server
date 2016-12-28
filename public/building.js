@@ -58,12 +58,14 @@ Building.prototype.init=function(){
 	this.sent_unit_line.geometry.dynamic = true;
 	scene.add(this.sent_unit_line);
 
-	
-	this.owner_mesh=filled_circle_mesh(3.8,get_player_color(this.owner));
+
+	this.owner_mesh=filled_circle_mesh(4,get_player_color(this.owner));
+	this.owner_mesh.position.set(0,+0.003*this.unitID,0);
+
 	this.owner_mesh.material.transparent=true;
 	this.owner_mesh.material.opacity=0.2;
-	this.owner_mesh.scale.set(3.8/this.mesh.scale.x,
-		3.8/this.mesh.scale.y,3.8/this.mesh.scale.z)
+	this.owner_mesh.scale.set(4/this.mesh.scale.x,
+		4/this.mesh.scale.y,4/this.mesh.scale.z)
 	this.mesh.add(this.owner_mesh);
 
 	if(this.type=="black_hole"){
@@ -115,7 +117,7 @@ function filled_circle_geo(radius,segments){
 	var geometry=new THREE.CircleGeometry( radius, segments );
 	return geometry;
 }
-var filled_circle_geometry=new filled_circle_geo(1,24);
+var filled_circle_geometry=new filled_circle_geo(1,32);
 function filled_circle_mesh(radius,color){
 	var material = new THREE.MeshPhongMaterial( {
 		opacity: 80.0,
@@ -136,9 +138,16 @@ Building.prototype.init_black_hole=function(){
 	this.owner_mesh.visible=false;
 
 	this.mesh.selectable=false;
-	this.black_hole_mesh=circle_mesh(15,0xffffff);
-	this.black_hole_mesh2=circle_mesh(15,0xffffff);
+	this.black_hole_mesh=filled_circle_mesh(15,0x101010);
+	this.black_hole_mesh.position.set(0,-0.4,0);
+	this.black_hole_mesh.material.transparent=true;
+	this.black_hole_mesh.material.opacity=0.6;
 
+
+	this.black_hole_mesh2=filled_circle_mesh(15,0x000000);
+	this.black_hole_mesh2.position.set(0,-0.39,0);
+	this.black_hole_mesh2.material.transparent=true;
+	this.black_hole_mesh2.material.opacity=0.4;
 	this.mesh.add(this.black_hole_mesh);
 	this.mesh.add(this.black_hole_mesh2);
 }
@@ -148,8 +157,17 @@ Building.prototype.init_station=function(){
 Building.prototype.init_white_hole=function(){
 	this.owner_mesh.visible=false;
 	this.mesh.selectable=false;
-	this.white_hole_mesh=circle_mesh(15,0xffffff);
-	this.white_hole_mesh2=circle_mesh(15,0xffffff);
+	this.white_hole_mesh=filled_circle_mesh(15,0xffffff);
+	this.white_hole_mesh.position.set(0,-0.4,0);
+	this.white_hole_mesh.material.transparent=true;
+	this.white_hole_mesh.material.opacity=0.3;
+
+
+
+	this.white_hole_mesh2=filled_circle_mesh(15,0xffffff);
+	this.white_hole_mesh2.position.set(0,-0.39,0);
+	this.white_hole_mesh2.material.transparent=true;
+	this.white_hole_mesh2.material.opacity=0.4;
 
 	this.mesh.add(this.white_hole_mesh);
 	this.mesh.add(this.white_hole_mesh2);

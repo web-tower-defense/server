@@ -94,6 +94,7 @@ LaserWeapon.prototype.update = function(pos,owner,attack_range,cool_down){
 		this.target_unit.damage(1);
     if(this.attack_timer===0){
       var audio = new Audio('./audio/effect/laser.mp3');
+      audio.volume = 0.5;
       audio.play();
     }
     this.attack_timer++;
