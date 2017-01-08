@@ -46,7 +46,7 @@ io.on('connection', function(socket){
 		io.to(roomName).emit('updateRoom', data); //update room with new player
 
 		if(io.sockets.adapter.rooms[roomName].length===game_data.room_max_player[roomName]){
-			//game_init(roomName);
+			game_init(roomName);
 		}
 		io.sockets.emit('resetRooms',getRoomsData());
 	});
