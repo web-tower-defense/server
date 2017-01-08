@@ -127,3 +127,35 @@ body {
       align-items: center;
       padding-left: 14px;
       flex-grow: 1; }
+
+
+#players-div {
+  display: flex;
+  flex-direction: column; }
+  #players-div > .player-div {
+    height: 44px !important;
+    display: flex;
+    align-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+    #players-div > .player-div .join-room-btn, #rooms-div > .player-div .full-room-btn {
+      border: 0;
+      margin: 0;
+      padding: 0; }
+      #players-div > .player-div .join-room-btn i, #rooms-div > .player-div .full-room-btn i {
+        color: white;
+        width: 44px; }
+    #players-div > .player-div .join-room-btn {
+      background-color: #607d8b; }
+      #players-div > .player-div .join-room-btn:hover {
+        background-color: #86afc3; }
+    #players-div > .player-div .full-room-btn {
+      background-color: #37474f; }
+    #players-div > .player-div > span {
+      display: flex;
+      align-items: center;
+      padding-left: 14px;
+      flex-grow: 1;
+      color: black; }

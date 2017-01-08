@@ -1,5 +1,6 @@
 var socket = io();
 var mapName = "map02(2人).jpg";
+var playerName = "";
 var roomSystem = {
   init: function() {
     this.cacheDom();
@@ -14,10 +15,12 @@ var roomSystem = {
     this.roomsDiv = document.getElementById('rooms-div');
     this.chooseMapBtn = document.getElementById('choose-map-btn');
     this.mapsDropDownDiv = document.getElementById('maps-dropdown');
+    this.playersDiv = document.getElementById('players-div');
   },
   bindEvents: function() {
     $('#player-name-input').bind('keydown keyup keypress', function() {
       playerName = this.value||"";
+      console.log('name : '+playerName);
     });
     var mapImage = $('#map-img')[0];
     $('#maps-dropdown>a').each(function(idx){
@@ -61,12 +64,13 @@ var roomSystem = {
     for (var i = 0; i < this.roomsDiv.childElementCount; i++) {
       var room = this.roomsDiv.children[i];
       if(room.lastChild.className==='join-room-btn'){
-        room.lastChild.onclick = roomSystem.joinRoomEvent.bind(roomSystem, room.firstChild.textContent, playerName);
+        room.lastChild.onclick = this.joinRoomEvent.bind(this, room.firstChild.textContent);
       }
     }
   },
   //below are onclick events
-  joinRoomEvent: function(roomName, playerName) {
+  joinRoomEvent: function(roomName) {
+    //console.log('room : ' + roomName+'   player : ' + playerName);
     socket.emit('joinRoomEvent',roomName, playerName);
     this.showWaitingDivAndHideMainDiv(true);
     this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
@@ -154,18 +158,38 @@ var roomSystem = {
     this.waitingDiv.style.display = 'none';
     this.mainDiv.style.display = 'flex';
   },
+  updateCurrentRoom: function(data) {
+    console.log(data)
+    this.playersDiv.innerHTML = "";
+    data.playerNames.forEach(function(player){
+      var playerDiv = document.createElement('div');
+      playerDiv.setAttribute('class', 'player-div');
+      var span = document.createElement('span');
+      span.textContent = player;
+      var button = document.createElement('button');
+      var icon = document.createElement('i');
+      button.setAttribute('class', 'join-room-btn');
+      icon.setAttribute('class', 'fa fa-sign-in');
+      button.appendChild(icon);
+      playerDiv.appendChild(span);
+      playerDiv.appendChild(button);
+      roomSystem.playersDiv.appendChild(playerDiv);
+    });
+  },
 
 }
-var playerName = "";
 socket.on('respondClientCreateNewRoomEvent', function(data) {
   if (data.isHost) {
     if (data.nameRepeat) {
       roomSystem.showMessageDiv('this name is already used');
     } else {
-      playerName = $('#player-name-input').val();
-      if(playerName==="")playerName='player1';
       console.log('playerName:'+playerName+"\nmap:"+mapName);
+
+      $('#map-img2').attr('src', 'maps/'+mapName)
+      $('#map-img2')[0].style.display = 'block'
       roomSystem.showWaitingDivAndHideMainDiv();
+
+      roomSystem.updateCurrentRoom(data);
     }
   }
   else{
@@ -204,7 +228,15 @@ socket.on('resetMapImg', function(files){
   })
   roomSystem.bindEvents();
 })
-socket.on('newJoiner', function(playerNames){
+socket.on('respondJoinRoomEvent', function(data){
+  console.log("new joiner");
+  console.log(data.mapName);
 
+  $('#map-img2').attr('src', 'maps/'+mapName)
+  $('#map-img2')[0].style.display = 'block'
+})
+socket.on('updateRoom', function(data){
+  console.log("update");
+  roomSystem.updateCurrentRoom(data);
 })
 roomSystem.init();
