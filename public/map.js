@@ -159,7 +159,30 @@ function create_building(building,id,data){
 	}
 	//console.log(outlinePass.selectedObjects);
 }
-
+function create_plane(width,height,opacity,color){
+	var geometry = new THREE.PlaneGeometry(width,height);
+	geometry.faceVertexUvs[0] = [];
+	for(var i = 0; i < geometry.faces.length; i++){
+		geometry.faceVertexUvs[0].push([
+			new THREE.Vector2( 0,0 ),
+			new THREE.Vector2( 0,1 ),
+			new THREE.Vector2( 1,1),
+				new THREE.Vector2( 1,0),
+		]);
+	}
+	geometry.computeFaceNormals();
+	geometry.dynamic = true;
+	geometry.uvsNeedUpdate = true;
+	var material = new THREE.MeshPhongMaterial( {
+		opacity: opacity,
+		color: color,
+		emissive: color,
+		transparent: true,
+		side: THREE.DoubleSide
+	});
+	var plane = new THREE.Mesh( geometry, material );
+	return plane;
+}
 function loadMap(file){
 	$.getJSON(file, function(data) {
     	//console.log(data);
@@ -170,29 +193,11 @@ function loadMap(file){
     var height = data.mapHeight;
     var textureLoader = new THREE.TextureLoader();
 
-		var geometry = new THREE.PlaneGeometry( width*4, height*4);
-		geometry.faceVertexUvs[0] = [];
-		for(var i = 0; i < geometry.faces.length; i++){
-			geometry.faceVertexUvs[0].push([
-				new THREE.Vector2( 0,0 ),
-				new THREE.Vector2( 0,1 ),
-				new THREE.Vector2( 1,1),
-			    new THREE.Vector2( 1,0),
-			]);
-		}
-		geometry.computeFaceNormals();
-    geometry.dynamic = true;
-    geometry.uvsNeedUpdate = true;
-		var material = new THREE.MeshPhongMaterial( {
-			opacity: 0.0,
-			transparent: true,
-			side: THREE.DoubleSide
-		});
-		var plane = new THREE.Mesh( geometry, material );
+		var plane=create_plane(4*width,4*height,0,0xffffff);
 		plane.rotation.x = Math.PI / 2;
 		plane.position.y = -1;
-		plane.position.x = width;
-		plane.position.z = -height;
+		//plane.position.x = -2*width;
+		//plane.position.z = 2*height;
 		scene.add( plane );
 
 		for(var i = 0; i < data.models.length; i++){

@@ -269,6 +269,10 @@ function onDragStart(){
 	console.log("drag");
 }
 var click_timer=0;
+function chech_selectable(){
+
+}
+
 function clickObject(obj){
 	if(click_timer>0)return;
 	selected_timer=0;

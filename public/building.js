@@ -163,8 +163,6 @@ Building.prototype.init_white_hole=function(){
 	this.white_hole_mesh.material.transparent=true;
 	this.white_hole_mesh.material.opacity=0.3;
 
-
-
 	this.white_hole_mesh2=filled_circle_mesh(15,0xffffff);
 	this.white_hole_mesh2.position.set(0,-0.39,0);
 	this.white_hole_mesh2.material.transparent=true;
@@ -303,19 +301,13 @@ Building.prototype.draw = function(){
 	if(cur_str!==this.prev_str){
 		scene.remove(this.textMesh);
 		this.textMesh.geometry.dispose();
-
 		//this.textMesh.material.dispose();
 		this.prev_str=cur_str;
 		this.textMesh=createTextMesh(this.prev_str,this.owner);
 		//this.textMesh.rotation.x=-1.5;
 		this.textMesh.selectable = false;
 		this.textMesh.dynamic = true;
-		//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
-		this.textMesh.position.set(
-			this.pos.x-1.0,
-			this.pos.y+3.5,
-			this.pos.z
-		);
+		this.textMesh.rotation.x=Math.atan2(look.y,-look.z);
 		scene.add(this.textMesh);
 	}
 	this.textMesh.position.set(
@@ -329,17 +321,68 @@ Building.prototype.draw = function(){
 	//this.textMesh.geometry = createTextGeo("P"+this.owner+":"+this.curUnit.toString()+"/"+this.maxUnit.toString());
 
 }
+var game_over_str=0;
+
+function game_over(win){
+
+	game_over_str=create_plane(30,25,0.7,0x00ffff);
+	if(win){
+		var str=createTextMesh("you win!!",1);
+		str.rotation.x=0;
+		str.position.y=7;
+		game_over_str.add(str);
+		//game_over_str.add(tmp3);
+	}else{
+		var str=createTextMesh("you lose!!",1);
+		str.rotation.x=0;
+		str.position.y=7;
+		game_over_str.add(str);
+	}
+	var time_val=10000-loop_times;
+	if(time_val<0)time_val=0;
+	var time_score=Math.floor(0.1*(time_val));
+	var str=createTextMesh("time score:"+time_score,1);
+
+
+	str.rotation.x=0;
+	str.position.y=4;
+	game_over_str.add(str);
+
+	game_over_str.selectable = false;
+	//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
+	var vec=look.clone();
+	vec.normalize();
+	game_over_str.rotation.x=Math.atan2(vec.y,-vec.z);
+	vec.multiplyScalar(25.0);
+	game_over_str.position.set(
+		camera.position.x+vec.x+15,
+		camera.position.y+vec.y,
+		camera.position.z+vec.z
+	);
+	scene.add(game_over_str);
+	//location.reload();
+}
 Building.prototype.captured=function(new_owner){
 	game_data.playerbuildings_count[this.owner] --;
 	game_data.playerbuildings_count[new_owner] ++;
 
 	if(game_data.playerbuildings_count[this.owner] === 0){
+		if(this.owner!==0)game_data.loser_num++;
+
 		if(player_id === this.owner){
-			alert("YOU LOSE");
-      location.reload();
+			//alert("YOU LOSE");
+			game_over(false);
 		}else{
-			alert("YOU WIN");
-      location.reload();
+			var max_loser=(game_data.max_player-1)+game_data.AI.length;
+			if(game_data.loser_num>=max_loser){
+				console.log("loser:"+game_data.loser_num+",player:"+max_loser);
+				game_over(true);
+			}else{
+				console.log("loser:"+game_data.loser_num+",player:"+max_loser);
+			}
+
+			//alert("YOU WIN");
+      //location.reload();
 		}
 	}
 

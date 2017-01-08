@@ -64,7 +64,16 @@ function render() {
 		//look angle
 	//look.z=-0.8*camera.position.y;
   //look.y=-camera.position.y;
-
+	if(game_over_str!==0){
+		var vec=look.clone();
+		vec.normalize();
+		vec.multiplyScalar(30.0);
+		game_over_str.position.set(
+			camera.position.x+vec.x,
+			camera.position.y+vec.y,
+			camera.position.z+vec.z
+		);
+	}
 	var lookAtPos = new THREE.Vector3();
 	lookAtPos.addVectors(camera.position, look);
 	camera.lookAt(lookAtPos);//( scene.position );

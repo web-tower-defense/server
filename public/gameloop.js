@@ -8,15 +8,6 @@ var Command_data=function(roomName,commands,loop_times){
 	this.commands=commands;
 	this.loop_times=loop_times;
 }
-/*
-function handle_commands(){
-	for(var i = 0; i < game_data.commands.length; i++){
-		game_data.buildings[game_data.commands[i].selected].target=game_data.commands[i].target;
-		console.log("command:"+game_data.commands[i].selected+","+game_data.commands[i].target);
-	}
-	game_data.commands=[];
-}
-*/
 function sent_commands(){
 	if(game_data.max_player===1&&!data_receive){
 		game_data.web_commands=game_data.commands;
@@ -162,16 +153,17 @@ function game_init(){
 	game_data.commands=[];
 	game_data.web_commands=[];
 	game_data.players=[];
+	game_data.loser_num=0;
 	init_laser_pool();
 }
 function main_loop() {
 	console.log("mainloop start");
 	game_init();
-	var audio = new Audio('./audio/music/test.mp3');
+	var audio = new Audio('./audio/music/1.mp3');
 	audio.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();
-}, false);
+	}, false);
 	audio.play();
 	var timer = setInterval(game_update,40);
 }
