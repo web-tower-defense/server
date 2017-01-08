@@ -23,6 +23,16 @@ body {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
+.back_to_menu {
+	top: 500px;
+	right : 600px;
+	width: 224px;
+	height: 65px;
+	position: absolute;
+	background-image: url("/images/back_to_menu.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
 
 .zoom_out {
 	top: 50px;

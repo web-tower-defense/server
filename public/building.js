@@ -325,6 +325,19 @@ var game_over_str=0;
 
 function game_over(win){
 
+	var back_ui = document.createElement("BUTTON");
+	back_ui.className = "back_to_menu";
+	//zoom_in.appendChild(t);
+	back_ui.onmousedown = function(){
+
+	};
+	back_ui.onmouseup = function(){
+		location.reload();
+	};
+	document.body.appendChild(back_ui);
+
+
+
 	game_over_str=create_plane(30,25,0.7,0x00ffff);
 	if(win){
 		var str=createTextMesh("you win!!",1);
