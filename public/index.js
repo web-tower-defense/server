@@ -72,6 +72,7 @@ var roomSystem = {
   joinRoomEvent: function(roomName) {
     //console.log('room : ' + roomName+'   player : ' + playerName);
     socket.emit('joinRoomEvent',roomName, playerName);
+    this.roomName = roomName;
     this.showWaitingDivAndHideMainDiv(true);
     this.waitingDiv.lastChild.onclick = this.cancelCreateNewRoomEvent.bind(this,roomName);
   },
@@ -158,20 +159,34 @@ var roomSystem = {
     this.waitingDiv.style.display = 'none';
     this.mainDiv.style.display = 'flex';
   },
+  playerReady: function() {
+    var data = {};
+    console.log("ready : "+playerName);
+    data.playerName = playerName;
+    data.roomName = roomSystem.roomName;
+    console.log(data);
+    console.log(roomSystem);
+    socket.emit('playerReadyEvent',data);
+  },
   updateCurrentRoom: function(data) {
     console.log(data)
     this.playersDiv.innerHTML = "";
-    data.playerNames.forEach(function(player){
+    data.players.forEach(function(player){
       var playerDiv = document.createElement('div');
       playerDiv.setAttribute('class', 'player-div');
       var span = document.createElement('span');
-      span.textContent = player;
+      span.textContent = player.name;
+      var span2 = document.createElement('span');
+      span2.textContent = player.status + " QWQ ";
       var button = document.createElement('button');
       var icon = document.createElement('i');
       button.setAttribute('class', 'join-room-btn');
+      if(player.name === playerName)
+        button.onclick = roomSystem.playerReady;
       icon.setAttribute('class', 'fa fa-sign-in');
       button.appendChild(icon);
       playerDiv.appendChild(span);
+      playerDiv.appendChild(span2);
       playerDiv.appendChild(button);
       roomSystem.playersDiv.appendChild(playerDiv);
     });
@@ -229,9 +244,8 @@ socket.on('resetMapImg', function(files){
   roomSystem.bindEvents();
 })
 socket.on('respondJoinRoomEvent', function(data){
-  console.log("new joiner");
-  console.log(data.mapName);
-
+  //console.log("new joiner");
+  //console.log(data.mapName);
   $('#map-img2').attr('src', 'maps/'+mapName)
   $('#map-img2')[0].style.display = 'block'
 })
