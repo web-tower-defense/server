@@ -351,14 +351,24 @@ function game_over(win){
 		str.position.y=7;
 		game_over_str.add(str);
 	}
+
+
 	var time_val=10000-loop_times;
 	if(time_val<0)time_val=0;
 	var time_score=Math.floor(0.1*(time_val));
-	var str=createTextMesh("time score:"+time_score,1);
-
-
+	var str=createTextMesh("time:"+loop_times/25+" sec",1);
 	str.rotation.x=0;
 	str.position.y=4;
+	game_over_str.add(str);
+
+	var str=createTextMesh("captured num:"+game_data.players[player_id].captured_num,1);
+	str.rotation.x=0;
+	str.position.y=1;
+	game_over_str.add(str);
+
+	var str=createTextMesh("lost num:"+game_data.players[player_id].lost_num,1);
+	str.rotation.x=0;
+	str.position.y=-2;
 	game_over_str.add(str);
 
 	game_over_str.selectable = false;
@@ -376,22 +386,24 @@ function game_over(win){
 	//location.reload();
 }
 Building.prototype.captured=function(new_owner){
-	game_data.playerbuildings_count[this.owner] --;
-	game_data.playerbuildings_count[new_owner] ++;
 
-	if(game_data.playerbuildings_count[this.owner] === 0){
+	game_data.players[this.owner].buildings_count--;
+	game_data.players[this.owner].lost_num++;
+	game_data.players[new_owner].buildings_count++;
+	game_data.players[new_owner].captured_num++;
+
+	if(game_data.players[this.owner].buildings_count === 0){
 		if(this.owner!==0)game_data.loser_num++;
 
 		if(player_id === this.owner){
 			//alert("YOU LOSE");
 			game_over(false);
 		}else{
-			var max_loser=(game_data.max_player-1)+game_data.AI.length;
-			if(game_data.loser_num>=max_loser){
-				console.log("loser:"+game_data.loser_num+",player:"+max_loser);
+			if(game_data.loser_num>=game_data.total_player-1){
+				//console.log("loser:"+game_data.loser_num+",player:"+max_loser);
 				game_over(true);
 			}else{
-				console.log("loser:"+game_data.loser_num+",player:"+max_loser);
+				//console.log("loser:"+game_data.loser_num+",player:"+max_loser);
 			}
 
 			//alert("YOU WIN");

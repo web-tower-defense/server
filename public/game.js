@@ -43,8 +43,8 @@ function init(socket, data) {
 	var map_name="maps/"+data.map_name;
 	console.log("init map_name:"+map_name);
 	loadMap(map_name);
-
 	animate();
+	
 	main_loop();
 }
 function animate() {

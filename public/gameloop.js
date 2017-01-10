@@ -118,7 +118,6 @@ function game_update(){
 			ai_update()
 		}
 		for(var i = 0; i < game_data.buildings.length; i++){
-
 			//console.log(game_data.buildings[i].owner);
 				game_data.buildings[i].sent_unit();
 				game_data.buildings[i].update();
@@ -137,9 +136,6 @@ function game_update(){
 		}
 	}
 	//handle_commands();
-
-
-
 	// console.log("mouse_pos:"+mouse_pos.x+","+mouse_pos.y+","+mouse_pos.z);
 
 	//console.log("mousepos="+game_data.mouse_pos.x+","+game_data.mouse_pos.y+","+game_data.mouse_pos.z);
@@ -147,6 +143,19 @@ function game_update(){
 	//console.log("update");
 }
 var game_start=false;
+function Player(){
+	this.buildings_num=0;
+	this.captured_num=0;
+	this.lost_num=0;
+	this.buildings_count=0;
+}
+function start_game(){
+	init_players();
+	for(var i=0;i<game_data.buildings.length;i++){
+		game_data.players[game_data.buildings[i].owner].buildings_count++;
+	}
+	game_start=true;
+}
 function game_init(){
 	game_data.units=[];
 	game_data.buildings=[];
@@ -155,11 +164,18 @@ function game_init(){
 	game_data.players=[];
 	game_data.loser_num=0;
 	init_laser_pool();
+
+}
+function init_players(){
+	console.log("init players player_num:"+game_data.total_player);
+	for(var i=0;i<game_data.total_player+1;i++){
+		game_data.players.push(new Player());
+	}
 }
 function main_loop() {
 	console.log("mainloop start");
 	game_init();
-	var audio = new Audio('./audio/music/1.mp3');
+	var audio = new Audio('./audio/music/2.mp3');
 	audio.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();

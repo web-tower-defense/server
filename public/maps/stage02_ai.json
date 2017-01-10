@@ -3,6 +3,7 @@
     "mapWidth": 100,
     "mapHeight": 100,
     "AI":[2,3],
+    "player_num":3,
     "models":
     [
         {

@@ -296,6 +296,9 @@ function clickObject(obj){
 		click_mesh.position.set(cur_intersected.position.x,
 			cur_intersected.position.y+0.5,cur_intersected.position.z);
 		click_mesh.visible=true;
+		var audio = new Audio('./audio/effect/click.wav');
+		audio.volume = 0.3;
+		audio.play();
 	}else if(selectedPlanet!==null){
 		targetPlanet = obj;
 
@@ -321,7 +324,9 @@ function clickObject(obj){
 		selectedPlanet = null;
 		targetPlanet = null;
 		selection_sphere.visible = false;
-
+		var audio = new Audio('./audio/effect/click.wav');
+		audio.volume = 0.3;
+		audio.play();
 	}
 }
 //var seleted_id=-1;
@@ -481,6 +486,8 @@ function rayCast(){
 			selec_mesh.position.set(cur_intersected.position.x,
 				cur_intersected.position.y+0.5,cur_intersected.position.z);
 			selec_mesh.visible=true;
+
+
 			if(selectedPlanet !== null){
 				document.getElementsByTagName("body")[0].style.cursor =
 				 "url('./cursor/sword.cur'), auto";
