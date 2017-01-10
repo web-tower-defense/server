@@ -183,6 +183,9 @@ io.on('connection', function(socket){
 	socket.on('gameInit', function(test){
 		//game init
 	})
+	socket.on('createNameEvent', function(playerName){
+		//do nothing currently
+	})
 	function room_init(name,maxPlayer,map_name,socketId){
 
 		game_data.room_command[name]=0;

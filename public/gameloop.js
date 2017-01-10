@@ -175,7 +175,8 @@ function init_players(){
 function main_loop() {
 	console.log("mainloop start");
 	game_init();
-	var audio = new Audio('./audio/music/2.mp3');
+	var audio = new Audio('./audio/music/Maximalism - Soundtrack for a Great Adventure - 05 Tenacity.mp3');
+	audio.volume = 0.1;
 	audio.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();

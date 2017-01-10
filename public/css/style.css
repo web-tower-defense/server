@@ -16,6 +16,17 @@ body {
   position: relative; }
   #main-div * {
     font-size: 18px; }
+  #main-div > #title-img {}
+  #main-div >  #name-div{
+    color: white;
+  }
+  #main-div >  #name-div > #player-name-input{
+    width: 63%;
+  }
+  #main-div > #name-div > #comfirm-name-btn{
+    width: 33%;
+    margin-left: 2px;
+  }
   #nav-bar-div{
     margin-top: 5px;
     margin-bottom: 5px;

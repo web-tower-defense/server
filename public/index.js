@@ -22,6 +22,13 @@ var roomSystem = {
       playerName = this.value||"";
       console.log('name : '+playerName);
     });
+    $('#comfirm-name-btn').unbind().click(function(){
+      socket.emit('createNameEvent',playerName);
+      $('#player-name-input').css({display:'none'});
+      $('#comfirm-name-btn').css({display:'none'});
+      $('#player-name').css({display:'flex'});
+      $('#player-name').html('hello player '+playerName);
+    })
     var mapImage = $('#map-img')[0];
     $('#maps-dropdown>a').each(function(idx){
       $(this).click(function(){
@@ -182,6 +189,11 @@ var roomSystem = {
       var span = document.createElement('div');
       span.setAttribute('class', 'player-name');
       span.textContent = player.name;
+      if(key === 0){
+        var icon = document.createElement('i');
+        icon.setAttribute('class', 'fa fa-star');
+        span.appendChild(icon);
+      }
       var span2 = document.createElement('div');
       span2.setAttribute('class', 'player-status');
       if(player.status === null && roomSystem.isHost === true){
