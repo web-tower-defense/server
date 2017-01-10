@@ -34,14 +34,13 @@ io.on('connection', function(socket){
 		data.max_player=game_data.room_max_player[roomName];
 		io.to(roomName).emit('gameInit', data);
 	}
-	socket.on('joinRoomEvent',function(roomName, playerName){
-		socket.join(roomName);
-		game_data.socket_ids[roomName].push(socket.id);
-		waitingRooms[roomName].playerNames.push(playerName);
-		waitingRooms[roomName].playerStatus.push('waiting');
-		//io.sockets.adapter.rooms[roomName]
-		var data = io.sockets.adapter.rooms[roomName];
+
+	function getCurrentRoomData(roomName){
+		var data = {};
 		data.mapName = waitingRooms[roomName].mapName;
+		data.maxPlayer = waitingRooms[roomName].maxPlayer;
+		data.allPlayer = waitingRooms[roomName].allPlayer;
+		data.readyPlayer = waitingRooms[roomName].readyPlayer;
 		data.players = [];
 		waitingRooms[roomName].playerNames.forEach(function(player_name, key){
 			var player = {};
@@ -49,7 +48,20 @@ io.on('connection', function(socket){
 			player.status = waitingRooms[roomName].playerStatus[key];
 			data.players.push(player);
 		});
-
+		return data;
+	}
+	socket.on('joinRoomEvent',function(roomName, playerName){
+		socket.join(roomName);
+		game_data.socket_ids[roomName].push(socket.id);
+		for(var i=0; i<waitingRooms[roomName].maxPlayer; i++){
+			if(waitingRooms[roomName].playerNames[i] === null){
+				waitingRooms[roomName].playerNames[i] = playerName;
+				waitingRooms[roomName].playerStatus[i] = 'waiting';
+				break;
+			}
+		}
+		//io.sockets.adapter.rooms[roomName]
+		var data = getCurrentRoomData(roomName)
 		socket.emit('respondJoinRoomEvent', data);
 		io.to(roomName).emit('updateRoom', data); //update room with new player
 
@@ -60,12 +72,10 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('clientCreateNewRoomEvent', function(roomName, mapName, playerName, maxPlayer) {
-
 		var data = {};
-		data.roomName = roomName;
-		data.isHost = true;
+		var nameRepeat = false;
 		if(io.sockets.adapter.rooms.hasOwnProperty(roomName)){
-			data.nameRepeat=true;
+			nameRepeat = true;
 		}else{
 			var map_name=mapName.split('(')[0]+".json";
 			waitingRooms[roomName] = {};
@@ -75,20 +85,20 @@ io.on('connection', function(socket){
 			waitingRooms[roomName].playerStatus[0] = 'waiting';
 			waitingRooms[roomName].mapName = mapName;
 			waitingRooms[roomName].maxPlayer = maxPlayer;
+			waitingRooms[roomName].allPlayer = 1;
 			waitingRooms[roomName].readyPlayer = 0;
 
-			data.nameRepeat=false;
-			data.players = [];
+			for(var i=1; i<maxPlayer; i++){
+				waitingRooms[roomName].playerNames.push(null);
+				waitingRooms[roomName].playerStatus.push(null);
+			}
+
 			socket.join(roomName);
 			room_init(roomName,maxPlayer,map_name,socket.id);
+			data = getCurrentRoomData(roomName);
 		}
-		waitingRooms[roomName].playerNames.forEach(function(player_name, key){
-			var player = {};
-			console.log('key : '+key);
-			player.name = player_name;
-			player.status = waitingRooms[roomName].playerStatus[key];
-			data.players.push(player);
-		});
+		data.isHost = true;
+		data.nameRepeat = nameRepeat;
 		socket.emit('respondClientCreateNewRoomEvent', data);
 		data.isHost = false;
 		data.rooms = getRoomsData();
@@ -98,8 +108,23 @@ io.on('connection', function(socket){
 		}
 
 	});
-	socket.on('cancelCreateNewRoomEvent',function(roomName){
-		socket.leave(roomName);
+	socket.on('cancelCreateNewRoomEvent',function(data){
+		console.log('cancel~'+data.roomName+data.playerName);
+		for(var i=0; i<waitingRooms[data.roomName].maxPlayer; i++){
+			console.log('player : '+waitingRooms[data.roomName].playerNames[i]);
+			if(waitingRooms[data.roomName].playerNames[i] === data.playerName){
+				console.log('find~');
+				waitingRooms[data.roomName].playerNames[i] = null;
+				if(waitingRooms[data.roomName].playerStatus[i] === 'ready'){
+					waitingRooms[data.roomName].readyPlayer--;
+				}
+				waitingRooms[data.roomName].playerStatus[i] = null;
+				waitingRooms[data.roomName].allPlayer--;
+				break;
+			}
+		}
+		io.to(data.roomName).emit('updateRoom', getCurrentRoomData(data.roomName));
+		socket.leave(data.roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
 	});
 	socket.on('disconnect', function(){
@@ -111,28 +136,29 @@ io.on('connection', function(socket){
 		}
 	})
 	socket.on('playerReadyEvent', function(data){
-		var out = io.sockets.adapter.rooms[data.roomName];
-		out.mapName = waitingRooms[data.roomName].mapName;
-		out.players = [];
+
 		waitingRooms[data.roomName].playerNames.forEach(function(playerName, key){
-			var player = {};
-			player.name = playerName;
 			if(data.playerName === playerName){
 				if(waitingRooms[data.roomName].playerStatus[key] === 'waiting'){
 					waitingRooms[data.roomName].playerStatus[key] = 'ready';
+					waitingRooms[data.roomName].readyPlayer++;
 				}
 				else{
 					waitingRooms[data.roomName].playerStatus[key] = 'waiting';
+					waitingRooms[data.roomName].readyPlayer--;
 				}
 			}
-			player.status = waitingRooms[data.roomName].playerStatus[key];
-			out.players.push(player);
 		});
+		var out = getCurrentRoomData(data.roomName);
 		io.to(data.roomName).emit('updateRoom', out);
-		waitingRooms[data.roomName].readyPlayer++;
+
 		if(waitingRooms[data.roomName].readyPlayer === waitingRooms[data.roomName].maxPlayer){
-			game_init(data.roomName);
+			//game_init(data.roomName);
 		}
+	})
+	socket.on('gameStartEvent', function(roomName){
+		console.log('start : '+roomName);
+		game_init(roomName);
 	})
 	socket.on('gameInit', function(test){
 		//game init

@@ -93,8 +93,12 @@ var roomSystem = {
   },
   cancelCreateNewRoomEvent: function(roomName) {
     //cancel create new room
+    var out = {};
+    out.roomName = roomName;
+    out.playerName = playerName;
+    console.log(out);
     this.hideWaitingDivAndShowMainDiv();
-    socket.emit('cancelCreateNewRoomEvent',roomName);
+    socket.emit('cancelCreateNewRoomEvent',out);
   },
   //below are useful function
   resetRooms: function (rooms) {
@@ -190,10 +194,28 @@ var roomSystem = {
       playerDiv.appendChild(button);
       roomSystem.playersDiv.appendChild(playerDiv);
     });
+    if(data.readyPlayer===data.maxPlayer){
+      if(this.isHost === true){
+        var button = document.createElement('button');
+        button.setAttribute('class', 'start-game-btn');
+        button.textContent = 'START !';
+        button.onclick = roomSystem.gameStart;
+        roomSystem.playersDiv.appendChild(button);
+      }
+      else{
+        var span = document.createElement('span');
+        span.textContent = 'all players ready.\n  waiting for host player to start...';
+        roomSystem.playersDiv.appendChild(span);
+      }
+    }
   },
-
+  gameStart: function() {
+    console.log(roomSystem);
+    socket.emit('gameStartEvent', roomSystem.roomName);
+  },
 }
 socket.on('respondClientCreateNewRoomEvent', function(data) {
+  roomSystem.isHost = data.isHost;
   if (data.isHost) {
     if (data.nameRepeat) {
       roomSystem.showMessageDiv('this name is already used');
@@ -246,7 +268,7 @@ socket.on('resetMapImg', function(files){
 socket.on('respondJoinRoomEvent', function(data){
   //console.log("new joiner");
   //console.log(data.mapName);
-  $('#map-img2').attr('src', 'maps/'+mapName)
+  $('#map-img2').attr('src', 'maps/'+data.mapName)
   $('#map-img2')[0].style.display = 'block'
 })
 socket.on('updateRoom', function(data){
