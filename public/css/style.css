@@ -130,8 +130,18 @@ body {
 
 #waiting-div{
   min-width: 400px;}
-  #waiting-div > #map-img2 {
-    max-width: 300px;
+  #waiting-div > #map-div{
+    width: 400px;
+    height: 200px;
+    background-image: url('../images/setting.png'); }
+  #waiting-div > #map-div > #map-img2 {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom:10px;
+    width: 95%;
+    height: 90%;
+    max-width: 400px;
     max-height: 200px;
   }
 
@@ -139,29 +149,27 @@ body {
   display: flex;
   flex-direction: column; }
   #players-div > .player-div {
-    height: 44px !important;
+    height: 29px !important;
     display: flex;
-    align-content: space-between;
-    align-items: stretch;
     width: 100%;
+    color: black;
     background-color: #eee;
     border-bottom: 1px solid #8f8f8f; }
-    #players-div > .player-div .join-room-btn, #rooms-div > .player-div .full-room-btn {
-      border: 0;
-      margin: 0;
-      padding: 0; }
-      #players-div > .player-div .join-room-btn i, #rooms-div > .player-div .full-room-btn i {
-        color: white;
-        width: 44px; }
-    #players-div > .player-div .join-room-btn {
-      background-color: #607d8b; }
-      #players-div > .player-div .join-room-btn:hover {
-        background-color: #86afc3; }
-    #players-div > .player-div .full-room-btn {
-      background-color: #37474f; }
-    #players-div > .player-div > span {
-      display: flex;
+    #players-div > .player-div > div {
+      display: block;
+      text-align: justify;
+      font-size: 16px;
       align-items: center;
-      padding-left: 14px;
       flex-grow: 1;
-      color: black; }
+      color: black;
+      border-style: solid;
+      border-width: 1px;
+      border-color: black}
+    #players-div > .player-div > .player-name {
+      width: 50%; }
+    #players-div > .player-div > .player-status {
+      width: 20%; }
+      #players-div > .player-div > .player-status > button {
+        float: right;
+        right: 0;
+        height: 100%; }

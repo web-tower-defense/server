@@ -100,7 +100,7 @@ function create_building(building,id,data){
 	new_building.maxUnit = building.maxUnit;
 	new_building.owner = building.owner;
 	//game_data.playerbuildings_count[building.owner] ++;
-	
+
 	if(building.hasOwnProperty('unit_vel')){
 		new_building.unit_vel = building.unit_vel;
 	}
@@ -182,12 +182,18 @@ function create_plane(width,height,opacity,color){
 	var plane = new THREE.Mesh( geometry, material );
 	return plane;
 }
-function loadMap(file){
+function loadMap(file, AInum){
 	$.getJSON(file, function(data) {
     	//console.log(data);
 		tmp_data=data;
 		game_data.unitLen=data.mapUnitLen;
 		game_data.AI=data.AI;
+
+		for(var i=0; i<AInum; i++){
+			console.log('ai : '+data.player_num - i - data.AI.length);
+			game_data.AI.push(data.player_num - i - data.AI.length);
+		}
+		console.log(game_data.AI);
 		//game_data.total_player=game_data.max_player+game_data.AI.length;
 		game_data.total_player=data.player_num;
 		console.log("load map player_num:"+data.player_num);
