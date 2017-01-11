@@ -321,70 +321,7 @@ Building.prototype.draw = function(){
 	//this.textMesh.geometry = createTextGeo("P"+this.owner+":"+this.curUnit.toString()+"/"+this.maxUnit.toString());
 
 }
-var game_over_str=0;
 
-function game_over(win){
-
-	var back_ui = document.createElement("BUTTON");
-	back_ui.className = "back_to_menu";
-	//zoom_in.appendChild(t);
-	back_ui.onmousedown = function(){
-
-	};
-	back_ui.onmouseup = function(){
-		location.reload();
-	};
-	document.body.appendChild(back_ui);
-
-
-
-	game_over_str=create_plane(30,25,0.7,0x00ffff);
-	if(win){
-		var str=createTextMesh("you win!!",1);
-		str.rotation.x=0;
-		str.position.y=7;
-		game_over_str.add(str);
-		//game_over_str.add(tmp3);
-	}else{
-		var str=createTextMesh("you lose!!",1);
-		str.rotation.x=0;
-		str.position.y=7;
-		game_over_str.add(str);
-	}
-
-
-	var time_val=10000-loop_times;
-	if(time_val<0)time_val=0;
-	var time_score=Math.floor(0.1*(time_val));
-	var str=createTextMesh("time:"+loop_times/25+" sec",1);
-	str.rotation.x=0;
-	str.position.y=4;
-	game_over_str.add(str);
-
-	var str=createTextMesh("captured num:"+game_data.players[player_id].captured_num,1);
-	str.rotation.x=0;
-	str.position.y=1;
-	game_over_str.add(str);
-
-	var str=createTextMesh("lost num:"+game_data.players[player_id].lost_num,1);
-	str.rotation.x=0;
-	str.position.y=-2;
-	game_over_str.add(str);
-
-	game_over_str.selectable = false;
-	//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
-	var vec=look.clone();
-	vec.normalize();
-	game_over_str.rotation.x=Math.atan2(vec.y,-vec.z);
-	vec.multiplyScalar(25.0);
-	game_over_str.position.set(
-		camera.position.x+vec.x+15,
-		camera.position.y+vec.y,
-		camera.position.z+vec.z
-	);
-	scene.add(game_over_str);
-	//location.reload();
-}
 Building.prototype.captured=function(new_owner){
 
 	game_data.players[this.owner].buildings_count--;

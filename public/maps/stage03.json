@@ -128,28 +128,28 @@
       },
       "mercury" : {
         "name": "mercury",
-        "curUnit": 30,
+        "curUnit": 20,
         "maxUnit": 50,
         "grow_cycle":80,
         "scale":1.5
       },
       "uranus" : {
         "name": "uranus",
-        "curUnit": 20,
+        "curUnit": 15,
         "maxUnit": 40,
         "grow_cycle":90,
         "scale":1.5
       },
       "mars" : {
         "name": "mars",
-        "curUnit": 40,
+        "curUnit": 25,
         "maxUnit": 60,
         "grow_cycle":70,
         "scale":1.5
       },
       "pluto" : {
         "name": "pluto",
-        "curUnit": 15,
+        "curUnit": 10,
         "maxUnit": 30,
         "grow_cycle":120,
         "scale":3
