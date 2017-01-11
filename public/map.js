@@ -190,10 +190,17 @@ function loadMap(file, AInum){
 		game_data.AI=data.AI;
 
 		for(var i=0; i<AInum; i++){
-			console.log('ai : '+data.player_num - i - data.AI.length);
-			game_data.AI.push(data.player_num - i - data.AI.length);
+			var ai_id=data.player_num-data.AI.length;
+			//console.log('ai : '+ai_id);
+			game_data.AI.push(ai_id);
 		}
-		console.log(game_data.AI);
+		/*
+		console.log("AI==================");
+		for(var i=0;i<game_data.AI.length;i++){
+			console.log("ai="+game_data.AI[i]);
+		}
+		console.log("AI==================");
+		*/
 		//game_data.total_player=game_data.max_player+game_data.AI.length;
 		game_data.total_player=data.player_num;
 		console.log("load map player_num:"+data.player_num);
