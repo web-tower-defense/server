@@ -12,11 +12,19 @@ body {
     display: flex;
     flex-direction: column; }
 
+  #header-div{
+    display: flex;  
+  }
+    #header-div > #title-img {
+    }
+    #header-div > button {
+      display: inline-block;
+    }
+
 #main-div {
   position: relative; }
   #main-div * {
     font-size: 18px; }
-  #main-div > #title-img {}
   #main-div >  #name-div{
     color: white;
   }
