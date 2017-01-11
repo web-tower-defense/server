@@ -2,9 +2,13 @@ extends layout
 
 block content
   #header-div
-    h1 星球大戰 - Space War 3D
+    //- h1 星球大戰 - Space War 3D
+    img#title-img(src="../images/logo_white_small.png", alt="alt")
   #main-div
-    input#player-name-input(type="text", placeholder="enter your name here")
+    #name-div
+      input#player-name-input(type="text", placeholder="enter your name here")
+      button#comfirm-name-btn comfirm
+      span#player-name(style = "display:none")
     #nav-bar-div
       //-button#room 房間列表
       //-button#intro 操作說明
@@ -31,6 +35,7 @@ block content
       //-     i(class="fa fa-users")
   #waiting-div
     p Your room has been created, now waiting for opponent...
-    img#map-img2(src="#", alt="alt")
+    #map-div
+      img#map-img2(src="#", alt="alt")
     #players-div
     button cancel

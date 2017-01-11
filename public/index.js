@@ -22,6 +22,13 @@ var roomSystem = {
       playerName = this.value||"";
       console.log('name : '+playerName);
     });
+    $('#comfirm-name-btn').unbind().click(function(){
+      socket.emit('createNameEvent',playerName);
+      $('#player-name-input').css({display:'none'});
+      $('#comfirm-name-btn').css({display:'none'});
+      $('#player-name').css({display:'flex'});
+      $('#player-name').html('hello player '+playerName);
+    })
     var mapImage = $('#map-img')[0];
     $('#maps-dropdown>a').each(function(idx){
       $(this).click(function(){
@@ -164,6 +171,7 @@ var roomSystem = {
     this.mainDiv.style.display = 'flex';
   },
   playerReady: function() {
+    console.log('ready~~');
     var data = {};
     console.log("ready : "+playerName);
     data.playerName = playerName;
@@ -175,23 +183,80 @@ var roomSystem = {
   updateCurrentRoom: function(data) {
     console.log(data)
     this.playersDiv.innerHTML = "";
-    data.players.forEach(function(player){
+    data.players.forEach(function(player, key){
       var playerDiv = document.createElement('div');
       playerDiv.setAttribute('class', 'player-div');
-      var span = document.createElement('span');
+      var span = document.createElement('div');
+      span.setAttribute('class', 'player-name');
       span.textContent = player.name;
-      var span2 = document.createElement('span');
-      span2.textContent = player.status + " QWQ ";
-      var button = document.createElement('button');
-      var icon = document.createElement('i');
-      button.setAttribute('class', 'join-room-btn');
-      if(player.name === playerName)
+      if(key === 0){
+        var icon = document.createElement('i');
+        icon.setAttribute('class', 'fa fa-star');
+        span.appendChild(icon);
+      }
+      var span2 = document.createElement('div');
+      span2.setAttribute('class', 'player-status');
+      if(player.status === null && roomSystem.isHost === true){
+        var AIbutton = document.createElement('button');
+        var icon = document.createElement('i');
+        AIbutton.setAttribute('class', 'add-ai-btn');
+        AIbutton.player = key;
+        AIbutton.onclick = function(){
+          console.log('add ai : '+key);
+          var data = {};
+          data.key = key;
+          data.roomName = roomSystem.roomName;
+          console.log(data);
+          socket.emit('addAiEvent', data);
+        };
+        icon.setAttribute('class', 'fa fa-user-plus');
+        AIbutton.appendChild(icon);
+        span2.appendChild(AIbutton);
+      }else{
+        span2.textContent = player.status;
+      }
+
+      if(player.status === 'waiting'){
+        span2.setAttribute('style', 'background-color:#ffbca0');
+      }
+      else if(player.status === 'ready'){
+        span2.setAttribute('style', 'background-color:#a0ffb3');
+      }
+      if(player.status === 'ready(AI)' && roomSystem.isHost === true){
+        span2.setAttribute('style', 'background-color:#a0ffb3');
+        var button = document.createElement('button');
+        var icon = document.createElement('i');
+        button.onclick = function(){
+          var data = {};
+          data.key = key;
+          data.roomName = roomSystem.roomName;
+          console.log(data);
+          socket.emit('kickAiEvent', data);
+        };
+        icon.setAttribute('class', 'fa fa-times');
+        button.appendChild(icon);
+        span2.appendChild(button);
+      }
+      if(player.name === playerName){
+        var button = document.createElement('button');
+        var icon = document.createElement('i');
+        button.setAttribute('class', 'ready-btn');
         button.onclick = roomSystem.playerReady;
-      icon.setAttribute('class', 'fa fa-sign-in');
-      button.appendChild(icon);
+        if(player.status === 'waiting'){
+          icon.setAttribute('class', 'fa fa-check');
+        }
+        else if(player.status === 'ready'){
+          icon.setAttribute('class', 'fa fa-times');
+        }
+        button.appendChild(icon);
+      }
+
+      if(player.name === playerName){
+        span2.appendChild(button);
+      }
       playerDiv.appendChild(span);
       playerDiv.appendChild(span2);
-      playerDiv.appendChild(button);
+
       roomSystem.playersDiv.appendChild(playerDiv);
     });
     if(data.readyPlayer===data.maxPlayer){
@@ -239,19 +304,21 @@ socket.on('roommateDisconnect',function(){
   location.reload();
 })
 socket.on('gameInit', function(data){
+  console.log(data);
   while(document.body.firstChild){
     document.body.removeChild(document.body.firstChild);
   }
   //console.log(data);
   var socketIDs = [];
   var player_id = 1;
+  var AInum = data.max_player - data.length;
   Object.keys(data.sockets).forEach( function(socketId){
     //console.log("Room client socket Id: " + socketId );
     socketIDs[socketId] = player_id++;
   });
   //socketIDs["roomName"] = data.name;
   data.player_id=socketIDs[socket.id];
-  init(socket,data);
+  init(socket,data,AInum);
   document.body.getElementsByTagName('div')[0].style.margin = '0px 0px';
 })
 socket.on('resetMapImg', function(files){

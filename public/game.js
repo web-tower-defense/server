@@ -11,8 +11,7 @@ var currentlyPressedKeys = {};//new Array(300);
 function aiGameInit() {
 
 }
-function init(socket, data) {
-
+function init(socket, data, AInum) {
 
 	game_data.socket=socket;
 	game_data.roomName=data.name; //data["roomName"];
@@ -42,9 +41,9 @@ function init(socket, data) {
 	loadUnit();
 	var map_name="maps/"+data.map_name;
 	console.log("init map_name:"+map_name);
-	loadMap(map_name);
+	loadMap(map_name, AInum);
 	animate();
-	
+
 	main_loop();
 }
 function animate() {
