@@ -1,9 +1,9 @@
 {
-    "mapName": "map02",
+    "mapName": "map01",
     "mapWidth": 100,
     "mapHeight": 100,
     "AI":[],
-    "player_num":2,
+    "player_num":3,
     "models":
     [
         {
@@ -93,18 +93,27 @@
       "venus" : {
         "name": "venus",
         "curUnit": 10,
-        "maxUnit": 70,
+        "maxUnit": 60,
         "unit_vel": 0.25,
         "grow_cycle":40,
-        "sent_unit_cycle":15,
+        "sent_unit_cycle":10,
         "scale":1
       },
       "moon" : {
         "name": "moon",
         "curUnit": 10,
-        "maxUnit": 40,
+        "maxUnit": 30,
         "grow_cycle":120,
         "scale":2
+      },
+      "station" : {
+        "name": "station",
+        "type":"station",
+        "unit_vel": 0.4,
+        "curUnit": 10,
+        "maxUnit": 50,
+        "grow_cycle":100000,
+        "scale":1.5
       },
       "hexa" : {
         "name": "hexa",
@@ -117,40 +126,31 @@
         "sent_unit_cycle":360,
         "unit_type":"laser_unit"
       },
-      "station" : {
-        "name": "station",
-        "type":"station",
-        "unit_vel": 0.4,
-        "curUnit": 10,
-        "maxUnit": 50,
-        "grow_cycle":100000,
-        "scale":1.5
-      },
       "mercury" : {
         "name": "mercury",
-        "curUnit": 20,
-        "maxUnit": 50,
+        "curUnit": 12,
+        "maxUnit": 24,
         "grow_cycle":80,
         "scale":1.5
       },
       "uranus" : {
         "name": "uranus",
         "curUnit": 15,
-        "maxUnit": 40,
+        "maxUnit": 30,
         "grow_cycle":90,
         "scale":1.5
       },
       "mars" : {
         "name": "mars",
-        "curUnit": 25,
-        "maxUnit": 60,
+        "curUnit": 18,
+        "maxUnit": 36,
         "grow_cycle":70,
         "scale":1.5
       },
       "pluto" : {
         "name": "pluto",
-        "curUnit": 10,
-        "maxUnit": 30,
+        "curUnit": 8,
+        "maxUnit": 16,
         "grow_cycle":120,
         "scale":3
       },
@@ -172,7 +172,7 @@
         {
             "template": "venus",
             "owner": 0,
-            "curUnit": 40,
+            "curUnit": 30,
             "position": [0,0]
         },{
             "template": "venus",
@@ -180,7 +180,7 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":180,
+            "orbit_angle":0,
             "position": [70,0]
         },{
             "template": "venus",
@@ -188,16 +188,24 @@
             "orbiting":0,
             "orbit_cycle":8000,
             "orbit_radius":70,
-            "orbit_angle":0,
+            "orbit_angle":120,
             "position": [-70,0]
 
+        },{
+            "template": "venus",
+            "owner": 3,
+            "orbiting":0,
+            "orbit_cycle":8000,
+            "orbit_radius":70,
+            "orbit_angle":240,
+            "position": [-70,0]
         },{
             "template": "moon",
             "owner": 0,
             "orbiting":1,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":180,
+            "orbit_angle":0,
             "position": [45,-10]
         },{
             "template": "moon",
@@ -205,6 +213,16 @@
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
+            "orbit_angle":120,
+            "scale":2,
+            "position": [-45,-10]
+        },{
+            "template": "moon",
+            "owner": 0,
+            "orbiting":3,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":240,
             "scale":2,
             "position": [-45,-10]
         },{
@@ -214,7 +232,7 @@
             "orbiting":1,
             "orbit_radius":8,
             "orbit_cycle":600,
-            "orbit_angle":270,
+            "orbit_angle":240,
             "position": [45,-10]
         },{
             "template": "station",
@@ -222,7 +240,15 @@
             "orbiting":2,
             "orbit_radius":8,
             "orbit_cycle":600,
-            "orbit_angle":90,
+            "orbit_angle":120,
+            "position": [-45,-10]
+        },{
+            "template": "station",
+            "owner": 3,
+            "orbiting":3,
+            "orbit_radius":8,
+            "orbit_cycle":600,
+            "orbit_angle":0,
             "position": [-45,-10]
         },{
             "template": "station",
@@ -359,14 +385,21 @@
             "orbiting":1,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":0
+            "orbit_angle":120
         },{
             "template": "hexa",
             "owner": 0,
             "orbiting":2,
             "orbit_radius":15,
             "orbit_cycle":1800,
-            "orbit_angle":180
+            "orbit_angle":240
+        },{
+            "template": "hexa",
+            "owner": 0,
+            "orbiting":3,
+            "orbit_radius":15,
+            "orbit_cycle":1800,
+            "orbit_angle":0
         }
     ]
  }

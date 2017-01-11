@@ -348,7 +348,7 @@ function handleMouseUp(){
 	if(dragTarget === dragSource && dragTarget.hasOwnProperty("unitID")){
 		clickObject(dragSource);
 	}
-	if(selectedPlanet&&!dragTarget.hasOwnProperty("unitID")){
+	if(selectedPlanet&&dragTarget!==null&&!dragTarget.hasOwnProperty("unitID")){
 		console.log("deselected");
 		selectedPlanet=null;
 		selection_sphere.visible = false;
