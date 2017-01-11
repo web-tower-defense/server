@@ -48,6 +48,7 @@ io.on('connection', function(socket){
 			var player = {};
 			player.name = player_name;
 			player.status = waitingRooms[roomName].playerStatus[key];
+			player.ID = key+1;
 			data.players.push(player);
 		});
 		return data;
@@ -113,8 +114,8 @@ io.on('connection', function(socket){
 
 	});
 	socket.on('cancelCreateNewRoomEvent',function(data){
-		console.log('cancel~'+data.roomName+data.playerName);
-		for(var i=0; i<waitingRooms[data.roomName].maxPlayer; i++){
+		//console.log('cancel~'+data.roomName+data.playerName);
+		/*for(var i=0; i<waitingRooms[data.roomName].maxPlayer; i++){
 			console.log('player : '+waitingRooms[data.roomName].playerNames[i]);
 			if(waitingRooms[data.roomName].playerNames[i] === data.playerName){
 				console.log('find~');
@@ -126,7 +127,14 @@ io.on('connection', function(socket){
 				waitingRooms[data.roomName].allPlayer--;
 				break;
 			}
+		}*/
+		waitingRooms[data.roomName].playerNames[data.playerID-1] = null;
+		if(waitingRooms[data.roomName].playerStatus[data.playerID-1] === 'ready'){
+			waitingRooms[data.roomName].readyPlayer--;
 		}
+		waitingRooms[data.roomName].playerStatus[data.playerID-1] = null;
+		waitingRooms[data.roomName].allPlayer--;
+
 		io.to(data.roomName).emit('updateRoom', getCurrentRoomData(data.roomName));
 		socket.leave(data.roomName);
 		io.sockets.emit('resetRooms',getRoomsData());
@@ -142,7 +150,7 @@ io.on('connection', function(socket){
 	socket.on('playerReadyEvent', function(data){
 
 		waitingRooms[data.roomName].playerNames.forEach(function(playerName, key){
-			if(data.playerName === playerName){
+			if(data.playerID === key+1){
 				if(waitingRooms[data.roomName].playerStatus[key] === 'waiting'){
 					waitingRooms[data.roomName].playerStatus[key] = 'ready';
 					waitingRooms[data.roomName].readyPlayer++;

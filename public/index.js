@@ -1,6 +1,7 @@
 var socket = io();
 var mapName = "map02(2人).jpg";
 var playerName = "";
+var playerID = 0;
 var roomSystem = {
   init: function() {
     this.cacheDom();
@@ -103,6 +104,7 @@ var roomSystem = {
     var out = {};
     out.roomName = roomName;
     out.playerName = playerName;
+    out.playerID = playerID;
     console.log(out);
     this.hideWaitingDivAndShowMainDiv();
     socket.emit('cancelCreateNewRoomEvent',out);
@@ -171,13 +173,13 @@ var roomSystem = {
     this.mainDiv.style.display = 'flex';
   },
   playerReady: function() {
-    console.log('ready~~');
     var data = {};
-    console.log("ready : "+playerName);
+    //console.log("ready : "+playerName);
     data.playerName = playerName;
+    data.playerID = playerID;
     data.roomName = roomSystem.roomName;
-    console.log(data);
-    console.log(roomSystem);
+    //console.log(data);
+    //console.log(roomSystem);
     socket.emit('playerReadyEvent',data);
   },
   updateCurrentRoom: function(data) {
@@ -193,6 +195,10 @@ var roomSystem = {
         var icon = document.createElement('i');
         icon.setAttribute('class', 'fa fa-star');
         span.appendChild(icon);
+      }
+      if(key === playerID-1){
+        //#aeffa0
+        span.setAttribute('style', 'background-color:#a0ffb3');
       }
       var span2 = document.createElement('div');
       span2.setAttribute('class', 'player-status');
@@ -237,7 +243,7 @@ var roomSystem = {
         button.appendChild(icon);
         span2.appendChild(button);
       }
-      if(player.name === playerName){
+      if(player.ID === playerID){
         var button = document.createElement('button');
         var icon = document.createElement('i');
         button.setAttribute('class', 'ready-btn');
@@ -249,9 +255,6 @@ var roomSystem = {
           icon.setAttribute('class', 'fa fa-times');
         }
         button.appendChild(icon);
-      }
-
-      if(player.name === playerName){
         span2.appendChild(button);
       }
       playerDiv.appendChild(span);
@@ -285,8 +288,8 @@ socket.on('respondClientCreateNewRoomEvent', function(data) {
     if (data.nameRepeat) {
       roomSystem.showMessageDiv('this name is already used');
     } else {
-      console.log('playerName:'+playerName+"\nmap:"+mapName);
-
+      playerID = data.allPlayer;
+      console.log('playerName:'+playerName+"\nplayerID : "+playerID+"\nmap:"+mapName);
       $('#map-img2').attr('src', 'maps/'+mapName)
       $('#map-img2')[0].style.display = 'block'
       roomSystem.showWaitingDivAndHideMainDiv();
@@ -334,9 +337,10 @@ socket.on('resetMapImg', function(files){
 })
 socket.on('respondJoinRoomEvent', function(data){
   //console.log("new joiner");
-  //console.log(data.mapName);
   $('#map-img2').attr('src', 'maps/'+data.mapName)
   $('#map-img2')[0].style.display = 'block'
+  playerID = data.allPlayer;
+  //console.log('playerName:'+playerName+"\nplayerID : "+playerID+"\nmap:"+data.mapName);
 })
 socket.on('updateRoom', function(data){
   console.log("update");
