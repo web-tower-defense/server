@@ -86,9 +86,9 @@
         "name": "venus",
         "curUnit": 10,
         "maxUnit": 70,
-        "unit_vel": 1.25,
+        "unit_vel": 0.25,
         "grow_cycle":40,
-        "sent_unit_cycle":5,
+        "sent_unit_cycle":10,
         "scale":1
       },
       "moon" : {
@@ -153,7 +153,7 @@
         {
             "template": "venus",
             "owner": 1,
-            "curUnit": 100,
+            "curUnit": 10,
             "position": [40,0]
         },{
             "template": "venus",
