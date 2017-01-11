@@ -163,32 +163,25 @@
         },{
             "template": "mercury",
       			"owner": 0,
-            "orbiting":0,
-            "orbit_cycle":3000,
-            "orbit_radius":30,
-            "orbit_angle":20,
-            "position": [30,-35]
+            "position": [15,0]
         },{
             "template": "mercury",
       			"owner": 0,
-            "orbiting":1,
-            "orbit_cycle":3000,
-            "orbit_radius":30,
-            "orbit_angle":200
+            "position": [-15,0]
         },{
             "template": "moon",
             "owner": 0,
             "orbiting":2,
-            "orbit_radius":8,
+            "orbit_radius":10,
             "orbit_cycle":800,
             "orbit_angle":0
         },{
             "template":"moon",
             "owner": 0,
             "orbiting":3,
-            "orbit_radius":8,
+            "orbit_radius":10,
             "orbit_cycle":800,
-            "orbit_angle":100
+            "orbit_angle":180
         },{
             "template": "uranus",
             "owner": 0,
