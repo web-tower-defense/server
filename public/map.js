@@ -208,12 +208,12 @@ function loadMap(file, AInum){
     var height = data.mapHeight;
     var textureLoader = new THREE.TextureLoader();
 
-		var plane=create_plane(4*width,4*height,0,0xffffff);
+		/*var plane=create_plane(4*width,4*height,0,0xffffff);
 		plane.rotation.x = Math.PI / 2;
 		plane.position.y = -1;
 		//plane.position.x = -2*width;
 		//plane.position.z = 2*height;
-		scene.add( plane );
+		scene.add( plane );*/
 
 		for(var i = 0; i < data.models.length; i++){
 			load_building_model(data.models[i],data);

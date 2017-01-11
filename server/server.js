@@ -17,7 +17,8 @@ io.on('connection', function(socket){
 		for(room in io.sockets.adapter.rooms){
 			if(room.length<20){
 				roomsData[room] =
-					io.sockets.adapter.rooms[room].length===game_data.room_max_player[room];
+					(waitingRooms[room].allPlayer===game_data.room_max_player[room]);
+					//(io.sockets.adapter.rooms[room].length===game_data.room_max_player[room]);
 			}
 		}
 		return roomsData;
@@ -58,6 +59,7 @@ io.on('connection', function(socket){
 			if(waitingRooms[roomName].playerNames[i] === null){
 				waitingRooms[roomName].playerNames[i] = playerName;
 				waitingRooms[roomName].playerStatus[i] = 'waiting';
+				waitingRooms[roomName].allPlayer++;
 				break;
 			}
 		}
@@ -167,18 +169,22 @@ io.on('connection', function(socket){
 		waitingRooms[data.roomName].playerNames[data.key] = 'AI';
 		waitingRooms[data.roomName].playerStatus[data.key] = 'ready(AI)';
 		waitingRooms[data.roomName].readyPlayer++;
+		waitingRooms[data.roomName].allPlayer++;
 		waitingRooms[data.roomName].AInum++;
 		var out = getCurrentRoomData(data.roomName);
 		io.to(data.roomName).emit('updateRoom', out);
+		io.sockets.emit('resetRooms',getRoomsData());
 	})
 	socket.on('kickAiEvent', function(data){
 		console.log('room : '+data.roomName+' add ai : '+data.key);
 		waitingRooms[data.roomName].playerNames[data.key] = null;
 		waitingRooms[data.roomName].playerStatus[data.key] = null;
 		waitingRooms[data.roomName].readyPlayer--;
+		waitingRooms[data.roomName].allPlayer--;
 		waitingRooms[data.roomName].AInum--;
 		var out = getCurrentRoomData(data.roomName);
 		io.to(data.roomName).emit('updateRoom', out);
+		io.sockets.emit('resetRooms',getRoomsData());
 	})
 	socket.on('gameInit', function(test){
 		//game init
@@ -187,7 +193,7 @@ io.on('connection', function(socket){
 		//do nothing currently
 	})
 	function room_init(name,maxPlayer,map_name,socketId){
-
+		console.log('init name : '+name);
 		game_data.room_command[name]=0;
 		game_data.room_max_player[name]=maxPlayer;
 		game_data.room_map_name[name]=map_name;
