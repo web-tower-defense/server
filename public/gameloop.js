@@ -3,6 +3,8 @@ var loop_times=0;
 var command_timer=0;
 var data_receive=false;
 var pause_game=false;
+var game_over_str=0;
+
 var Command_data=function(roomName,commands,loop_times){
 	this.roomName=roomName;
 	this.commands=commands;
@@ -142,70 +144,100 @@ function game_update(){
 	//console.log("campos="+camera.position.x+","+camera.position.y+","+camera.position.z);
 	//console.log("update");
 }
-var game_over_str=0;
 
 function game_over(win){
 
-	var back_ui = document.createElement("BUTTON");
-	back_ui.className = "back_to_menu";
+	var gameover_ui = document.createElement("canvas");
+	var fontface =  "GoodTimes";
+	var fontsize =  24;
+	var borderThickness =  0;
+	gameover_ui.width = 450;
+	gameover_ui.height = 600;
+	gameover_ui.className = "gameover_ui";
+	var context = gameover_ui.getContext('2d');
+	context.font = "Bold " + fontsize + "px " + fontface;
+	context.fillStyle = "rgba(200, 200, 200, 1.0)";
+
+
+	if(win){
+		var str1="you win";
+	}else{
+		var str1="you lose";
+	}
+	var str2="time:";
+	var secs = Math.floor((loop_times*loop_interval)/1000);
+	var mins = Math.floor(secs / 60);
+	secs = secs%60;
+	var str3=mins+" : "+secs;
+	var str4="captured:";
+	var str5=("000"+game_data.players[player_id].captured_num).slice(-4);
+	var str6="lost:";
+	var str7=("000"+game_data.players[player_id].lost_num).slice(-4);
+
+	context.fillText( str1, 160, fontsize + 20);
+	context.fillText( str2, 50, fontsize*2 + 50);
+	context.fillText( str3, 300, fontsize*2 + 50);
+	context.fillText( str4, 50, fontsize*3 + 80);
+	context.fillText( str5, 300, fontsize*3 + 80);
+	context.fillText( str6, 50, fontsize*4 + 110);
+	context.fillText( str7, 300, fontsize*4 + 110);
+	document.body.appendChild(gameover_ui);
+
+	var back_button = document.createElement("BUTTON");
+	back_button.className = "back_to_menu";
 	//zoom_in.appendChild(t);
-	back_ui.onmousedown = function(){
+	back_button.onmousedown = function(){
 
 	};
-	back_ui.onmouseup = function(){
+	back_button.onmouseup = function(){
 		location.reload();
 	};
-	document.body.appendChild(back_ui);
+	document.body.appendChild(back_button);
 
+	/*var spriteMap = new THREE.TextureLoader().load( "/images/gameover_panel.png" );
+	var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+	var gameover_sprite = new THREE.Sprite( spriteMaterial );
 
-
-	game_over_str=create_plane(30,25,0.7,0x00ffff);
 	if(win){
-		var str=createTextMesh("you win!!",1);
-		str.rotation.x=0;
-		str.position.y=7;
-		game_over_str.add(str);
+		var str1=makeTextSprite("you win!!",{"fontsize":12});
+		gameover_sprite.add(str1);
 		//game_over_str.add(tmp3);
 	}else{
-		var str=createTextMesh("you lose!!",1);
-		str.rotation.x=0;
-		str.position.y=7;
-		game_over_str.add(str);
+		var str1=makeTextSprite("you lose!!",{"fontsize":12});
+		gameover_sprite.add(str1);
 	}
 
 
 	//var time_val=10000-loop_times;
 	//if(time_val<0)time_val=0;
 	//var time_score=Math.floor(0.1*(time_val));
-	var str=createTextMesh("time:"+(loop_times*loop_interval)/1000.0+" sec",1);
-	str.rotation.x=0;
-	str.position.y=4;
-	game_over_str.add(str);
+	var str2=makeTextSprite("time:"+(loop_times*loop_interval)/1000.0+" sec",{"fontsize":12});
+	gameover_sprite.add(str2);
 
-	var str=createTextMesh("captured num:"+game_data.players[player_id].captured_num,1);
-	str.rotation.x=0;
-	str.position.y=1;
-	game_over_str.add(str);
+	var str3=makeTextSprite("captured num:"+game_data.players[player_id].captured_num,{"fontsize":12});
+	gameover_sprite.add(str3);
 
-	var str=createTextMesh("lost num:"+game_data.players[player_id].lost_num,1);
-	str.rotation.x=0;
-	str.position.y=-2;
-	game_over_str.add(str);
+	var str4=makeTextSprite("lost num:"+game_data.players[player_id].lost_num,{"fontsize":12});
+	gameover_sprite.add(str4);
 
-	game_over_str.selectable = false;
+	gameover_sprite.selectable = false;
+	gameover_sprite.dynamic = true;
 	//console.log("this pos="+this.pos.x+","+this.pos.y+","+this.pos.z);
+	//gameover_sprite.scale.set(1.2, 1.5, 1.0);
 	var vec=look.clone();
 	vec.normalize();
-	game_over_str.rotation.x=Math.atan2(vec.y,-vec.z);
-	vec.multiplyScalar(25.0);
-	game_over_str.position.set(
-		camera.position.x+vec.x+15,
+	vec.multiplyScalar(1.5);
+	console.log(vec);
+	gameover_sprite.position.set(
+		camera.position.x+vec.x,
 		camera.position.y+vec.y,
 		camera.position.z+vec.z
 	);
-	scene.add(game_over_str);
+
+	scene.add(gameover_sprite);*/
 	//location.reload();
 }
+
 var game_start=false;
 function Player(){
 	this.buildings_num=0;

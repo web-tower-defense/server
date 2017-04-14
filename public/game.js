@@ -81,4 +81,5 @@ function render() {
 	rayCast();
 	//composer.render();
 	renderer.render( scene, camera );
+	//look = new THREE.Vector3(-camera.position.x,-camera.position.y,-camera.position.z);
 }

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'GoodTimes';
+  src: url('/fonts/ttf/good times rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 body {
 	font-family: Monospace;
 	margin: 0px;
@@ -23,16 +31,6 @@ body {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-.back_to_menu {
-	top: 500px;
-	right : 600px;
-	width: 224px;
-	height: 65px;
-	position: absolute;
-	background-image: url("/images/back_to_menu.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-}
 
 .zoom_out {
 	top: 50px;
@@ -42,5 +40,27 @@ body {
 	position: absolute;
 	background-image: url("/zoom_out.png");
 	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.back_to_menu {
+	top: 500px;
+	left : 50%;
+  margin-left: -100px;
+	width: 200px;
+	height: 65px;
+	position: absolute;
+	background-image: url("/images/back_to_menu.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.gameover_ui {
+  top: 50px;
+	position:absolute;
+  left : 50%;
+  margin-left: -225px;
+	background-image: url("/images/gameover_panel.png");
+  background-size: cover;
 	background-repeat: no-repeat;
 }

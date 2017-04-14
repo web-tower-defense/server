@@ -36,6 +36,29 @@ function zoomOut(){
 
 function initInput(){
 
+	var hammerElement = document.getElementById("game_canvas");
+	var hammertime = new Hammer(hammerElement);
+	hammertime.get('pinch').set({ enable: true });
+	hammertime.on('pan', function(ev) {
+		console.log('pan');
+		console.log(ev);
+	});
+
+	hammertime.on('pinch', function(ev) {
+		console.log('pinch');
+		console.log(ev);
+	});
+
+	hammertime.on('swipe', function(ev) {
+		console.log('swipe');
+		console.log(ev);
+	});
+
+	hammertime.on('rotate', function(ev) {
+		console.log('rotate');
+		console.log(ev);
+	});
+
 	zoom_in = document.createElement("BUTTON");
 	var t = document.createTextNode("zoom in");
 	zoom_in.className = "zoom_in";

@@ -7,6 +7,7 @@ function Building(){
 	this.growthSpeed = 1;
 	this.mesh = 0;
 	this.textMesh = 0;
+	this.textSprite = 0;
 	this.target=-1;
 	this.sent_unit_timer=0;
 	this.recruit_timer=0;
@@ -299,7 +300,7 @@ Building.prototype.draw = function(){
 	var cur_str=this.curUnit.toString()+"/"+this.maxUnit.toString();
 
 	if(cur_str!==this.prev_str){
-		scene.remove(this.textMesh);
+		/*scene.remove(this.textMesh);
 		this.textMesh.geometry.dispose();
 		//this.textMesh.material.dispose();
 		this.prev_str=cur_str;
@@ -308,15 +309,30 @@ Building.prototype.draw = function(){
 		this.textMesh.selectable = false;
 		this.textMesh.dynamic = true;
 		this.textMesh.rotation.x=Math.atan2(look.y,-look.z);
-		scene.add(this.textMesh);
+		scene.add(this.textMesh);*/
+
+		scene.remove(this.textSprite);
+		//this.textSprite.material.dispose();
+		this.prev_str=cur_str;
+		this.textSprite=makeTextSprite(this.prev_str);
+		//this.textSprite.rotation.x=-1.5;
+		this.textSprite.selectable = false;
+		this.textSprite.dynamic = true;
+		scene.add(this.textSprite);
 	}
-	this.textMesh.position.set(
+	/*this.textMesh.position.set(
 		this.pos.x-1.0,
+		this.pos.y+3.5,
+		this.pos.z
+	);*/
+	this.textSprite.position.set(
+		this.pos.x+5.0,
 		this.pos.y+3.5,
 		this.pos.z
 	);
 	if(this.type=="black_hole"||this.type=="white_hole"){
 		this.textMesh.visible=false;
+		this.textSprite.visible=false;
 	}
 	//this.textMesh.geometry = createTextGeo("P"+this.owner+":"+this.curUnit.toString()+"/"+this.maxUnit.toString());
 

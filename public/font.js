@@ -130,3 +130,73 @@ function loadFont() {
 		//scene.add( textMesh1 );
 	} );
 }
+
+function makeTextSprite( message, parameters )
+{
+	 if ( parameters === undefined ) parameters = {};
+	 var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "GoodTimes";
+	 var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 40;
+	 var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 0;
+	 var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+	 var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+	 var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:200, g:200, b:200, a:1.0 };
+
+	 var canvas = document.createElement('canvas');
+	 var context = canvas.getContext('2d');
+	 context.font = "Bold " + fontsize + "px " + fontface;
+	 var metrics = context.measureText( message );
+	 var textWidth = metrics.width;
+
+	 context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+	 context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+
+	 //context.lineWidth = borderThickness;
+	 //roundRect(context, borderThickness/2, borderThickness/2, (textWidth + borderThickness) * 1.1, fontsize * 1.4 + borderThickness, 8);
+
+	 context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", 1.0)";
+	 context.fillText( message, borderThickness, fontsize + borderThickness);
+
+	 var texture = new THREE.Texture(canvas)
+	 texture.minFilter = THREE.LinearFilter;
+	 texture.needsUpdate = true;
+
+	 var spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
+	 var sprite = new THREE.Sprite( spriteMaterial );
+	 sprite.scale.set(0.5 * fontsize, 0.25 * fontsize, 0.75 * fontsize);
+	 return sprite;
+}
+
+function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+  if (typeof stroke == 'undefined') {
+    stroke = true;
+  }
+  if (typeof radius === 'undefined') {
+    radius = 5;
+  }
+  if (typeof radius === 'number') {
+    radius = {tl: radius, tr: radius, br: radius, bl: radius};
+  } else {
+    var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+    for (var side in defaultRadius) {
+      radius[side] = radius[side] || defaultRadius[side];
+    }
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + radius.tl, y);
+  ctx.lineTo(x + width - radius.tr, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+  ctx.lineTo(x + width, y + height - radius.br);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+  ctx.lineTo(x + radius.bl, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+  ctx.lineTo(x, y + radius.tl);
+  ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+  ctx.closePath();
+  if (fill) {
+    ctx.fill();
+  }
+  if (stroke) {
+    ctx.stroke();
+  }
+
+}

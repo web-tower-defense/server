@@ -14,6 +14,8 @@ function initScene(){
 	scene = new THREE.Scene();
 	scene.background = reflectionCube;
 
+	scene2D = new THREE.Scene();
+
 	var ambient = new THREE.AmbientLight( 0x444444 );
 	ambient.intensity = 1.5;
 	scene.add( ambient );
@@ -43,6 +45,7 @@ function initScene(){
 	renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.id = "game_canvas";
 	container.appendChild( renderer.domElement );
 
 	stats = new Stats();
@@ -77,6 +80,33 @@ function initScene(){
 	effectFXAA = new THREE.ShaderPass(THREE.CopyShader);
 	effectFXAA.renderToScreen = true;
 	composer.addPass(effectFXAA);*/
+
+	/*var gameover_ui = document.createElement("canvas");
+	var fontface =  "GoodTimes";
+	var fontsize =  40;
+	var borderThickness =  0;
+	gameover_ui.width = 450;
+	gameover_ui.height = 600;
+	gameover_ui.className = "gameover_ui";
+	var context = gameover_ui.getContext('2d');
+	context.font = "Bold " + fontsize + "px " + fontface;
+	context.fillStyle = "rgba(200, 200, 200, 1.0)";
+	var str1="win";
+	var str2="time:";
+	var str3="captured num:";
+	var str4="lost num:";
+
+	var imageObj = new Image("/images/gameover_panel.png");
+  imageObj.onload = function() {
+    context.drawImage(this, 0, 0);
+  };
+  imageObj.src = "/images/gameover_panel.png";
+
+	context.fillText( str1, 50, fontsize + 10);
+	context.fillText( str2, 50, fontsize*2 + 20);
+	context.fillText( str3, 50, fontsize*3 + 30);
+	context.fillText( str4, 50, fontsize*4 + 40);
+	document.body.appendChild(gameover_ui);*/
 
 }
 

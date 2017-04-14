@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'GoodTimes';
+  src: url('/fonts/ttf/good times rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 body {
   background: url("/textures/Background-3.jpg") no-repeat fixed;
   background-size: cover;
@@ -13,7 +21,7 @@ body {
     flex-direction: column; }
 
   #header-div{
-    display: flex;  
+    display: flex;
   }
     #header-div > #title-img {
     }
@@ -110,6 +118,7 @@ body {
       background-color: #e5f7ff; }
 
 #message-div {
+  font-family: 'GoodTimes';
   height: 44px;
   display: none;
   background-color: #607d8b;
@@ -148,9 +157,9 @@ body {
       flex-grow: 1; }
 
 #waiting-div{
-  min-width: 400px;}
+  min-width: 200px;}
   #waiting-div > #map-div{
-    width: 400px;
+    /*width: 400px;*/
     height: 200px;
     background-image: url('../images/setting.png'); }
   #waiting-div > #map-div > #map-img2 {

@@ -137,7 +137,7 @@ function create_building(building,id,data){
 		new_building.mesh.scale.y=building.scale;
 		new_building.mesh.scale.z=building.scale;
 	}
-	var capacity_text = createTextMesh(
+	/*var capacity_text = createTextMesh(
 		new_building.curUnit.toString(),
 		new_building.owner);
 
@@ -145,7 +145,7 @@ function create_building(building,id,data){
 	capacity_text.selectable = false;
 	capacity_text.dynamic = true;
 	scene.add( capacity_text );
-	new_building.textMesh = capacity_text;
+	new_building.textMesh = capacity_text;*/
 
 	new_building.init();
 	game_data.buildings.push(new_building);
