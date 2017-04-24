@@ -1,0 +1,97 @@
+@font-face {
+  font-family: 'GoodTimes';
+  src: url('../fonts/ttf/good times rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+body {
+	font-family: Monospace;
+	margin: 0px;
+	overflow: hidden;
+}
+#info {
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+#info a, .button {font-weight: bold; text-decoration: underline; cursor: pointer }
+
+.zoom_in {
+	top: 10px;
+	right : 10px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	background-image: url("../zoom_in.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.zoom_out {
+	top: 50px;
+	right : 10px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	background-image: url("../zoom_out.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+#gameover_btn {
+	top: 300px;
+	left : 30%;
+  	margin-left: -75px;
+	width: 150px;
+	height: 50px;
+	position: absolute;
+	background-image: url("../images/back_button.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	border: none;
+}
+
+.gameover_ui {
+  	top: 20px;
+	position:absolute;
+  	left : 50%;
+  	margin-left: -300px;
+	background-image: url("../images/gameover_panel2.png");
+  	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.tutorial_div {
+  display: none;
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+	background-image: url("../images/tutorial_text_box.png");
+  background-size: 100%;
+	background-repeat: no-repeat;
+}
+  .tutorial_div > p{
+    font-size: 24px;
+    color: white;
+    margin: 10px;
+  }
+
+
+.tutorial_ok {
+  position: absolute;
+  font-size: 24px;
+  width: 100px;
+  left: 50%;
+  margin-left: -50px;
+  bottom: 50px;
+}

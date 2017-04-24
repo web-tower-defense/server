@@ -1,0 +1,319 @@
+@font-face {
+  font-family: 'GoodTimes';
+  src: url('../fonts/ttf/good times rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+body {
+  background: url("../textures/Background-3.jpg") no-repeat fixed;
+  background-size: cover;
+  background-color: #fafafa;
+  /*display: flex;
+  flex-direction: column;*/
+  align-content: space-around;
+  margin-top: 40px; }
+  body > div {
+    max-width: 400px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column; }
+
+
+
+#header-div {
+  color: white;
+  /*display: flex;
+  align-items: flex-end;*/
+  justify-content: center; 
+}
+  #header-div h1 {
+    font-size: 28px !important; }
+  #header-div > #title-img {
+    width: 200px;
+    margin-left: 100px;
+  }
+  #header-div > button {
+    display: inline-block;
+  }
+
+#main-div {
+  position: relative; }
+  #main-div * {
+    font-size: 18px; }
+  #main-div >  #name-div{
+    color: white;
+  }
+  #main-div >  #name-div > #player-name-input{
+    width: 63%;
+  }
+  #main-div > #name-div > #comfirm-name-btn{
+    width: 33%;
+    margin-left: 2px;
+  }
+  #nav-bar-div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: inherit;
+    text-align:center;
+  }
+  #nav-bar-div > button{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+
+#waiting-div {
+  display: none;
+  color: white; }
+
+#create-new-room-div {
+  display: none;
+  padding: 0;
+  height: 44px;
+  position: relative; }
+  #create-new-room-div #maps-dropdown {
+    display: none;
+    position: absolute;
+    background-color: gray;
+    overflow: auto;
+    box-shadow: 0 8px 16px 0px rgba(0, 0, 0, 0.2);
+    right: 50px;
+    top: 44px;
+    z-index: 3;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end; }
+    #create-new-room-div #maps-dropdown a {
+      padding: 10px;
+      color: black;
+      box-sizing: border-box;
+      height: 45px;
+      text-decoration: none;
+      text-align: center;
+      align-self: flex-end;
+      border-bottom: 1px solid;
+      display: block; }
+      #create-new-room-div #maps-dropdown a:hover {
+        background-color: #fff; }
+  #create-new-room-div > input {
+    padding-left: 14px;
+    border: 0;
+    color: white;
+    background-color: #029395;
+    flex-grow: 1; }
+  #create-new-room-div > button {
+    border: 0;
+    border-right: 1px solid #585f63;
+    padding: 0;
+    background-color: #b0bec5;
+    color: #607d8b; }
+    #create-new-room-div > button i {
+      width: 44px; }
+    #create-new-room-div > button:hover {
+      background-color: #e5f7ff; }
+
+#message-div {
+  font-family: 'GoodTimes';
+  height: 44px;
+  display: none;
+  background-color: #607d8b;
+  color: white;
+  align-items: center;
+  justify-content: center; }
+
+#rooms-div {
+  display: flex;
+  flex-direction: column; }
+  #rooms-div > .room-div {
+    height: 44px !important;
+    display: flex;
+    align-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+    #rooms-div > .room-div .join-room-btn, #rooms-div > .room-div .full-room-btn {
+      border: 0;
+      margin: 0;
+      padding: 0; }
+      #rooms-div > .room-div .join-room-btn i, #rooms-div > .room-div .full-room-btn i {
+        color: white;
+        width: 44px; }
+    #rooms-div > .room-div .join-room-btn {
+      background-color: #607d8b; }
+      #rooms-div > .room-div .join-room-btn:hover {
+        background-color: #86afc3; }
+    #rooms-div > .room-div .full-room-btn {
+      background-color: #37474f; }
+    #rooms-div > .room-div > span {
+      display: flex;
+      align-items: center;
+      padding-left: 14px;
+      flex-grow: 1; }
+
+
+#select-mode-div {
+}
+  #select-mode-div > #single-player-btn {
+    background: url("../images/single-player-button.png") no-repeat center;
+    background-size: 120% auto;
+    height: 110px;
+    display:inline-block;
+    width: 40%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+  #select-mode-div > #multi-player-btn {
+    background: url("../images/multi-player-button.png") no-repeat center;
+    background-size: 120% auto;
+    height: 110px;
+    display:inline-block;
+    width: 40%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+
+#select-single-mode-div {
+  display: none;
+}
+  #select-single-mode-div > #campaign-btn {
+    background: url("../images/campaign-button.png") no-repeat center;
+    background-size: 120% auto;
+    height: 110px;
+    display:inline-block;
+    width: 40%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+  #select-single-mode-div > #challange-btn {
+    background: url("../images/challange-button.png") no-repeat center;
+    background-size: 120% auto;
+    height: 110px;
+    display:inline-block;
+    width: 40%;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+
+#select-map-div {
+  margin: 0;
+  display: none;
+  color: white;
+}
+  #select-map-div > p{
+    margin: 5px;
+  }
+  #select-map-div > #prev-map-btn {
+    height: 100px;
+    width: 12%;
+    background-image: url("../images/thin-arrow-left.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    outline: none;
+    border: none;
+  }
+  #select-map-div > #next-map-btn {
+    height: 100px;
+    width: 12%;
+    background-image: url("../images/thin-arrow-right.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    outline: none;
+    border: none;
+  }
+  #select-map-div > #map-img {
+    width: 70%;
+  }
+  #select-map-div > #select-level-div {
+    padding-top: 10px;
+  }
+    #select-map-div > #select-level-div > #prev-level-btn{
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      left: 40%;
+      margin-left: -90px;
+      background-image: url("../images/arrow-left.png");
+      background-size: 100%;
+      background-color: transparent;
+      outline: none;
+      border: none;
+
+    }
+    #select-map-div > #select-level-div > #next-level-btn{
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      left: 60%;
+      margin-left: 50px;
+      background-image: url("../images/arrow-right.png");
+      background-size: 100%;
+      background-color: transparent;
+      outline: none;
+      border: none;
+    }
+    #select-map-div > #select-level-div > #level{
+      position: absolute;
+      font-size: 24px;
+      text-align: center;
+      width: 100px;
+      padding-left: 50%;
+      margin-left: -50px;
+      padding-top: 5px;
+    }
+
+  #select-map-div > #start-game-btn {
+    position: absolute;
+    font-size: 20px;
+    width: 120px;
+    height: 25px;
+    left: 50%;
+    margin-left: -60px;
+    margin-top: 50px;
+  }
+
+#waiting-div{
+  min-width: 200px;}
+  #waiting-div > #map-div{
+    /*width: 400px;*/
+    height: 200px;
+    background-image: url('../images/setting.png'); }
+  #waiting-div > #map-div > #map-img2 {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom:10px;
+    width: 95%;
+    height: 90%;
+    max-width: 400px;
+    max-height: 200px;
+  }
+
+#players-div {
+  display: flex;
+  flex-direction: column; }
+  #players-div > .player-div {
+    height: 29px !important;
+    display: flex;
+    width: 100%;
+    color: black;
+    background-color: #eee;
+    border-bottom: 1px solid #8f8f8f; }
+    #players-div > .player-div > div {
+      display: block;
+      text-align: justify;
+      font-size: 16px;
+      align-items: center;
+      flex-grow: 1;
+      color: black;
+      border-style: solid;
+      border-width: 1px;
+      border-color: black}
+    #players-div > .player-div > .player-name {
+      width: 50%; }
+    #players-div > .player-div > .player-status {
+      width: 20%; }
+      #players-div > .player-div > .player-status > button {
+        float: right;
+        right: 0;
+        height: 100%; }

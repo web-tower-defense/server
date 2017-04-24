@@ -1,5 +1,6 @@
 {
     "mapName": "map02",
+    "Tutorial": 1,
     "mapWidth": 100,
     "mapHeight": 100,
     "AI":[2],
@@ -9,33 +10,9 @@
         {
             "name": "venus",
             "dirpath": "obj/planets/",
-            "path": "venus.obj",
+            "path": "Planet02.obj",
             "material":{
-                "path": "venus.mtl"
-            }
-        },
-        {
-            "name": "mercury",
-            "dirpath": "obj/planets/",
-            "path": "mercury.obj",
-            "material":{
-                "path": "mercury.mtl"
-            }
-        },
-        {
-            "name": "mars",
-            "dirpath": "obj/planets/",
-            "path": "mars.obj",
-            "material":{
-                "path": "mars.mtl"
-            }
-        },
-        {
-            "name": "pluto",
-            "dirpath": "obj/planets/",
-            "path": "pluto.obj",
-            "material":{
-                "path": "pluto.mtl"
+                "path": "Planet02.mtl"
             }
         },
         {
@@ -47,39 +24,13 @@
             }
         },
         {
-            "name": "uranus",
+            "name": "earth",
             "dirpath": "obj/planets/",
-            "path": "uranus.obj",
+            "path": "planet01.obj",
             "material":{
-                "path": "uranus.mtl"
-            }
-        },
-        {
-            "name": "blackhole",
-            "dirpath": "obj/planets/",
-            "path": "blackhole.obj",
-            "material":{
-                "path": "blackhole.mtl"
-            }
-        },
-        {
-            "name": "whitehole",
-            "dirpath": "obj/planets/",
-            "path": "whitehole.obj",
-            "material":{
-                "path": "whitehole.mtl"
-            }
-        },
-        {
-            "name": "station",
-            "dirpath": "obj/planets/",
-            "path": "station.obj",
-            "material":{
-                "path": "station.mtl"
+                "path": "earth.mtl"
             }
         }
-
-
     ],
     "building_template":{
       "venus" : {
@@ -95,57 +46,15 @@
         "name": "moon",
         "curUnit": 10,
         "maxUnit": 40,
-        "grow_cycle":120,
+        "grow_cycle":100000000,
         "scale":2
       },
-      "station" : {
-        "name": "station",
-        "type":"station",
-        "unit_vel": 0.4,
-        "curUnit": 10,
-        "maxUnit": 50,
-        "grow_cycle":100000,
-        "scale":1.5
-      },
-      "mercury" : {
-        "name": "mercury",
-        "curUnit": 20,
-        "maxUnit": 50,
-        "grow_cycle":80,
-        "scale":1.5
-      },
-      "uranus" : {
-        "name": "uranus",
+      "earth" : {
+        "name": "earth",
         "curUnit": 15,
         "maxUnit": 40,
-        "grow_cycle":90,
+        "grow_cycle":900000000,
         "scale":1.5
-      },
-      "mars" : {
-        "name": "mars",
-        "curUnit": 25,
-        "maxUnit": 60,
-        "grow_cycle":70,
-        "scale":1.5
-      },
-      "pluto" : {
-        "name": "pluto",
-        "curUnit": 10,
-        "maxUnit": 30,
-        "grow_cycle":120,
-        "scale":3
-      },
-      "blackhole" : {
-        "name": "blackhole",
-        "curUnit": 1000,
-        "maxUnit": 2000,
-        "type":"black_hole"
-      },
-      "whitehole" : {
-        "name": "whitehole",
-        "type":"white_hole",
-        "curUnit": 1000,
-        "maxUnit": 2000
       }
     },
     "buildings":
@@ -156,46 +65,13 @@
             "curUnit": 10,
             "position": [40,0]
         },{
-            "template": "venus",
-            "owner": 2,
-            "position": [-40,0]
-
-        },{
-            "template": "mercury",
-      			"owner": 0,
-            "position": [15,0]
-        },{
-            "template": "mercury",
-      			"owner": 0,
-            "position": [-15,0]
-        },{
             "template": "moon",
             "owner": 0,
-            "orbiting":2,
-            "orbit_radius":10,
-            "orbit_cycle":800,
-            "orbit_angle":0
+            "position": [0,0]
         },{
-            "template":"moon",
-            "owner": 0,
-            "orbiting":3,
-            "orbit_radius":10,
-            "orbit_cycle":800,
-            "orbit_angle":180
-        },{
-            "template": "uranus",
-            "owner": 0,
-            "orbiting":0,
-            "orbit_cycle":2500,
-            "orbit_radius":25,
-            "orbit_angle":60
-        },{
-            "template": "uranus",
-            "owner": 0,
-            "orbiting":1,
-            "orbit_cycle":2500,
-            "orbit_radius":25,
-            "orbit_angle":240
+            "template": "earth",
+            "owner": 2,
+            "position": [-40,0]
         }
     ]
  }

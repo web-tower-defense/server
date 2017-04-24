@@ -8,7 +8,7 @@
     [
         {
             "name": "venus",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "venus.obj",
             "material":{
                 "path": "venus.mtl"
@@ -16,7 +16,7 @@
         },
         {
             "name": "mercury",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "mercury.obj",
             "material":{
                 "path": "mercury.mtl"
@@ -24,7 +24,7 @@
         },
         {
             "name": "mars",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "mars.obj",
             "material":{
                 "path": "mars.mtl"
@@ -32,7 +32,7 @@
         },
         {
             "name": "pluto",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "pluto.obj",
             "material":{
                 "path": "pluto.mtl"
@@ -40,7 +40,7 @@
         },
         {
             "name": "moon",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "moon.obj",
             "material":{
                 "path": "moon.mtl"
@@ -48,7 +48,7 @@
         },
         {
             "name": "uranus",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "uranus.obj",
             "material":{
                 "path": "uranus.mtl"
@@ -56,7 +56,7 @@
         },
         {
             "name": "blackhole",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "blackhole.obj",
             "material":{
                 "path": "blackhole.mtl"
@@ -64,7 +64,7 @@
         },
         {
             "name": "whitehole",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "whitehole.obj",
             "material":{
                 "path": "whitehole.mtl"
@@ -72,7 +72,7 @@
         },
         {
             "name": "station",
-            "dirpath": "obj/planets/",
+            "dirpath": "./obj/planets/",
             "path": "station.obj",
             "material":{
                 "path": "station.mtl"

@@ -64,3 +64,32 @@ body {
   background-size: cover;
 	background-repeat: no-repeat;
 }
+
+.tutorial_div {
+  display: none;
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+	background-image: url("/images/tutorial_text_box.png");
+  background-size: 100%;
+	background-repeat: no-repeat;
+}
+  .tutorial_div > p{
+    font-size: 24px;
+    color: white;
+    margin: 10px;
+  }
+
+
+.tutorial_ok {
+  position: absolute;
+  font-size: 24px;
+  width: 100px;
+  left: 50%;
+  margin-left: -50px;
+  bottom: 50px;
+}

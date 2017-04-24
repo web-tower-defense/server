@@ -1,0 +1,78 @@
+{
+    "mapName": "map02",
+    "Tutorial": 1,
+    "mapWidth": 100,
+    "mapHeight": 100,
+    "AI":[2],
+    "AItype":["idle"],
+    "player_num":2,
+    "models":
+    [
+        {
+            "name": "venus",
+            "dirpath": "obj/planets/",
+            "path": "Planet02.obj",
+            "material":{
+                "path": "Planet02.mtl"
+            }
+        },
+        {
+            "name": "moon",
+            "dirpath": "obj/planets/",
+            "path": "moon.obj",
+            "material":{
+                "path": "moon.mtl"
+            }
+        },
+        {
+            "name": "earth",
+            "dirpath": "obj/planets/",
+            "path": "planet01.obj",
+            "material":{
+                "path": "earth.mtl"
+            }
+        }
+    ],
+    "building_template":{
+      "venus" : {
+        "name": "venus",
+        "curUnit": 10,
+        "maxUnit": 70,
+        "unit_vel": 0.25,
+        "grow_cycle":40,
+        "sent_unit_cycle":10,
+        "scale":1
+      },
+      "moon" : {
+        "name": "moon",
+        "curUnit": 10,
+        "maxUnit": 40,
+        "grow_cycle":100000000,
+        "scale":2
+      },
+      "earth" : {
+        "name": "earth",
+        "curUnit": 15,
+        "maxUnit": 40,
+        "grow_cycle":900000000,
+        "scale":1.5
+      }
+    },
+    "buildings":
+    [
+        {
+            "template": "venus",
+            "owner": 1,
+            "curUnit": 10,
+            "position": [40,0]
+        },{
+            "template": "moon",
+            "owner": 0,
+            "position": [0,0]
+        },{
+            "template": "earth",
+            "owner": 2,
+            "position": [-40,0]
+        }
+    ]
+ }

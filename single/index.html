@@ -1,0 +1,113 @@
+
+<!DOCTYPE html><html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>星球大戰PlanetsWar</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/game.css">
+</head>
+
+<body style="zoom: 1;">
+	<div id="header-div">
+		<img id="title-img" src="./images/logo_white_small.png" alt="alt">
+		<!--a href="manul.html" target="_blank" style="color:yellow">操作說明</a-->
+	</div>
+	<div id="main-div">
+		<div id="name-div">
+			<p id="player-name" style="">歡迎，指揮官。請輸入您的代號：</p>
+			<input id="player-name-input" type="text" placeholder="enter your name here">
+			<button id="comfirm-name-btn">comfirm</button>
+		</div>
+		<div id="nav-bar-div"></div>
+		<div id="message-div">Please enter a name!</div>
+
+		<div id="create-new-room-div">
+			<input id="create-new-room-input" type="text" placeholder="Create new room here">
+			<button id="choose-map-btn">
+				<i class="fa fa-map"></i>
+			</button>
+			<div id="maps-dropdown" style="display: flex;">
+				<a>tutorial01(1人)</a>
+				<a>tutorial02(1人)</a>
+				<a>tutorial03(1人)</a>
+				<a>tutorial04(1人)</a>
+				<a>tutorial05(1人)</a>
+			</div>
+			<button id="create-new-room-btn">
+				<i class="fa fa-plus"></i>
+			</button>
+		</div>
+		<div id="rooms-div"></div>
+		<div id="select-mode-div" style="display:none">
+			<button id="single-player-btn"></button>
+			<button id="multi-player-btn"></button>
+		</div>
+		<div id="select-single-mode-div">
+			<button id="campaign-btn"></button>
+			<button id="challange-btn"></button>
+		</div>
+		<div id="select-map-div">
+			<p>選擇地圖</p>
+			<button id="prev-map-btn"></button>
+			<img id="map-img" src="maps/tutorial01(1人).jpg" alt="alt">
+			<button id="next-map-btn"></button>
+			<div id="select-level-div">
+				<button id="prev-level-btn"></button>
+				<span id="level">EASY</span>
+				<button id="next-level-btn"></button>
+			</div>
+			<button id="start-game-btn">START</button>
+		</div>
+	</div>
+
+	<div id="waiting-div">
+		<p>Your room has been created, now waiting for opponent...</p>
+		<div id="map-div"><img id="map-img2" src="#" alt="alt"></div>
+		<div id="players-div"></div>
+		<button id="cancel">cancel</button>
+	</div>
+
+	<script src="./jquery.min.js"></script>
+	<script src="./index.js" charset="utf-8"></script>
+	<script src="./js/three.min.js"></script>
+	<script src="./js/THREE.MeshLine.js"></script>
+	<script src="./js/loaders/DDSLoader.js"></script>
+	<script src="./js/loaders/MTLLoader.js"></script>
+	<script src="./js/loaders/OBJLoader.js"></script>
+	<script src="./js/Detector.js"></script>
+	<script src="./js/libs/stats.min.js"></script>
+	<script src="./js/utils/GeometryUtils.js"></script>
+	<script src="./js/shaders/CopyShader.js"></script>
+	<script src="./js/controls/OrbitControls.js"></script>
+	<script src="./js/postprocessing/EffectComposer.js"></script>
+	<script src="./js/postprocessing/MaskPass.js"></script>
+	<script src="./js/shaders/CopyShader.js"></script>
+	<script src="./js/postprocessing/RenderPass.js"></script>
+	<script src="./js/postprocessing/ShaderPass.js"></script>
+	<script src="./js/postprocessing/OutlinePass.js"></script>
+	<script src="./js/shaders/FXAAShader.js"></script>
+	<script src="./js/shaders/CopyShader.js"></script>
+	<script src="./laser/threex.laserbeam.js"></script>
+	<script src="./laser/threex.lasercooked.js"></script>
+	<script src="./hammer.min.js"></script>
+	<script src="./hammer-time.min.js"></script>
+	<script src="./unit.js"></script>
+	<script src="./tutorial.js"></script>
+	<script src="./ai.js"></script>
+	<script src="./input.js"></script>
+	<script src="./font.js"></script>
+	<script src="./camera.js"></script>
+	<script src="./scene.js"></script>
+	<script src="./attack.js"></script>
+	<script src="./building.js"></script>
+	<script src="./map.js"></script>
+	<script src="./command.js"></script>
+	<script src="./gameloop.js"></script>
+	<script src="./game.js"></script>
+
+</body>
+
+</html>

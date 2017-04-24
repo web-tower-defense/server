@@ -365,6 +365,9 @@ Building.prototype.captured=function(new_owner){
 	}
 
 	this.owner=new_owner;
+	if(new_owner === 1){
+		TutorialSystem.check([this.unitID]);
+	}
 	this.mesh.owner = new_owner;
 	this.target=-1;
 

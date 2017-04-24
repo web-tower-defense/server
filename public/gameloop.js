@@ -40,7 +40,9 @@ function handle_web_commands(){
 	for(var i = 0; i < game_data.web_commands.length; i++){
 		game_data.buildings[game_data.web_commands[i].selected].set_target(game_data.web_commands[i].target);
 		//console.log("command:"+game_data.web_commands[i].selected+","+game_data.web_commands[i].target);
+		TutorialSystem.check([game_data.web_commands[i].selected,  game_data.web_commands[i].target]);
 	}
+	TutorialSystem.check([0]);
 	game_data.web_commands=[];
 	data_receive=false;
 	//console.log("handle_web_commands done:"+loop_times);
@@ -98,7 +100,7 @@ function game_update(){
 				console.log("game paused");
 				pause_game=true;
 			}
-		}else{
+		}else if(TutorialSystem.inited === false){
 			pause_game=false;
 			command_timer=0;
 			//console.log("update_cycle:"+loop_times);
@@ -111,6 +113,9 @@ function game_update(){
 	command_timer++;
 	if(pause_game&&game_data.max_player===1){
 		console.log("single player pause_game");
+	}
+	else if(pause_game){
+		console.log("pause_game");
 	}
 	if(!pause_game||game_data.max_player===1){
 		loop_times++;

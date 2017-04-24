@@ -224,6 +224,10 @@ function loadMap(file, AInum){
 		game_data.buildings_count = data.buildings.length;
 		game_data.playerbuildings_count = [0,0,0];
 
+		if(data.Tutorial > 0){
+			TutorialSystem.init(data.Tutorial);
+		}
+
 	});
 
 }
